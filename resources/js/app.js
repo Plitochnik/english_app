@@ -1,16 +1,14 @@
 import './bootstrap';
-
 import { createApp } from 'vue';
+
 
 
 const app = createApp({});
 
+import ParamForm from "./components/Form/ParamForm.vue";
 
-import ContactForm from "./components/ContactForm.vue";
-import HeadComponent from "./components/HeadComponent.vue";
 
-app.component('head-component', HeadComponent);
-app.component('contact-form', ContactForm);
+app.component('param-form', ParamForm);
 
 
 app.mount('#app');

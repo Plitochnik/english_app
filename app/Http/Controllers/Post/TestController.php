@@ -9,6 +9,8 @@ class TestController extends Controller
 {
     public function __invoke()
     {
+
+
         return view('home_game.test');
     }
 }

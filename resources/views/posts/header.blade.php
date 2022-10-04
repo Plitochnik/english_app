@@ -15,13 +15,14 @@
           href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <link id="u-page-google-font" rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Mulish:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i">
-    {{--    @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
-
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite('resources/css/app.css')
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
 		"@type": "Organization",
 		"name": ""
 }
+
     </script>
     <meta name="theme-color" content="#478ac9">
     <meta property="og:title" content="Главная">
@@ -41,7 +42,6 @@
            class="u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">Share</a>
     </div>
 </header>
-
 
 @yield('header')
 

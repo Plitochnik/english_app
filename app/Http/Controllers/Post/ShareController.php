@@ -9,6 +9,6 @@ class ShareController extends Controller
 {
     public function __invoke()
     {
-        return view('share');
+        return view('share.share');
     }
 }
