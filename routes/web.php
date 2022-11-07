@@ -1,32 +1,30 @@
 <?php
 
-use App\Http\Controllers\Post\ShareController;
-use App\Http\Controllers\Post\TestController;
-use App\Http\Controllers\Scaning\ScaningController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\TestsAlgorithms\WordsCheckController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+//Route::get('/iner', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//});
+//
+//Route::get('/dashboard', function () {
+//    return Inertia::render('Dashboard');
+//})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/signin', [IndexController::class, 'signin'])->name('index.signin');
+
+Route::get('/parameters', [IndexController::class, 'parameters'])->name('index.parameters');
+
+Route::post('/parameters', [WordsCheckController::class, 'manageWords']);
 
 
-Route::get('/share', ShareController::class)->name('share');
 
-Route::post('/test', TestController::class)->name('test');
-
-Route::post('/scaning', ScaningController::class)->name('scaning');
-
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+require __DIR__.'/auth.php';

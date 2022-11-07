@@ -1,5 +1,6 @@
-@include('posts.header')
+@extends('posts.header')
 
+@section('form')
 <section class="u-align-center u-clearfix u-section-1" id="sec-571f">
     <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-clearfix u-expanded-width u-gutter-10 u-layout-wrap u-layout-wrap-1">
@@ -81,5 +82,10 @@
     </div>
 </section>
 
+@endsection
 
-@include('posts.footer')
+
+
+
+
+{{--@include('posts.footer')--}}
