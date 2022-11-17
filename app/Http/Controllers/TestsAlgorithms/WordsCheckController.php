@@ -10,55 +10,122 @@ use JetBrains\PhpStorm\NoReturn;
 
 class WordsCheckController extends Controller
 {
-    public function manageWords(ParamFormRequest $request)
+    public function manageWords(ParamFormRequest $request): \Inertia\Response|\Inertia\ResponseFactory
     {
         $posts = $request->validated();
 
         $home_language = mb_strtolower($posts['home_language']);
         $test_language = mb_strtolower($posts['test_language']);
+        $picked = mb_strtolower($posts['picked']);
 
-        function takeFalseTestWordsFromDatabase($test_lang): array
+        function getUsersTestLevel($picked): array
         {
-            $false_test_words = [];
+            $picked_level = [];
 
-            for ($i = 0; $i <= 3; $i++) {
-                $false_test_words[$i] = Words::find(rand(1, count(Words::all())))->$test_lang;
+            if ($picked === 'upper-intermediate') {
+                $picked_level[0] = 1;
+                $picked_level[1] = 500;
             }
 
-            return $false_test_words;
+            if ($picked === 'advanced') {
+                $picked_level[0] = 500;
+                $picked_level[1] = count(Words::all());
+            }
+
+            return $picked_level;
         }
 
-        $random_true_value = rand(1, count(Words::all()));
-        $true_test_word = Words::find($random_true_value)->$test_language;
-        $true_home_word = Words::find($random_true_value)->$home_language;
+        $picked_level = getUsersTestLevel($picked);
 
-        $false_test_words = takeFalseTestWordsFromDatabase($home_language);
 
-        function pushTrueWordToFalseArrayAnswerList($false_test_words, $true_test_word)
+        function createRandomValuesForTestWordsAndAnswers($picked_level): array
         {
-            $five_users_answers = $false_test_words;
-            array_push($five_users_answers, $true_test_word);
+            $random_true_value = [];
 
-            shuffle($five_users_answers);
+            for ($i = 0; $i <= 9; $i++) {
+                $random_true_value[$i] = rand($picked_level[0], $picked_level[1]);
+            }
 
-            return $five_users_answers;
+            return $random_true_value;
         }
 
+        $random_true_value = createRandomValuesForTestWordsAndAnswers($picked_level);
 
-        function getKeyOfCorrectAnswer($five_users_answers, $true_home_word)
+
+        function getTestWords($picked_level, $test_language, $random_true_value): array
         {
-            $key_of_true_answer = array_search($true_home_word, $five_users_answers);
+            $test_words = [];
 
-            return $key_of_true_answer;
+            for ($i = 0; $i <= 9; $i++) {
+                $test_words[] = mb_convert_case(Words::find($random_true_value[$i])->$test_language, MB_CASE_TITLE);
+            }
+
+            return $test_words;
         }
 
 
-        $random_false_values = takeFalseTestWordsFromDatabase($test_language);
-        $five_users_answers = pushTrueWordToFalseArrayAnswerList($false_test_words, $true_home_word);
-        $key_of_true_answer = getKeyOfCorrectAnswer($five_users_answers, $true_home_word);
+        function getTrueAnswers($random_true_value, $home_language): array
+        {
+            $true_answers = [];
 
-        dump('Перевод слова: "' . $true_test_word . "\"\n" . 'Варианты ответа: ');
-        dd($five_users_answers);
+            for ($i = 0; $i <= 9; $i++) {
+                $true_answers[$i] = mb_convert_case(Words::find($random_true_value[$i])->$home_language, MB_CASE_TITLE);
+            }
+
+            return $true_answers;
+        }
+
+        $test_words = getTestWords($picked_level, $test_language, $random_true_value);
+        $true_answers = getTrueAnswers($random_true_value, $home_language);
+
+
+        function mergeTrueWordToFalseArrayAnswerList($test_words, $true_answers, $picked_level, $home_language): array
+        {
+            $ready_words_for_test = [];
+
+            for ($i = 0; $i <= 9; $i++) {
+                $ready_words_for_test[$i] = [
+                    $test_words[$i] => [
+                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
+                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
+                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
+                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
+                    ]
+                ];
+            }
+
+            for ($i = 0; $i <= 9; $i++) {
+                $ready_words_for_test[$i][$test_words[$i]][4] = $true_answers[$i];
+                shuffle($ready_words_for_test[$i][$test_words[$i]]);
+            }
+
+            return $ready_words_for_test;
+        }
+
+
+        $ready_words_for_test = mergeTrueWordToFalseArrayAnswerList($test_words, $true_answers, $picked_level, $home_language);
+
+
+        function getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers): array
+        {
+            $key_of_true_answer = [];
+
+            for ($i = 0; $i <= 9; $i++) {
+                $key_of_true_answer[$i] = array_search($true_answers[$i],$ready_words_for_test[$i][$test_words[$i]]);
+            }
+
+            for ($i = 0; $i <= 9; $i++) {
+                $ready_words_for_test[$i][$test_words[$i]][5] = $key_of_true_answer[$i];
+            }
+
+            return $ready_words_for_test;
+        }
+
+
+        $ready_words_for_test = getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers);
+
+
+        return inertia('Test/Test', compact('ready_words_for_test', 'true_answers', 'test_words'));
 
     }
 

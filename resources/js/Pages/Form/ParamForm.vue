@@ -16,64 +16,19 @@
                     <form @submit.prevent="submit">
                         <div class="products">
                             <div class="form">
-                                <div class="YourLan">
-                                    <h5 class="text-bg-1">Ваш язык: {{ home_language }}</h5>
+                                <div class="font">
+                                    <div>
+                                        Ваш язык: {{ home_language }}
+                                    </div>
                                 </div>
                                 <div class="home_language">
-                                    <div id="app-cover_1">
-                                        <div id="select-box">
-                                            <input type="checkbox" id="options-view-button">
-                                            <div id="select-button" class="brd">
-                                                <div id="selected-value">
-                                                    <span>Выберете язык</span>
-                                                </div>
-                                                <div id="chevrons">
-                                                    <i class="fas fa-chevron-up"></i>
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </div>
-                                            </div>
-                                            <div id="options">
-                                                <div class="option">
-                                                    <input class="s-c top" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Ukrainian">
-                                                    <input class="s-c bottom" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Ukrainian">
-                                                    <i class="fab fa-codepen"></i>
-                                                    <span class="label">Ukrainian</span>
-                                                    <span class="opt-val">Ukrainian</span>
-                                                </div>
-                                                <div class="option">
-                                                    <input class="s-c top" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Russian">
-                                                    <input class="s-c bottom" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Russian">
-                                                    <i class="fab fa-dribbble"></i>
-                                                    <span class="label">Russian</span>
-                                                    <span class="opt-val">Russian</span>
-                                                </div>
-                                                <div class="option">
-                                                    <input class="s-c top" type="radio" name="1_platform"
-                                                           v-model="home_language" value="English">
-                                                    <input class="s-c bottom" type="radio" name="1_platform"
-                                                           v-model="home_language" value="English">
-                                                    <i class="fab fa-dribbble"></i>
-                                                    <span class="label">English</span>
-                                                    <span class="opt-val">English</span>
-                                                </div>
-                                                <div class="option">
-                                                    <input class="s-c top" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Spanish">
-                                                    <input class="s-c bottom" type="radio" name="1_platform"
-                                                           v-model="home_language" value="Spanish">
-                                                    <i class="fab fa-dribbble"></i>
-                                                    <span class="label">Spanish</span>
-                                                    <span class="opt-val">Spanish</span>
-                                                </div>
-
-                                                <div id="option-bg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <select v-model="home_language">
+                                        <option disabled value="">Выберете язык</option>
+                                        <option>Ukrainian</option>
+                                        <option>Russian</option>
+                                        <option>English</option>
+                                        <option>Spanish</option>
+                                    </select>
                                 </div>
                             </div>
                             <div>
@@ -81,90 +36,84 @@
                             </div>
                             <div class="form">
                                 <div class="YourLan">
-                                    <h5 class="text-bg-1">Тест на: {{ test_language }}</h5>
+                                    <div class="mt-3 font">
+                                        Тест на: {{ test_language }}
+                                    </div>
                                 </div>
                                 <div class="choose">
                                     <div class="test_language">
-                                        <div id="app-cover_2">
-                                            <div id="select-box">
-                                                <input type="checkbox" id="options-view-button">
-                                                <div id="select-button" class="brd">
-                                                    <div id="selected-value">
-                                                        <span>Выберете язык</span>
-                                                    </div>
-                                                    <div id="chevrons">
-                                                        <i class="fas fa-chevron-up"></i>
-                                                        <i class="fas fa-chevron-down"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="options">
-                                                    <div class="option">
-                                                        <input class="s-c top" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Ukrainian">
-                                                        <input class="s-c bottom" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Ukrainian">
-                                                        <i class="fab fa-codepen"></i>
-                                                        <span class="label">Ukrainian</span>
-                                                        <span class="opt-val">Ukrainian</span>
-                                                    </div>
-                                                    <div class="option">
-                                                        <input class="s-c top" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Russian">
-                                                        <input class="s-c bottom" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Russian">
-                                                        <i class="fab fa-dribbble"></i>
-                                                        <span class="label">Russian</span>
-                                                        <span class="opt-val">Russian</span>
-                                                    </div>
-                                                    <div class="option">
-                                                        <input class="s-c top" type="radio" name="2_platform"
-                                                               v-model="test_language" value="English">
-                                                        <input class="s-c bottom" type="radio" name="2_platform"
-                                                               v-model="test_language" value="English">
-                                                        <i class="fab fa-dribbble"></i>
-                                                        <span class="label">English</span>
-                                                        <span class="opt-val">English</span>
-                                                    </div>
-                                                    <div class="option">
-                                                        <input class="s-c top" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Spanish">
-                                                        <input class="s-c bottom" type="radio" name="2_platform"
-                                                               v-model="test_language" value="Spanish">
-                                                        <i class="fab fa-dribbble"></i>
-                                                        <span class="label">Spanish</span>
-                                                        <span class="opt-val">Spanish</span>
-                                                    </div>
-
-                                                    <div id="option-bg"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <select v-model="test_language">
+                                            <option disabled value="">Выберете язык</option>
+                                            <option>Ukrainian</option>
+                                            <option>Russian</option>
+                                            <option>English</option>
+                                            <option>Spanish</option>
+                                        </select>
                                     </div>
                                     <div>
                                         <div>
-                                            <div class="position-absolute mb-2 font">{{ picked }}</div>
+                                            <div class="mt-3 position-absolute mb-2 font">{{ picked }}</div>
                                         </div>
                                         <div class="">
                                             <input type="radio" id="one" value="Upper-Intermediate" v-model="picked"/>
-                                            <label class="position-relative mb-2 mr-4" for="one">В1-В2</label>
+                                            <label class="ml-1 position-relative mb-2 mr-4" for="one">В1-В2</label>
 
                                             <input type="radio" id="two" value="Advanced" v-model="picked"/>
-                                            <label for="two">С1-С2</label>
+                                            <label class="ml-1" for="two">С1-С2</label>
                                         </div>
-
                                     </div>
-                                    <div class="bg-white p-4">
-                                        <button
-                                            class="inline-flex items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md"
-                                            type="submit">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                                 viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-                                            </svg>
 
-                                            Go
-                                        </button>
+                                    <div class="container">
+                                        <div class="btn">
+                                            <button type="submit" class="shop-now">Начать тест</button>
+                                            <!--                                            <Link :href="route('test.process')"></Link>-->
+                                            <div class="snowflake-grid to-left">
+                                                <div class="snowflake-item border-bottom border-right">
+                                                    <div class="sub-items border-right border-bottom pull-down">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-bottom border-left">
+                                                    <div class="sub-items border-right border-bottom r-90 pull-down-right">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-top border-right">
+                                                    <div class="sub-items border-right border-bottom r-270 pull-right">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-top border-left">
+                                                    <div class="sub-items border-right border-bottom r-180 pull-left">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="snowflake-grid to-right">
+                                                <div class="snowflake-item border-bottom border-right">
+                                                    <div class="sub-items border-right border-bottom pull-down">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-bottom border-left">
+                                                    <div
+                                                        class="sub-items border-right border-bottom r-90 pull-down-right"
+                                                    >
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-top border-right">
+                                                    <div class="sub-items border-right border-bottom r-270 pull-right">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="snowflake-item border-top border-left">
+                                                    <div class="sub-items border-right border-bottom r-180 pull-left">
+                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -173,33 +122,31 @@
                 </div>
             </div>
         </div>
-        <slot/>
-    </div>
 
+
+    </div>
 
 
 </template>
 
 <script>
+
 import {Link} from "@inertiajs/inertia-vue3";
 import {reactive} from 'vue'
 import {Inertia} from '@inertiajs/inertia'
 import HeaderLayout from "../../Layouts/HeaderLayout.vue";
 // import "../../../../public/cssform/parameter.css";
 import "../../../../public/cssform/select.scss";
-import $ from 'jquery'
+// import $ from 'jquery'
 
 
 export default {
-
-
 
     components: {
         HeaderLayout,
     },
 
     data() {
-
         return {
             home_language: '',
             test_language: '',
@@ -207,74 +154,21 @@ export default {
         }
     },
 
-    mounted() {
-        $('select.dropdown').each(function() {
-
-            var dropdown = $('<div />').addClass('dropdown selectDropdown');
-
-            $(this).wrap(dropdown);
-
-            var label = $('<span />').text($(this).attr('placeholder')).insertAfter($(this));
-            var list = $('<ul />');
-
-            $(this).find('option').each(function() {
-                list.append($('<li />').append($('<a />').text($(this).text())));
-            });
-
-            list.insertAfter($(this));
-
-            if($(this).find('option:selected').length) {
-                label.text($(this).find('option:selected').text());
-                list.find('li:contains(' + $(this).find('option:selected').text() + ')').addClass('active');
-                $(this).parent().addClass('filled');
-            }
-
-        });
-
-        $(document).on('click touch', '.selectDropdown ul li a', function(e) {
-            e.preventDefault();
-            var dropdown = $(this).parent().parent().parent();
-            var active = $(this).parent().hasClass('active');
-            var label = active ? dropdown.find('select').attr('placeholder') : $(this).text();
-
-            dropdown.find('option').prop('selected', false);
-            dropdown.find('ul li').removeClass('active');
-
-            dropdown.toggleClass('filled', !active);
-            dropdown.children('span').text(label);
-
-            if(!active) {
-                dropdown.find('option:contains(' + $(this).text() + ')').prop('selected', true);
-                $(this).parent().addClass('active');
-            }
-
-            dropdown.removeClass('open');
-        });
-
-        $('.dropdown > span').on('click touch', function(e) {
-            var self = $(this).parent();
-            self.toggleClass('open');
-        });
-
-        $(document).on('click touch', function(e) {
-            var dropdown = $('.dropdown');
-            if(dropdown !== e.target && !dropdown.has(e.target).length) {
-                dropdown.removeClass('open');
-            }
-        });
-
-// light
-        $('.switch input').on('change', function(e) {
-            $('.dropdown, body').toggleClass('light', $(this).is(':checked'));
-        });
-
-    },
 
     methods: {
         submit() {
-            this.$inertia.post('/parameters', {home_language: this.home_language, test_language: this.test_language})
+            this.$inertia.post('/test', {
+                home_language: this.home_language,
+                test_language: this.test_language,
+                picked: this.picked
+            })
+            console.log('It works');
         },
     },
+
+    props: [
+        'ready_words_for_test',
+    ],
 
 
 }
@@ -283,5 +177,8 @@ export default {
 
 <style scoped>
 
+.font {
+    font-family: Mulish, sans-serif;
+}
 
 </style>

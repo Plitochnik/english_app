@@ -26,6 +26,7 @@ class ParamFormRequest extends FormRequest
         return [
             'home_language' => 'required|string',
             'test_language' => 'required|string',
+            'picked' => 'required|string',
         ];
     }
 }

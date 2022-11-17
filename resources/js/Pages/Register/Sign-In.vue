@@ -61,7 +61,6 @@ import HeaderLayout from "../../Layouts/HeaderLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 
 
-
 export default {
     components: {
         HeaderLayout,

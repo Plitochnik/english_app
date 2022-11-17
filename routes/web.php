@@ -23,7 +23,9 @@ Route::get('/signin', [IndexController::class, 'signin'])->name('index.signin');
 
 Route::get('/parameters', [IndexController::class, 'parameters'])->name('index.parameters');
 
-Route::post('/parameters', [WordsCheckController::class, 'manageWords']);
+Route::post('/test', [WordsCheckController::class, 'manageWords'])->name('test.process');
+
+Route::get('/test', [IndexController::class, 'testProcess'])->name('test.process');
 
 
 

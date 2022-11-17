@@ -16,5 +16,10 @@ class IndexController extends Controller
         return inertia('Register/Sign-In');
     }
 
+    public function testProcess()
+    {
+        return inertia('Test/Test');
+    }
+
 
 }
