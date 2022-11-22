@@ -135,9 +135,7 @@ import {Link} from "@inertiajs/inertia-vue3";
 import {reactive} from 'vue'
 import {Inertia} from '@inertiajs/inertia'
 import HeaderLayout from "../../Layouts/HeaderLayout.vue";
-// import "../../../../public/cssform/parameter.css";
 import "../../../../public/cssform/select.scss";
-// import $ from 'jquery'
 
 
 export default {
@@ -162,14 +160,14 @@ export default {
                 test_language: this.test_language,
                 picked: this.picked
             })
-            console.log('It works');
+
         },
     },
 
     props: [
         'ready_words_for_test',
     ],
-
+    
 
 }
 

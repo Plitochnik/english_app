@@ -20,7 +20,6 @@
 
 <script>
 import {Link} from "@inertiajs/inertia-vue3";
-
 import "../../../public/nicepage_layout/css/nicepage.css";
 
 
@@ -37,7 +36,6 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@700&display=swap');
-
 
 
 .font {
