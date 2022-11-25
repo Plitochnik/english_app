@@ -15,6 +15,15 @@ module.exports = {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
         },
+
+        theme: {
+            spacing: {
+                sm: '8px',
+                md: '12px',
+                lg: '16px',
+                xl: '24px',
+            }
+        }
     },
 
     plugins: [require('@tailwindcss/forms')],

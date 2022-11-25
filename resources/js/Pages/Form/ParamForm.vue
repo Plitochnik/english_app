@@ -3,10 +3,10 @@
     <HeaderLayout></HeaderLayout>
 
 
-    <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
             <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
             </div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
@@ -16,6 +16,9 @@
                     <form @submit.prevent="submit">
                         <div class="products">
                             <div class="form">
+                                <div class="text-red-600">
+                                    {{ checker_home_lang }}
+                                </div>
                                 <div class="font">
                                     <div>
                                         Ваш язык: {{ home_language }}
@@ -35,8 +38,12 @@
                                 <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
                             </div>
                             <div class="form">
+
                                 <div class="YourLan">
-                                    <div class="mt-3 font">
+                                    <div class="mt-3 text-red-600">
+                                        {{ checker_test_lang }}
+                                    </div>
+                                    <div class="font">
                                         Тест на: {{ test_language }}
                                     </div>
                                 </div>
@@ -62,11 +69,9 @@
                                             <label class="ml-1" for="two">С1-С2</label>
                                         </div>
                                     </div>
-
                                     <div class="container">
                                         <div class="btn">
                                             <button type="submit" class="shop-now">Начать тест</button>
-                                            <!--                                            <Link :href="route('test.process')"></Link>-->
                                             <div class="snowflake-grid to-left">
                                                 <div class="snowflake-item border-bottom border-right">
                                                     <div class="sub-items border-right border-bottom pull-down">
@@ -74,7 +79,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="snowflake-item border-bottom border-left">
-                                                    <div class="sub-items border-right border-bottom r-90 pull-down-right">
+                                                    <div
+                                                        class="sub-items border-right border-bottom r-90 pull-down-right">
                                                         <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
                                                     </div>
                                                 </div>
@@ -122,8 +128,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
 
@@ -149,31 +153,54 @@ export default {
             home_language: '',
             test_language: '',
             picked: 'Upper-Intermediate',
+            checker_test_lang: '',
+            checker_home_lang: '',
         }
     },
 
-
     methods: {
         submit() {
-            this.$inertia.post('/test', {
-                home_language: this.home_language,
-                test_language: this.test_language,
-                picked: this.picked
-            })
+            if (this.home_language === '') {
+                this.checker_home_lang = 'Выберете ваш родной язык'
+            } else {
+                this.checker_home_lang = ''
+            }
+
+            if (this.test_language === '') {
+                this.checker_test_lang = 'Выберете язык на который вы хотите пройти тест'
+            } else {
+                this.checker_test_lang = ''
+            }
+
+            if (this.test_language === this.home_language) {
+                this.checker_home_lang = 'Языки должны быть разные'
+            } else {
+                this.$inertia.post('/test', {
+                    home_language: this.home_language,
+                    test_language: this.test_language,
+                    picked: this.picked
+                })
+            }
 
         },
+
     },
 
-    props: [
-        'ready_words_for_test',
-    ],
-    
 
 }
 
 </script>
 
 <style scoped>
+
+dialog {
+    background: rgba(255, 255, 255, 0.7);
+    width: 270px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    top: 290px;
+    left: 320px;
+}
 
 .font {
     font-family: Mulish, sans-serif;
