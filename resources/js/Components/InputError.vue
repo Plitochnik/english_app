@@ -1,5 +1,7 @@
 <script setup>
-defineProps(['message']);
+defineProps({
+    message: String,
+});
 </script>
 
 <template>

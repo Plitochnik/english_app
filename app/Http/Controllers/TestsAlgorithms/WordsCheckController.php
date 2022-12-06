@@ -125,7 +125,7 @@ class WordsCheckController extends Controller
         $ready_words_for_test = getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers);
 
 
-        return inertia('Test/Test', compact('ready_words_for_test', 'true_answers', 'test_words'));
+        return inertia('Test/Test', compact('ready_words_for_test','test_words'));
 
     }
 
