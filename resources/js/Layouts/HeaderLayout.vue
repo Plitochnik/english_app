@@ -12,6 +12,10 @@
                   class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
                 Sign in
             </Link>
+            <Link :href="route('index.signup')"
+                  class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
+                Sign up
+            </Link>
         </div>
     </header>
     </body>

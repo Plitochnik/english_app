@@ -1,12 +1,12 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import AuthenticationCard from '../../Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '../../Components/AuthenticationCardLogo.vue';
+import Checkbox from '../../Components/Checkbox.vue';
+import InputError from '../../Components/InputError.vue';
+import InputLabel from '../../Components/InputLabel.vue';
+import PrimaryButton from '../../Components/PrimaryButton.vue';
+import TextInput from '../../Components/TextInput.vue';
 
 const form = useForm({
     name: '',
@@ -22,6 +22,14 @@ const submit = () => {
     });
 };
 </script>
+
+<!--<template>-->
+<!--    <div>-->
+<!--        <input type="email" placeholder="email" class="form-control">-->
+<!--        <input type="password" placeholder="password" class="form-control">-->
+<!--        <input type="submit" value="login" class="btn btn-primary">-->
+<!--    </div>-->
+<!--</template>-->
 
 <template>
     <Head title="Register" />

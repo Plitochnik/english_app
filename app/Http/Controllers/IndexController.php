@@ -21,5 +21,10 @@ class IndexController extends Controller
         return inertia('Test/Test');
     }
 
+    public function signup()
+    {
+        return inertia('Register/Sign-up');
+    }
+
 
 }

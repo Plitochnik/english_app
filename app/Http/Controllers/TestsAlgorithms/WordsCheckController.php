@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ParamFormRequest;
 use App\Models\Words;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\NoReturn;
 
 class WordsCheckController extends Controller
@@ -37,7 +38,6 @@ class WordsCheckController extends Controller
 
         $picked_level = getUsersTestLevel($picked);
 
-
         function createRandomValuesForTestWordsAndAnswers($picked_level): array
         {
             $random_true_value = [];
@@ -51,7 +51,6 @@ class WordsCheckController extends Controller
 
         $random_true_value = createRandomValuesForTestWordsAndAnswers($picked_level);
 
-
         function getTestWords($picked_level, $test_language, $random_true_value): array
         {
             $test_words = [];
@@ -62,7 +61,6 @@ class WordsCheckController extends Controller
 
             return $test_words;
         }
-
 
         function getTrueAnswers($random_true_value, $home_language): array
         {
@@ -77,7 +75,6 @@ class WordsCheckController extends Controller
 
         $test_words = getTestWords($picked_level, $test_language, $random_true_value);
         $true_answers = getTrueAnswers($random_true_value, $home_language);
-
 
         function mergeTrueWordToFalseArrayAnswerList($test_words, $true_answers, $picked_level, $home_language): array
         {
@@ -102,16 +99,14 @@ class WordsCheckController extends Controller
             return $ready_words_for_test;
         }
 
-
         $ready_words_for_test = mergeTrueWordToFalseArrayAnswerList($test_words, $true_answers, $picked_level, $home_language);
-
 
         function getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers): array
         {
             $key_of_true_answer = [];
 
             for ($i = 0; $i <= 9; $i++) {
-                $key_of_true_answer[$i] = array_search($true_answers[$i],$ready_words_for_test[$i][$test_words[$i]]);
+                $key_of_true_answer[$i] = array_search($true_answers[$i], $ready_words_for_test[$i][$test_words[$i]]);
             }
 
             for ($i = 0; $i <= 9; $i++) {
@@ -121,12 +116,9 @@ class WordsCheckController extends Controller
             return $ready_words_for_test;
         }
 
-
         $ready_words_for_test = getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers);
 
-
-        return inertia('Test/Test', compact('ready_words_for_test','test_words'));
-
+        return Inertia::render('Test/Test', compact('ready_words_for_test', 'test_words'));
     }
 
 
