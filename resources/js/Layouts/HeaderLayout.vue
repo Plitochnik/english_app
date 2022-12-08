@@ -10,11 +10,19 @@
             </Link>
             <Link :href="route('index.signin')"
                   class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
-                Sign in
+                Tailwind_Sign_in
             </Link>
             <Link :href="route('index.signup')"
                   class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
-                Sign up
+                My_oun_Sign_up
+            </Link>
+            <Link href="/login"
+                  class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
+                Jetstream_Login
+            </Link>
+            <Link href="/register"
+                  class="ml-3 font u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-btn-2">
+                Jetstream_Register
             </Link>
         </div>
     </header>

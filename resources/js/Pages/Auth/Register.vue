@@ -23,16 +23,21 @@ const submit = () => {
 };
 </script>
 
-<!--<template>-->
-<!--    <div>-->
-<!--        <input type="email" placeholder="email" class="form-control">-->
-<!--        <input type="password" placeholder="password" class="form-control">-->
-<!--        <input type="submit" value="login" class="btn btn-primary">-->
-<!--    </div>-->
-<!--</template>-->
+
+<script>
+import HeaderLayout from "../../Layouts/HeaderLayout.vue";
+
+    export default {
+        components: {
+            HeaderLayout,
+        }
+    }
+</script>
 
 <template>
     <Head title="Register" />
+
+    <HeaderLayout></HeaderLayout>
 
     <AuthenticationCard>
         <template #logo>

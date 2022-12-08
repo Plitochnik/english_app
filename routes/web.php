@@ -10,6 +10,8 @@ use Inertia\Inertia;
 
 Route::get('/signin', [IndexController::class, 'signin'])->name('index.signin');
 
+Route::get('/', [IndexController::class, 'signup'])->name('index.signup');
+
 Route::get('/signup', [IndexController::class, 'signup'])->name('index.signup');
 
 Route::get('/parameters', [IndexController::class, 'parameters'])->name('index.parameters');
@@ -20,10 +22,7 @@ Route::post('/test', [WordsCheckController::class, 'manageWords'])->name('test.p
 
 Route::get('/test', [IndexController::class, 'testProcess'])->name('test.process');
 
-
 require __DIR__.'/auth.php';
-
-
 
 Route::get('/home', function () {
     return Inertia::render('Welcome', [
@@ -45,6 +44,4 @@ Route::middleware([
 });
 
 
-Auth::routes();
-
-
+// Auth::routes();
