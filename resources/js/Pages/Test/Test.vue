@@ -91,7 +91,7 @@
 
 
 import {Link} from "@inertiajs/inertia-vue3";
-import HeaderLayout from "../../Layouts/HeaderLayout.vue";
+import HeaderLayout from "../../Pages/HeaderLayout.vue";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
 import "../../../../public/DuringTest/Timer/Timer.css";
@@ -113,7 +113,6 @@ export default {
 
     data() {
         return {
-            // is_timer: true,
             test_process: false,
             is_start_animation: true,
             answers: [],

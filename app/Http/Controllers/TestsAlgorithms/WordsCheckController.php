@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TestsAlgorithms;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRedirectRequest;
 use App\Http\Requests\ParamFormRequest;
 use App\Models\Words;
 use Illuminate\Http\Request;
@@ -120,6 +121,7 @@ class WordsCheckController extends Controller
 
         return Inertia::render('Test/Test', compact('ready_words_for_test', 'test_words'));
     }
+
 
 
 }

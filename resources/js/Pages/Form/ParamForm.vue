@@ -2,6 +2,8 @@
 
     <HeaderLayout></HeaderLayout>
 
+    <sidebar :user-name="user_name"></sidebar>
+
     <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
             <div
@@ -18,12 +20,12 @@
                                 <div class="text-red-600">
                                     {{ checker_home_lang }}
                                 </div>
-                                <div class="font">
+                                <div class="mt-3 font">
                                     <div>
                                         Ваш язык: {{ home_language }}
                                     </div>
                                 </div>
-                                <div class="home_language">
+                                <div class="mt-1 home_language">
                                     <select v-model="home_language">
                                         <option disabled value="">Выберете язык</option>
                                         <option>Ukrainian</option>
@@ -37,7 +39,6 @@
                                 <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
                             </div>
                             <div class="form">
-
                                 <div class="YourLan">
                                     <div class="mt-3 text-red-600">
                                         {{ checker_test_lang }}
@@ -47,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="choose">
-                                    <div class="test_language">
+                                    <div class="mt-1 test_language">
                                         <select v-model="test_language">
                                             <option disabled value="">Выберете язык</option>
                                             <option>Ukrainian</option>
@@ -68,8 +69,27 @@
                                             <label class="ml-1" for="two">С1-С2</label>
                                         </div>
                                     </div>
-                                    <div class="container">
-                                        <div class="btn">
+                                    <div class="multiplayer-button">
+                                        <div v-if="$page.props.user">
+                                            <Link @click.prevent="checkinRegisteredUsers"
+                                                  class="px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex">
+                                                <img src="../../../../public/icons/multiplay_button/icon.png">
+                                                <span class="ml-2">Сыграть с другом</span>
+                                            </Link>
+                                        </div>
+                                        <div v-else>
+                                            <Link
+                                                href="/login"
+                                                :data="{ needed_account_logo }"
+                                                type="submit"
+                                                class="px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex">
+                                                <img src="../../../../public/icons/multiplay_button/icon.png">
+                                                <span class="ml-2">Сыграть с другом</span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
+                                        <div class="btn start-test-button">
                                             <button type="submit" class="shop-now">Начать тест</button>
                                             <div class="snowflake-grid to-left">
                                                 <div class="snowflake-item border-bottom border-right">
@@ -135,17 +155,27 @@
 <script>
 
 import {Link} from "@inertiajs/inertia-vue3";
-import {reactive} from 'vue'
-import {Inertia} from '@inertiajs/inertia'
-import HeaderLayout from "../../Layouts/HeaderLayout.vue";
+import HeaderLayout from "../HeaderLayout.vue";
 import "../../../../public/cssform/select.scss";
-
+import Login from "../Auth/Login.vue";
+import Sidebar from "../Sidebar.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import Welcome from "@/Pages/Welcome.vue";
 
 export default {
 
+    name: "ParamForm",
+
     components: {
         HeaderLayout,
+        Link,
+        Login,
+        Sidebar,
     },
+
+    props: [
+        'user_name',
+    ],
 
     data() {
         return {
@@ -154,6 +184,8 @@ export default {
             picked: 'Upper-Intermediate',
             checker_test_lang: '',
             checker_home_lang: '',
+            needed_account_logo: '111',
+            userName: this.userName,
         }
     },
 
@@ -183,8 +215,11 @@ export default {
 
         },
 
-    },
+        checkinRegisteredUsers() {
+            console.log('Зарегестрирован');
+        },
 
+    },
 
 }
 
@@ -192,17 +227,17 @@ export default {
 
 <style scoped>
 
-dialog {
-    background: rgba(255, 255, 255, 0.7);
-    width: 270px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    top: 290px;
-    left: 320px;
-}
-
 .font {
     font-family: Mulish, sans-serif;
 }
+
+.multiplayer-button {
+    margin: auto;
+    position: absolute;
+    left: 320px;
+    top: 360px;
+
+}
+
 
 </style>

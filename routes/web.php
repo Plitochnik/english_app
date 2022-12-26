@@ -3,28 +3,10 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\TestsAlgorithms\WordsCheckController;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
-Route::get('/signin', [IndexController::class, 'signin'])->name('index.signin');
-
-Route::get('/', [IndexController::class, 'signup'])->name('index.signup');
-
-Route::get('/signup', [IndexController::class, 'signup'])->name('index.signup');
-
-Route::get('/parameters', [IndexController::class, 'parameters'])->name('index.parameters');
-
-Route::post('/parameters', [WordsCheckController::class, 'manageWords']);
-
-Route::post('/test', [WordsCheckController::class, 'manageWords'])->name('test.process');
-
-Route::get('/test', [IndexController::class, 'testProcess'])->name('test.process');
-
-require __DIR__.'/auth.php';
-
-Route::get('/home', function () {
+Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -33,6 +15,20 @@ Route::get('/home', function () {
     ]);
 });
 
+Route::get('/parameters', [IndexController::class, 'parameters'])
+    ->name('index.parameters');
+
+Route::post('/test', [WordsCheckController::class, 'manageWords']);
+
+Route::get('/profile', [IndexController::class, 'profile'])
+    ->name('profile');
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+// проверка для перехода на защищенные роуты
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -44,4 +40,5 @@ Route::middleware([
 });
 
 
-// Auth::routes();
+//require __DIR__ . '/auth.php';
+

@@ -3,28 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
     public function parameters()
     {
-        return inertia('Form/ParamForm');
+        if (isset(Auth::user()->name)) {
+            $user_name = Auth::user()->name;
+        } else {
+            $user_name = 0;
+        }
+
+        return inertia('Form/ParamForm', compact('user_name'));
     }
 
-    public function signin()
+    public function profile()
     {
-        return inertia('Register/Sign-In');
+        return inertia('UserProfile/Profile');
     }
-
-    public function testProcess()
-    {
-        return inertia('Test/Test');
-    }
-
-    public function signup()
-    {
-        return inertia('Register/Sign-up');
-    }
-
 
 }
