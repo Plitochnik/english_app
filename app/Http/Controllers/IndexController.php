@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DashboardRequest;
+use App\Models\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
-    public function parameters()
+    public function getUserStatus()
     {
         if (isset(Auth::user()->name)) {
             $user_name = Auth::user()->name;
@@ -15,7 +17,19 @@ class IndexController extends Controller
             $user_name = 0;
         }
 
+        return $user_name;
+    }
+
+    public function parameters()
+    {
+        $user_name = $this->getUserStatus();
+
         return inertia('Form/ParamForm', compact('user_name'));
+    }
+
+    public function testProcess()
+    {
+        return inertia('Test/Test');
     }
 
     public function profile()

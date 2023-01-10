@@ -1,32 +1,28 @@
 <?php
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\TestsAlgorithms\WordsCheckController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
 
 Route::get('/parameters', [IndexController::class, 'parameters'])
-    ->name('index.parameters');
+    ->name('parameters');
+
 
 Route::post('/test', [WordsCheckController::class, 'manageWords']);
+Route::get('/test', [IndexController::class, 'testProcess']);
 
 Route::get('/profile', [IndexController::class, 'profile'])
     ->name('profile');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+//Route::post('/dashboard', [IndexController::class, 'create'])
+//    ->middleware(['auth', 'verified']);
 
 // проверка для перехода на защищенные роуты
 Route::middleware([
@@ -34,11 +30,14 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/about', function () {
+        return Inertia::render('About');
+    })->name('about');
+
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::post('/dashboard', [DashboardController::class, 'create']);
+    Route::get('/dashboard/{dashboard}', [DashboardController::class, 'details'])->name('dashboard.details');
+
 });
 
-
 //require __DIR__ . '/auth.php';
-

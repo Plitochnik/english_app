@@ -1,7 +1,5 @@
 <template>
 
-    <HeaderLayout></HeaderLayout>
-
     <sidebar :user-name="user_name"></sidebar>
 
     <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
@@ -17,10 +15,10 @@
                     <form @submit.prevent="submit">
                         <div class="products">
                             <div class="form">
-                                <div class="text-red-600">
+                                <div class="mt-2 text-red-600">
                                     {{ checker_home_lang }}
                                 </div>
-                                <div class="mt-3 font">
+                                <div class="mt-1 font">
                                     <div>
                                         Ваш язык: {{ home_language }}
                                     </div>
@@ -80,7 +78,6 @@
                                         <div v-else>
                                             <Link
                                                 href="/login"
-                                                :data="{ needed_account_logo }"
                                                 type="submit"
                                                 class="px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex">
                                                 <img src="../../../../public/icons/multiplay_button/icon.png">
@@ -155,19 +152,19 @@
 <script>
 
 import {Link} from "@inertiajs/inertia-vue3";
-import HeaderLayout from "../HeaderLayout.vue";
 import "../../../../public/cssform/select.scss";
 import Login from "../Auth/Login.vue";
 import Sidebar from "../Sidebar.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
-import Welcome from "@/Pages/Welcome.vue";
+import DropdownLink from "../../Components/DropdownLink.vue";
+import Dropdown from "../../Components/Dropdown.vue";
 
 export default {
 
     name: "ParamForm",
 
     components: {
-        HeaderLayout,
+        Dropdown,
+        DropdownLink,
         Link,
         Login,
         Sidebar,
@@ -184,32 +181,36 @@ export default {
             picked: 'Upper-Intermediate',
             checker_test_lang: '',
             checker_home_lang: '',
-            needed_account_logo: '111',
-            userName: this.userName,
         }
     },
 
     methods: {
         submit() {
-            if (this.home_language === '') {
+            if (this.home_language === '' && this.test_language !== '') {
                 this.checker_home_lang = 'Выберете ваш родной язык'
             } else {
                 this.checker_home_lang = ''
             }
 
-            if (this.test_language === '') {
+            if (this.test_language === '' && this.home_language !== '') {
                 this.checker_test_lang = 'Выберете язык на который вы хотите пройти тест'
             } else {
                 this.checker_test_lang = ''
             }
 
-            if (this.test_language === this.home_language) {
+            if (this.test_language === '' && this.home_language === '') {
+                this.checker_home_lang = 'Выберете пожалуйста языки'
+            }
+
+            if (this.test_language === this.home_language &&
+                this.home_language !== ''
+                && this.test_language !== '') {
                 this.checker_home_lang = 'Языки должны быть разные'
             } else {
                 this.$inertia.post('/test', {
                     home_language: this.home_language,
                     test_language: this.test_language,
-                    picked: this.picked
+                    picked: this.picked,
                 })
             }
 
@@ -236,7 +237,6 @@ export default {
     position: absolute;
     left: 320px;
     top: 360px;
-
 }
 
 

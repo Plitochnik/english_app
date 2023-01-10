@@ -1,6 +1,5 @@
 <template>
-
-    <div v-if="ready_words_for_test">
+    <div v-if="typeof ready_words_for_test">
         <div v-if="is_start_animation === true">
             <div class="countdown">
                 <div class="number">
@@ -68,8 +67,8 @@
                 </div>
             </div>
             <div v-else>
-                <h1>True: {{ true_user_answers }}</h1>
-                <h1>False: {{ false_user_answers }}</h1>
+                <h1>True: {{ user_points.true_answers }}</h1>
+                <h1>False: {{ user_points.false_answers }}</h1>
             </div>
         </div>
     </div>
@@ -77,7 +76,7 @@
         <h3 class="font">
             Вернитесь в меню и выберете параметры теста
         </h3>
-        <Link :href="route('index.parameters')" class="back-to-param u-font-arial">
+        <Link :href="route('parameters')" class="back-to-param u-font-arial">
             <u>
                 Вернуться в меню
             </u>
@@ -92,10 +91,10 @@
 
 import {Link} from "@inertiajs/inertia-vue3";
 import HeaderLayout from "../../Pages/HeaderLayout.vue";
+import "../../../../public/cssform/select.scss";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
 import "../../../../public/DuringTest/Timer/Timer.css";
-
 
 export default {
 
@@ -109,56 +108,80 @@ export default {
     props: [
         'ready_words_for_test',
         'test_words',
+        'chosen_languages',
+        'user_status',
     ],
 
     data() {
         return {
+            count: 0,
             test_process: false,
             is_start_animation: true,
             answers: [],
-            true_user_answers: 0,
-            false_user_answers: 0,
-            switch_words: '',
-            timer_to_check_answer: '',
-            user_answer: '',
+            user_points: {
+                true_answers: 0,
+                false_answers: 0,
+            },
+            interval_to_check_answer_function: null,
+            interval_to_show_words_function: null,
+            user_answer: null,
             is_test_finished: false,
             stop_animation: true,
+            user_result_in_percents: null,
+            values_for_statistic: {
+                true_ids: '',
+                true_count: '1,',
+                false_count: '0,',
+                test_word: '',
+                user_answer: '',
+                coma: ',',
+            },
         }
     },
 
-    methods: {
+    created: function () {
+        setTimeout(() => {
+            this.test_process = true
+            this.is_start_animation = false
+            this.showWords()
+            this.check_one_answer()
+        }, 4000)
+    },
 
+    methods: {
         check_pressed_button(which_button) {
             this.user_answer = which_button
+            this.values_for_statistic.user_answer += this.ready_words_for_test[0][this.test_words[0]][which_button] + this.values_for_statistic.coma
         },
 
         check_one_answer() {
-            this.timer_to_check_answer = setInterval(() => {
+            this.interval_to_check_answer_function = setInterval(() => {
+                this.count++
+                // if (this.count === 10) {
+                //     this.stopInterval()
+                // }
+
                 if (this.user_answer === this.ready_words_for_test[0][this.test_words[0]][5]) {
-                    this.true_user_answers++
+                    this.values_for_statistic.true_ids += this.values_for_statistic.true_count
+
+                    this.user_points.true_answers++
                 } else {
-                    this.false_user_answers++
+                    this.values_for_statistic.true_ids += this.values_for_statistic.false_count
+
+                    this.user_points.false_answers++
                 }
 
-                this.user_answer = ''
+                if (this.user_answer === null) {
+                    this.values_for_statistic.user_answer += '0,'
+                }
 
-            }, 9900)
-        },
+                this.user_answer = null
 
-        stopInterval() {
-            clearInterval()
-            this.test_process = false
-            this.switch_words = null
-            this.is_test_finished = true
-            this.timer_to_check_answer = null
-
-            setTimeout(() => {
-                this.stop_animation = false
-            }, 1000)
+            }, 900)
         },
 
         showWords() {
-            this.switch_words = setInterval(() => {
+            this.interval_to_show_words_function = setInterval(() => {
                 if (this.test_words.length === 0) {
                     this.stopInterval()
                 }
@@ -166,18 +189,47 @@ export default {
                 this.ready_words_for_test.shift()
                 this.test_words.shift()
 
-            }, 10000)
+            }, 1000)
         },
 
-    },
+        stopInterval() {
+            this.test_process = false
+            this.is_test_finished = true
+            clearInterval(this.interval_to_show_words_function);
+            clearInterval(this.interval_to_check_answer_function);
 
-    created: function () {
-        setTimeout(() => {
-            this.test_process = true
-            this.is_start_animation = false
-            this.check_one_answer()
-            this.showWords()
-        }, 4000)
+            this.calculateUserResult()
+
+            this.values_for_statistic.true_ids = this.values_for_statistic.true_ids.slice(0, -1);
+            this.values_for_statistic.user_answer = this.values_for_statistic.true_ids.slice(0, -1);
+            console.log(this.values_for_statistic.user_answer)
+            console.log(this.true_ids)
+
+            setTimeout(() => {
+                this.stop_animation = false
+                this.sendRequestToDashboard()
+            }, 1000)
+        },
+
+        calculateUserResult() {
+            this.user_result_in_percents = 10 * this.user_points.true_answers
+        },
+
+        sendRequestToDashboard() {
+            if (this.user_status !== null) {
+                this.$inertia.post('/dashboard', {
+                    user_id: this.user_status,
+                    percent: this.user_result_in_percents,
+                    test_word: this.values_for_statistic.test_word,
+                    user_answer: this.values_for_statistic.user_answer,
+                    true_ids: this.values_for_statistic.true_ids,
+                    home_lang: this.chosen_languages.home_language,
+                    test_lang: this.chosen_languages.test_language,
+                    true_answers: this.user_points.true_answers,
+                    false_answers: this.user_points.false_answers,
+                })
+            }
+        },
 
     },
 

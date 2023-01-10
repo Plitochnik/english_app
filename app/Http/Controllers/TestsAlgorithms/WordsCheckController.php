@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\TestsAlgorithms;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRedirectRequest;
 use App\Http\Requests\ParamFormRequest;
 use App\Models\Words;
 use Illuminate\Http\Request;
@@ -12,13 +11,32 @@ use JetBrains\PhpStorm\NoReturn;
 
 class WordsCheckController extends Controller
 {
-    public function manageWords(ParamFormRequest $request): \Inertia\Response|\Inertia\ResponseFactory
-    {
-        $posts = $request->validated();
 
-        $home_language = mb_strtolower($posts['home_language']);
-        $test_language = mb_strtolower($posts['test_language']);
-        $picked = mb_strtolower($posts['picked']);
+    public function checkAuthUser()
+    {
+        $user_status = auth()->user();
+
+        if ($user_status !== null) {
+            $user_status = auth()->user()->id;
+        }
+
+        return $user_status;
+    }
+
+    public function getChosenLanguagesForDashboardStatistic(ParamFormRequest $request)
+    {
+        $chosen_languages = $request->validated();
+
+        return $chosen_languages;
+    }
+
+    public function manageWords(ParamFormRequest $request): \Inertia\Response
+    {
+        $chosen_languages = $this->getChosenLanguagesForDashboardStatistic($request);
+
+        $home_language = mb_strtolower($chosen_languages['home_language']);
+        $test_language = mb_strtolower($chosen_languages['test_language']);
+        $picked = mb_strtolower($chosen_languages['picked']);
 
         function getUsersTestLevel($picked): array
         {
@@ -50,32 +68,32 @@ class WordsCheckController extends Controller
             return $random_true_value;
         }
 
-        $random_true_value = createRandomValuesForTestWordsAndAnswers($picked_level);
+        $random_true_values = createRandomValuesForTestWordsAndAnswers($picked_level);
 
-        function getTestWords($picked_level, $test_language, $random_true_value): array
+        function getTestWords($picked_level, $test_language, $random_true_values): array
         {
             $test_words = [];
 
             for ($i = 0; $i <= 9; $i++) {
-                $test_words[] = mb_convert_case(Words::find($random_true_value[$i])->$test_language, MB_CASE_TITLE);
+                $test_words[] = mb_convert_case(Words::find($random_true_values[$i])->$test_language, MB_CASE_TITLE);
             }
 
             return $test_words;
         }
 
-        function getTrueAnswers($random_true_value, $home_language): array
+        function getTrueAnswers($random_true_values, $home_language): array
         {
             $true_answers = [];
 
             for ($i = 0; $i <= 9; $i++) {
-                $true_answers[$i] = mb_convert_case(Words::find($random_true_value[$i])->$home_language, MB_CASE_TITLE);
+                $true_answers[$i] = mb_convert_case(Words::find($random_true_values[$i])->$home_language, MB_CASE_TITLE);
             }
 
             return $true_answers;
         }
 
-        $test_words = getTestWords($picked_level, $test_language, $random_true_value);
-        $true_answers = getTrueAnswers($random_true_value, $home_language);
+        $test_words = getTestWords($picked_level, $test_language, $random_true_values);
+        $true_answers = getTrueAnswers($random_true_values, $home_language);
 
         function mergeTrueWordToFalseArrayAnswerList($test_words, $true_answers, $picked_level, $home_language): array
         {
@@ -119,7 +137,9 @@ class WordsCheckController extends Controller
 
         $ready_words_for_test = getKeyOfCorrectAnswer($ready_words_for_test, $test_words, $true_answers);
 
-        return Inertia::render('Test/Test', compact('ready_words_for_test', 'test_words'));
+        $user_status = $this->checkAuthUser();
+
+        return inertia('Test/Test', compact('ready_words_for_test', 'test_words', 'chosen_languages', 'user_status'));
     }
 
 
