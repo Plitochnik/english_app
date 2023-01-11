@@ -1,6 +1,6 @@
 <template>
 
-    <section class="bg-white py-20 lg:py-[120px]">
+    <section class="py-20 lg:py-[120px]">
         <div class="container mx-auto">
             <div class="-mx-4 flex flex-wrap">
                 <div class="w-full px-4">
@@ -50,7 +50,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(statistic) in userStatistic">
+                            <tr v-for="statistic in userStatistic">
                                 <td class="text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium">
                                     <div v-if="statistic.percent <= 30" class="text-red-600">
                                         {{ statistic.percent }} %
@@ -66,10 +66,10 @@
                                     {{ statistic.home_lang }} -> {{ statistic.test_lang }}
                                 </td>
                                 <td class="text-dark border-b border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium">
-                                    {{ statistic.true_answers }} / {{ statistic.false_answers }}
+                                    {{ statistic.true_answers }} / 10
                                 </td>
                                 <td class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium">
-                                    Дата
+                                    {{ moment(statistic.created_at).format("DD-MM-YYYY") }}
                                 </td>
                                 <td class="text-dark border-b border-r border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium">
                                     <Link :href="route('dashboard.details', statistic.id)"
@@ -90,6 +90,7 @@
 
 <script>
 import {Link} from "@inertiajs/inertia-vue3";
+import moment from "moment";
 
 export default {
     name: "Table",
@@ -98,9 +99,14 @@ export default {
         Link,
     },
 
+    data() {
+        return {
+            moment: moment
+        }
+    },
+
     props: [
         'userStatistic',
-        'userData',
     ],
 
 

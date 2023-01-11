@@ -28,6 +28,7 @@ class DashboardRequest extends FormRequest
             'percent' => 'required|integer',
             'test_word' => 'required|string',
             'user_answer' => 'required|string',
+            'true_answer' => 'required|string',
             'true_ids' => 'required|string',
             'home_lang' => 'required|string',
             'test_lang' => 'required|string',

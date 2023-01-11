@@ -139,7 +139,7 @@ class WordsCheckController extends Controller
 
         $user_status = $this->checkAuthUser();
 
-        return inertia('Test/Test', compact('ready_words_for_test', 'test_words', 'chosen_languages', 'user_status'));
+        return inertia('Test/Test', compact('ready_words_for_test', 'test_words', 'true_answers', 'chosen_languages', 'user_status'));
     }
 
 

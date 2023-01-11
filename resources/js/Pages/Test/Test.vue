@@ -108,6 +108,7 @@ export default {
     props: [
         'ready_words_for_test',
         'test_words',
+        'true_answers',
         'chosen_languages',
         'user_status',
     ],
@@ -122,6 +123,7 @@ export default {
                 true_answers: 0,
                 false_answers: 0,
             },
+            pressed_button: null,
             interval_to_check_answer_function: null,
             interval_to_show_words_function: null,
             user_answer: null,
@@ -132,7 +134,8 @@ export default {
                 true_ids: '',
                 true_count: '1,',
                 false_count: '0,',
-                test_word: '',
+                test_word: null,
+                true_answer: '',
                 user_answer: '',
                 coma: ',',
             },
@@ -145,21 +148,24 @@ export default {
             this.is_start_animation = false
             this.showWords()
             this.check_one_answer()
+
+            this.values_for_statistic.test_word = this.test_words.join()
+            this.values_for_statistic.true_answer = this.true_answers.join()
         }, 4000)
     },
 
     methods: {
         check_pressed_button(which_button) {
+            this.pressed_button = which_button
             this.user_answer = which_button
-            this.values_for_statistic.user_answer += this.ready_words_for_test[0][this.test_words[0]][which_button] + this.values_for_statistic.coma
         },
 
         check_one_answer() {
             this.interval_to_check_answer_function = setInterval(() => {
-                this.count++
-                // if (this.count === 10) {
-                //     this.stopInterval()
-                // }
+                if (this.count === 10) {
+                    this.stopInterval()
+                    return
+                }
 
                 if (this.user_answer === this.ready_words_for_test[0][this.test_words[0]][5]) {
                     this.values_for_statistic.true_ids += this.values_for_statistic.true_count
@@ -175,20 +181,21 @@ export default {
                     this.values_for_statistic.user_answer += '0,'
                 }
 
+                if (this.pressed_button !== null) {
+                    this.values_for_statistic.user_answer += this.ready_words_for_test[0][this.test_words[0]][this.pressed_button] + this.values_for_statistic.coma
+                }
+
+                this.pressed_button = null
                 this.user_answer = null
 
+                this.count++
             }, 900)
         },
 
         showWords() {
             this.interval_to_show_words_function = setInterval(() => {
-                if (this.test_words.length === 0) {
-                    this.stopInterval()
-                }
-
                 this.ready_words_for_test.shift()
                 this.test_words.shift()
-
             }, 1000)
         },
 
@@ -199,11 +206,6 @@ export default {
             clearInterval(this.interval_to_check_answer_function);
 
             this.calculateUserResult()
-
-            this.values_for_statistic.true_ids = this.values_for_statistic.true_ids.slice(0, -1);
-            this.values_for_statistic.user_answer = this.values_for_statistic.true_ids.slice(0, -1);
-            console.log(this.values_for_statistic.user_answer)
-            console.log(this.true_ids)
 
             setTimeout(() => {
                 this.stop_animation = false
@@ -222,6 +224,7 @@ export default {
                     percent: this.user_result_in_percents,
                     test_word: this.values_for_statistic.test_word,
                     user_answer: this.values_for_statistic.user_answer,
+                    true_answer: this.values_for_statistic.true_answer,
                     true_ids: this.values_for_statistic.true_ids,
                     home_lang: this.chosen_languages.home_language,
                     test_lang: this.chosen_languages.test_language,

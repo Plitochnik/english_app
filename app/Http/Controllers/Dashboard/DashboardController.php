@@ -30,13 +30,13 @@ class DashboardController extends Controller
 
         $userStatistic = $user_data->where('user_id', $user_id);
 
-        return inertia('Statistic/Dashboard', compact('userName', 'userStatistic', 'user_data'));
+        return inertia('Statistic/Dashboard', compact('userName', 'userStatistic'));
     }
 
     public function create(DashboardRequest $request)
     {
         $users_test_info = $request->validated();
-        dd($users_test_info);
+
         Dashboard::create($users_test_info);
     }
 
@@ -50,17 +50,25 @@ class DashboardController extends Controller
 
         $test_details = $test_details->find($id);
 
-        $details = $this->getDetailsOfSpecificTest($test_details->words_ids, $test_details->true_ids);
+        $details = $this->getDetailsOfSpecificTest($test_details->test_word, $test_details->true_answer, $test_details->user_answer, $test_details->true_ids);
 
-        return inertia('Statistic/ViewMore', compact('test_details'));
+        $test_word = $details[0];
+        $true_answer = $details[1];
+        $user_answer = $details[2];
+        $true_ids = $details[3];
+        $true_counts = $test_details->true_answers;
+
+        return inertia('Statistic/ViewMore', compact('test_word', 'true_answer', 'user_answer', 'true_ids', 'true_counts'));
     }
 
-    public function getDetailsOfSpecificTest($words_ids, $true_ids)
+    public function getDetailsOfSpecificTest($test_word, $true_answer, $user_answer, $true_ids): array
     {
-        $words_ids = explode(',', $words_ids);
-        $true_ids = explode(',', $true_ids);
+        $test_word = explode(',', $test_word);
+        $true_answer = explode(',', $true_answer);
+        $user_answer = explode(',', substr($user_answer, 0, -1));
+        $true_ids = explode(',', substr($true_ids, 0, -1));
 
-        return array($words_ids, $true_ids);
+        return array($test_word, $true_answer, $user_answer, $true_ids);
     }
 
 
