@@ -6,6 +6,7 @@ use App\Http\Requests\DashboardRequest;
 use App\Models\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class IndexController extends Controller
 {
@@ -32,9 +33,10 @@ class IndexController extends Controller
         return inertia('Test/Test');
     }
 
-    public function profile()
+
+    public function tableTest()
     {
-        return inertia('UserProfile/Profile');
+        return Inertia::render('TableTest');
     }
 
 }

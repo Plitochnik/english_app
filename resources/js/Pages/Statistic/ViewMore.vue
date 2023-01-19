@@ -1,4 +1,7 @@
 <template>
+
+    <meta name="viewport" content="width=800">
+
     <section class=" py-20 lg:py-[110px]">
         <div class="container mx-auto">
             <div class="mx-8 flex flex-wrap">

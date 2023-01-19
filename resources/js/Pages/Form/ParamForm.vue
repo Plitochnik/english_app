@@ -1,11 +1,13 @@
 <template>
 
-    <sidebar :user-name="user_name"></sidebar>
+    <meta name="viewport" content="width=800">
 
-    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
+<!--    <sidebar :user-name="user_name"></sidebar>-->
+    <table-test :user-name="user_name"></table-test>
+
+    <div class="param min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
             </div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
@@ -157,6 +159,7 @@ import Login from "../Auth/Login.vue";
 import Sidebar from "../Sidebar.vue";
 import DropdownLink from "../../Components/DropdownLink.vue";
 import Dropdown from "../../Components/Dropdown.vue";
+import TableTest from "../../Pages/Sidebar/TableTest.vue";
 
 export default {
 
@@ -168,6 +171,7 @@ export default {
         Link,
         Login,
         Sidebar,
+        TableTest,
     },
 
     props: [
@@ -232,12 +236,20 @@ export default {
     font-family: Mulish, sans-serif;
 }
 
+.param {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+
 .multiplayer-button {
     margin: auto;
     position: absolute;
     left: 320px;
     top: 360px;
 }
+
 
 
 </style>

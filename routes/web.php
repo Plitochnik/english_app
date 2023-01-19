@@ -18,8 +18,7 @@ Route::get('/parameters', [IndexController::class, 'parameters'])
 Route::post('/test', [WordsCheckController::class, 'manageWords']);
 Route::get('/test', [IndexController::class, 'testProcess']);
 
-Route::get('/profile', [IndexController::class, 'profile'])
-    ->name('profile');
+Route::get('/tabletest', [IndexController::class, 'tableTest']);
 
 //Route::post('/dashboard', [IndexController::class, 'create'])
 //    ->middleware(['auth', 'verified']);

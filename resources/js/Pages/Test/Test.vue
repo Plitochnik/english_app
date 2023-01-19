@@ -1,5 +1,5 @@
 <template>
-    <div v-if="typeof ready_words_for_test">
+    <div v-if="ready_words_for_test">
         <div v-if="is_start_animation === true">
             <div class="countdown">
                 <div class="number">
@@ -20,44 +20,40 @@
             </div>
         </div>
         <div v-if="test_process === true" class="userform">
-            <p class="howtranslate">Как переводится слово:</p>
             <div class="holder">
-                <div class="forma">
-                    <p class="testword">{{ test_words[0] }}</p>
-                    <form id="myForm" class="testbuttons">
-                        <div>
-                            <button @click.prevent="check_pressed_button(0)" id="button_1" type="button"
-                                    class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                                {{ ready_words_for_test[0][test_words[0]][0] }}
-                            </button>
-                            <button @click.prevent="check_pressed_button(1)" id="button_2" type="button"
-                                    class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                                {{ ready_words_for_test[0][test_words[0]][1] }}
-                            </button>
-                            <button @click.prevent="check_pressed_button(2)" id="button_3" type="button"
-                                    class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                                {{ ready_words_for_test[0][test_words[0]][2] }}
-                            </button>
-                        </div>
-                        <div>
-                            <button @click.prevent="check_pressed_button(3)" id="button_4" type="button"
-                                    class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                                {{ ready_words_for_test[0][test_words[0]][3] }}
-                            </button>
-                            <button @click.prevent="check_pressed_button(4)" id="button_5" type="button"
-                                    class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                                {{ ready_words_for_test[0][test_words[0]][4] }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div>
                 <div class="timer">
                     <div class="numero_counting_wrapper">
                         <div class="numero_shape"></div>
                     </div>
                 </div>
+                <p class="howtranslate">Как переводится слово:</p>
+                <p class="testword">{{ test_words[0] }}</p>
+                <form id="myForm" class="testbuttons">
+                    <div class="buttonsline_1">
+                        <button id="button_1" type="button"
+                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                            {{ ready_words_for_test[0][test_words[0]][0] }}
+                        </button>
+                        <button id="button_2" type="button"
+                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                            {{ ready_words_for_test[0][test_words[0]][1] }}
+                        </button>
+                        <button id="button_3" type="button"
+                                class="element_3 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                            {{ ready_words_for_test[0][test_words[0]][2] }}
+                        </button>
+                    </div>
+                    <div class="buttonsline_2">
+                        <button id="button_4" type="button"
+                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                            {{ ready_words_for_test[0][test_words[0]][3] }}
+                        </button>
+                        <button id="button_5" type="button"
+                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                            {{ ready_words_for_test[0][test_words[0]][4] }}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         <div v-if="is_test_finished === true">
@@ -87,10 +83,7 @@
 </template>
 
 <script>
-
-
 import {Link} from "@inertiajs/inertia-vue3";
-import HeaderLayout from "../../Pages/HeaderLayout.vue";
 import "../../../../public/cssform/select.scss";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
@@ -101,7 +94,6 @@ export default {
     name: "Test",
 
     components: {
-        HeaderLayout,
         Link,
     },
 
@@ -243,6 +235,7 @@ export default {
 
 <style scoped>
 
+
 .font {
     display: flex;
     justify-content: center;
@@ -261,74 +254,60 @@ export default {
 }
 
 .holder {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.forma {
     background-color: white;
-    width: 700px;
-    height: 350px;
-    display: flex;
     border-radius: 20px;
-}
-
-.testword {
-    display: block;
-    color: black;
-    font-family: Mulish, sans-serif;
-    font-size: 37px;
-    margin: auto;
+    max-width: 700px;
+    height: 390px;
+    margin: 0 auto;
+    text-align: center;
     position: relative;
-    top: -130px;
-    left: 180px;
+    top: 150px;
+    left: 0;
+    right: 0;
 }
 
 .howtranslate {
     font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    top: 370px;
+    display: inline-block;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
 }
 
-.timer {
-    display: block;
-    position: relative;
-    top: -650px;
-    right: 290px;
+.testword {
+    display: inline-block;
+    color: black;
+    font-family: Mulish, sans-serif;
+    font-size: 37px;
+    position: absolute;
+    margin: 20px 0px 0px 0px;
+    top: 15px;
+    left: 0;
+    right: 0;
 }
 
 .testbuttons {
-    display: block;
+    position: absolute;
+    top: 210px;
+    left: 0;
+    right: 0;
 }
 
-.elemline_1 {
-    display: inline-block;
-    position: relative;
-    top: 240px;
-    right: 180px;
-    margin-bottom: auto;
+.testbuttons div {
+    margin: 10px 10px 10px 10px;
+//position: relative;
 }
 
-.elemline_2 {
-    display: inline-block;
-    position: relative;
-    top: 245px;
-    right: 130px;
-    margin-bottom: auto;
+.element_3 {
+    margin: 10px 0px 0px 0px;
 }
 
-.elemline_1 button {
-    display: block;
-}
+.timer {
+    position: absolute;
+    top: 25px;
+    left: 8px;
 
-.elemline_2 button {
-    display: block;
 }
 
 
