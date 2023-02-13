@@ -35,14 +35,9 @@
             </a>
         </ul>
     </div>
-
-    <!--    =======================================-->
-
 </template>
 
 <script setup>
-
-import DropdownLink from "../../Components/DropdownLink.vue";
 
 const logout = () => {
     Inertia.post(route('logout'));
@@ -72,6 +67,5 @@ export default {
 </script>
 
 <style scoped>
-
 
 </style>

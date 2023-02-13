@@ -5,19 +5,24 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.1",
         "ext-dom": "20031129",
         "ext-libxml": "*",
+        "ext-pdo": "*",
+        "beyondcode/laravel-websockets": "^1.13",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.5",
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.12",
+        "laravel/octane": "^1.4",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
+        "pusher/pusher-php-server": "7.0",
         "spatie/laravel-google-fonts": "^1.2",
-        "tightenco/ziggy": "^1.0"
+        "swoole/ide-helper": "^5.0",
+        "tightenco/ziggy": "^1.5"
     },
 
     "require-dev": {

@@ -221,10 +221,21 @@ export default {
         },
 
         checkinRegisteredUsers() {
-            console.log('Зарегестрирован');
+            Echo.channel('hello')
+                .listen('Hello', (e) => {
+                    console.log(e)
+                })
+            // console.log('Зарегестрирован');
         },
 
     },
+
+    mounted() {
+        // Echo.channel('hello')
+        //     .listen('Hello', (e) => {
+        //         console.log(e)
+        //     })
+    }
 
 }
 

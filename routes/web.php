@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
+Route::get('/', [IndexController::class, 'welcomePage'])
+    ->name('welcome');
+
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
@@ -14,14 +17,13 @@ Route::get('/about', function () {
 Route::get('/parameters', [IndexController::class, 'parameters'])
     ->name('parameters');
 
-
 Route::post('/test', [WordsCheckController::class, 'manageWords']);
 Route::get('/test', [IndexController::class, 'testProcess']);
 
 Route::get('/tabletest', [IndexController::class, 'tableTest']);
 
-//Route::post('/dashboard', [IndexController::class, 'create'])
-//    ->middleware(['auth', 'verified']);
+// Route::post('/dashboard', [IndexController::class, 'create'])
+//     ->middleware(['auth', 'verified']);
 
 // проверка для перехода на защищенные роуты
 Route::middleware([
@@ -39,4 +41,8 @@ Route::middleware([
 
 });
 
-//require __DIR__ . '/auth.php';
+Route::get('/playground', function () {
+    event(new \App\Events\Hello());
+
+    return null;
+});

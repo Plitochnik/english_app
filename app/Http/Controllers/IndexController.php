@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DashboardRequest;
-use App\Models\Dashboard;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Swoole\WebSocket\Server;
+
 
 class IndexController extends Controller
 {
+    public function welcomePage()
+    {
+        return Inertia::render('Welcome');
+    }
+
     public function getUserStatus()
     {
         if (isset(Auth::user()->name)) {
@@ -32,7 +38,6 @@ class IndexController extends Controller
     {
         return inertia('Test/Test');
     }
-
 
     public function tableTest()
     {
