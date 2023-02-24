@@ -30,6 +30,11 @@ class Hello implements ShouldBroadcast
             'London' => 'На месте',
         ];
     }
+
+    public function broadcastAs()
+    {
+        return 'chat.message';
+    }
     /**
      * Get the channels the event should broadcast on.
      *
@@ -37,6 +42,6 @@ class Hello implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('hello');
+        return new PrivateChannel('private.chat.1');
     }
 }

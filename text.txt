@@ -1,0 +1,60 @@
+  GET|HEAD  / .................................................................. welcome › IndexController@welcomePage
+  POST      _ignition/execute-solution . ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+  GET|HEAD  _ignition/health-check ............. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+  POST      _ignition/update-config .......... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+  GET|HEAD  api/user .................................................................................................
+  GET|POST|HEAD broadcasting/auth ......................... Illuminate\Broadcasting › BroadcastController@authenticate
+  POST      chat-message .............................................................................................
+  PUT       current-team ...................... current-team.update › Laravel\Jetstream › CurrentTeamController@update
+  GET|HEAD  dashboard ............................................ dashboard › Dashboard\DashboardController@dashboard
+  POST      dashboard ........................................................... Dashboard\DashboardController@create
+  GET|HEAD  dashboard/{dashboard} .......................... dashboard.details › Dashboard\DashboardController@details
+  GET|HEAD  forgot-password .................. password.request › Laravel\Fortify › PasswordResetLinkController@create
+  POST      forgot-password ..................... password.email › Laravel\Fortify › PasswordResetLinkController@store
+  GET|HEAD  laravel-websockets .......................................... BeyondCode\LaravelWebSockets › ShowDashboard
+  GET|HEAD  laravel-websockets/api/{appId}/statistics BeyondCode\LaravelWebSockets › DashboardApiController@getStatis…
+  POST      laravel-websockets/auth ............................. BeyondCode\LaravelWebSockets › AuthenticateDashboard
+  POST      laravel-websockets/event ...................................... BeyondCode\LaravelWebSockets › SendMessage
+  POST      laravel-websockets/statistics .. BeyondCode\LaravelWebSockets › WebSocketStatisticsEntriesController@store
+  GET|HEAD  login .................................... login › Laravel\Fortify › AuthenticatedSessionController@create
+  POST      login ............................................. Laravel\Fortify › AuthenticatedSessionController@store
+  POST      logout ................................. logout › Laravel\Fortify › AuthenticatedSessionController@destroy
+  GET|HEAD  online_test ................................................................... IndexController@onlineTest
+  GET|HEAD  parameters ....................................................... parameters › IndexController@parameters
+  GET|HEAD  register .................................... register › Laravel\Fortify › RegisteredUserController@create
+  POST      register ................................................ Laravel\Fortify › RegisteredUserController@store
+  POST      reset-password ........................... password.update › Laravel\Fortify › NewPasswordController@store
+  GET|HEAD  reset-password/{token} ................... password.reset › Laravel\Fortify › NewPasswordController@create
+  GET|HEAD  sanctum/csrf-cookie .................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+  POST      single_test ............................................. TestsAlgorithms\WordsCheckController@manageWords
+  GET|HEAD  single_test .................................................................. IndexController@testProcess
+  GET|HEAD  tabletest ...................................................................... IndexController@tableTest
+  GET|HEAD  team-invitations/{invitation} team-invitations.accept › Laravel\Jetstream › TeamInvitationController@acce…
+  DELETE    team-invitations/{invitation} team-invitations.destroy › Laravel\Jetstream › TeamInvitationController@des…
+  POST      teams ............................................. teams.store › Laravel\Jetstream › TeamController@store
+  GET|HEAD  teams/create .................................... teams.create › Laravel\Jetstream › TeamController@create
+  GET|HEAD  teams/{team} ........................................ teams.show › Laravel\Jetstream › TeamController@show
+  PUT       teams/{team} .................................... teams.update › Laravel\Jetstream › TeamController@update
+  DELETE    teams/{team} .................................. teams.destroy › Laravel\Jetstream › TeamController@destroy
+  POST      teams/{team}/members ................. team-members.store › Laravel\Jetstream › TeamMemberController@store
+  PUT       teams/{team}/members/{user} ........ team-members.update › Laravel\Jetstream › TeamMemberController@update
+  DELETE    teams/{team}/members/{user} ...... team-members.destroy › Laravel\Jetstream › TeamMemberController@destroy
+  GET|HEAD  two-factor-challenge . two-factor.login › Laravel\Fortify › TwoFactorAuthenticatedSessionController@create
+  POST      two-factor-challenge ..................... Laravel\Fortify › TwoFactorAuthenticatedSessionController@store
+  DELETE    user ............................ current-user.destroy › Laravel\Jetstream › CurrentUserController@destroy
+  GET|HEAD  user/confirm-password ............................... Laravel\Fortify › ConfirmablePasswordController@show
+  POST      user/confirm-password ........... password.confirm › Laravel\Fortify › ConfirmablePasswordController@store
+  GET|HEAD  user/confirmed-password-status password.confirmation › Laravel\Fortify › ConfirmedPasswordStatusControlle…
+  POST      user/confirmed-two-factor-authentication two-factor.confirm › Laravel\Fortify › ConfirmedTwoFactorAuthent…
+  DELETE    user/other-browser-sessions other-browser-sessions.destroy › Laravel\Jetstream › OtherBrowserSessionsCont…
+  PUT       user/password ......................... user-password.update › Laravel\Fortify › PasswordController@update
+  GET|HEAD  user/profile ............................... profile.show › Laravel\Jetstream › UserProfileController@show
+  PUT       user/profile-information user-profile-information.update › Laravel\Fortify › ProfileInformationController…
+  DELETE    user/profile-photo ....... current-user-photo.destroy › Laravel\Jetstream › ProfilePhotoController@destroy
+  POST      user/two-factor-authentication two-factor.enable › Laravel\Fortify › TwoFactorAuthenticationController@st…
+  DELETE    user/two-factor-authentication two-factor.disable › Laravel\Fortify › TwoFactorAuthenticationController@d…
+  GET|HEAD  user/two-factor-qr-code ............ two-factor.qr-code › Laravel\Fortify › TwoFactorQrCodeController@show
+  GET|HEAD  user/two-factor-recovery-codes two-factor.recovery-codes › Laravel\Fortify › RecoveryCodeController@index
+  POST      user/two-factor-recovery-codes ............................ Laravel\Fortify › RecoveryCodeController@store
+  GET|HEAD  user/two-factor-secret-key ... two-factor.secret-key › Laravel\Fortify › TwoFactorSecretKeyController@show
+

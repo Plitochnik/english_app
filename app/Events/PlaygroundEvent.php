@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,35 +15,39 @@ class PlaygroundEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    private string $message;
+//    private User $user;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $message)
     {
-        //
+        $this->message = $message;
+//        $this->user = $user;
     }
 
     public function broadcastWith()
     {
         return [
-            'name' => 'Vitaliy',
-            'surname' => 'Mitriiev',
+            'message' => $this->message,
+//            'user' => $this->user->only(['name', 'email'])
         ];
-    }
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new Channel('public.playground.1');
     }
 
     public function broadcastAs()
     {
-        return 'Odessa';
+        return 'chat-message';
+    }
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return PresenceChannel
+     */
+    public function broadcastOn()
+    {
+        return new PresenceChannel('playground');
     }
 }

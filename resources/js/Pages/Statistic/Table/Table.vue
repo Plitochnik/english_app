@@ -5,30 +5,6 @@
             <div class="-mx-4 flex flex-wrap">
                 <div class="w-full px-4">
                     <div class="mytable max-w-full overflow-x-auto">
-                        <div class="mb-2 flex items-center">
-                            <button
-                                class="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                                href=" javascript:void(0)">
-                                <div
-                                    class="py-2 px-6 text-gray-600 hover:text-indigo-700 hover:bg-indigo-100 rounded-full ">
-                                    <p>Все</p>
-                                </div>
-                            </button>
-                            <a class="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                               href="javascript:void(0)">
-                                <div
-                                    class="py-2 px-6 text-gray-600 hover:text-indigo-700 hover:bg-indigo-100 rounded-full ">
-                                    <p>Онлайн</p>
-                                </div>
-                            </a>
-                            <a class="rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8"
-                               href="javascript:void(0)">
-                                <div
-                                    class="py-2 px-6 text-gray-600 hover:text-indigo-700 hover:bg-indigo-100 rounded-full ">
-                                    <p>Личные</p>
-                                </div>
-                            </a>
-                        </div>
                         <table class="w-full table-auto">
                             <thead>
                             <tr class="bg-blue-600 text-center">
@@ -69,7 +45,7 @@
                                     {{ statistic.true_answers }} / 10
                                 </td>
                                 <td class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium">
-                                    {{ moment(statistic.created_at).format("DD-MM-YYYY") }}
+                                    {{ moment(statistic.created_at).format("DD-MM-YYYY (HH:mm)") }}
                                 </td>
                                 <td class="text-dark border-b border-r border-[#E8E8E8] bg-white py-5 px-2 text-center text-base font-medium">
                                     <Link :href="route('dashboard.details', statistic.id)"

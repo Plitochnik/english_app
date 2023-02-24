@@ -12,12 +12,12 @@ use JetBrains\PhpStorm\NoReturn;
 class WordsCheckController extends Controller
 {
 
-    public function checkAuthUser()
+    public function checkAuthUser(): int|\Illuminate\Contracts\Auth\Authenticatable|null
     {
         $user_status = auth()->user();
 
         if ($user_status !== null) {
-            $user_status = auth()->user()->id;
+            $user_status = 1;
         }
 
         return $user_status;
@@ -139,7 +139,9 @@ class WordsCheckController extends Controller
 
         $user_status = $this->checkAuthUser();
 
-        return inertia('Test/Test', compact('ready_words_for_test', 'test_words', 'true_answers', 'chosen_languages', 'user_status'));
+        $user_ready_for_test = true;
+
+        return inertia('Test/Test', compact('user_ready_for_test', 'ready_words_for_test', 'test_words', 'true_answers', 'chosen_languages', 'user_status'));
     }
 
 

@@ -13,7 +13,12 @@ class IndexController extends Controller
 {
     public function welcomePage()
     {
-        return Inertia::render('Welcome');
+        return inertia('Welcome');
+    }
+
+    public function privatePage()
+    {
+        return Inertia::render('Private');
     }
 
     public function getUserStatus()
@@ -42,6 +47,11 @@ class IndexController extends Controller
     public function tableTest()
     {
         return Inertia::render('TableTest');
+    }
+
+    public function onlineTest()
+    {
+        return inertia('Test/Online/OnlineTest');
     }
 
 }

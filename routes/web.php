@@ -7,42 +7,30 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/', [IndexController::class, 'welcomePage'])
-    ->name('welcome');
-
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->name('about');
-
 Route::get('/parameters', [IndexController::class, 'parameters'])
     ->name('parameters');
 
-Route::post('/test', [WordsCheckController::class, 'manageWords']);
-Route::get('/test', [IndexController::class, 'testProcess']);
+Route::post('/single_test', [WordsCheckController::class, 'manageWords']);
 
-Route::get('/tabletest', [IndexController::class, 'tableTest']);
+Route::get('/single_test', [IndexController::class, 'testProcess']);
+
+Route::get('/online_test', [IndexController::class, 'onlineTest']);
 
 // Route::post('/dashboard', [IndexController::class, 'create'])
 //     ->middleware(['auth', 'verified']);
 
-// проверка для перехода на защищенные роуты
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/about', function () {
-        return Inertia::render('About');
-    })->name('about');
-
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
     Route::post('/dashboard', [DashboardController::class, 'create']);
+
     Route::get('/dashboard/{dashboard}', [DashboardController::class, 'details'])->name('dashboard.details');
-
 });
 
-Route::get('/playground', function () {
-    event(new \App\Events\Hello());
-
-    return null;
-});
+Route::get('/', [IndexController::class, 'welcomePage'])
+//    ->middleware(['auth', 'verified'])
+    ->name('welcome');

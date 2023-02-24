@@ -1,24 +1,6 @@
 <template>
-    <div v-if="ready_words_for_test">
-        <div v-if="is_start_animation === true">
-            <div class="countdown">
-                <div class="number">
-                    <h2>3</h2>
-                </div>
-
-                <div class="number">
-                    <h2>2</h2>
-                </div>
-
-                <div class="number">
-                    <h2>1</h2>
-                </div>
-
-                <div class="number">
-                    <h2>Start!</h2>
-                </div>
-            </div>
-        </div>
+    <div v-if="is_user_chose_params === true">
+        <start-test-animation :is_start_animation="is_start_animation"></start-test-animation>
         <div v-if="test_process === true" class="userform">
             <div class="holder">
                 <div class="timer">
@@ -29,27 +11,27 @@
                 <p class="howtranslate">Как переводится слово:</p>
                 <p class="testword">{{ test_words[0] }}</p>
                 <form id="myForm" class="testbuttons">
-                    <div class="buttonsline_1">
-                        <button id="button_1" type="button"
-                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                    <div>
+                        <button @click.prevent="check_pressed_button(0)" id="button_1" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][0] }}
                         </button>
-                        <button id="button_2" type="button"
-                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                        <button @click.prevent="check_pressed_button(1)" id="button_2" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][1] }}
                         </button>
-                        <button id="button_3" type="button"
-                                class="element_3 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                        <button @click.prevent="check_pressed_button(2)" id="button_3" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][2] }}
                         </button>
                     </div>
-                    <div class="buttonsline_2">
-                        <button id="button_4" type="button"
-                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                    <div>
+                        <button @click.prevent="check_pressed_button(3)" id="button_4" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][3] }}
                         </button>
-                        <button id="button_5" type="button"
-                                class="mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                        <button @click.prevent="check_pressed_button(4)" id="button_5" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][4] }}
                         </button>
                     </div>
@@ -69,7 +51,7 @@
         </div>
     </div>
     <div v-else>
-        <h3 class="font">
+        <h3 class="mb-2 font text-xl">
             Вернитесь в меню и выберете параметры теста
         </h3>
         <Link :href="route('parameters')" class="back-to-param u-font-arial">
@@ -88,16 +70,19 @@ import "../../../../public/cssform/select.scss";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
 import "../../../../public/DuringTest/Timer/Timer.css";
+import StartTestAnimation from "@/Pages/Test/Animations/StartTestAnimation.vue";
 
 export default {
 
     name: "Test",
 
     components: {
+        StartTestAnimation,
         Link,
     },
 
     props: [
+        'user_ready_for_test',
         'ready_words_for_test',
         'test_words',
         'true_answers',
@@ -107,6 +92,7 @@ export default {
 
     data() {
         return {
+            is_user_chose_params: false,
             count: 0,
             test_process: false,
             is_start_animation: true,
@@ -135,15 +121,19 @@ export default {
     },
 
     created: function () {
-        setTimeout(() => {
-            this.test_process = true
-            this.is_start_animation = false
-            this.showWords()
-            this.check_one_answer()
+        this.is_user_chose_params = this.user_ready_for_test
 
-            this.values_for_statistic.test_word = this.test_words.join()
-            this.values_for_statistic.true_answer = this.true_answers.join()
-        }, 4000)
+        if (this.is_user_chose_params === true) {
+            setTimeout(() => {
+                this.test_process = true
+                this.is_start_animation = false
+                this.showWords()
+                this.check_one_answer()
+
+                this.values_for_statistic.test_word = this.test_words.join()
+                this.values_for_statistic.true_answer = this.true_answers.join()
+            }, 4000)
+        }
     },
 
     methods: {
@@ -210,7 +200,7 @@ export default {
         },
 
         sendRequestToDashboard() {
-            if (this.user_status !== null) {
+            if (this.user_status === 1) {
                 this.$inertia.post('/dashboard', {
                     user_id: this.user_status,
                     percent: this.user_result_in_percents,
@@ -234,7 +224,6 @@ export default {
 </script>
 
 <style scoped>
-
 
 .font {
     display: flex;

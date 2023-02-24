@@ -1,13 +1,12 @@
 <template>
 
     <meta name="viewport" content="width=800">
-
-<!--    <sidebar :user-name="user_name"></sidebar>-->
     <table-test :user-name="user_name"></table-test>
 
     <div class="param min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
             </div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
@@ -61,7 +60,7 @@
                                         <div>
                                             <div class="mt-3 position-absolute mb-2 font">{{ picked }}</div>
                                         </div>
-                                        <div class="">
+                                        <div>
                                             <input type="radio" id="one" value="Upper-Intermediate" v-model="picked"/>
                                             <label class="ml-1 position-relative mb-2 mr-4" for="one">В1-В2</label>
 
@@ -69,76 +68,8 @@
                                             <label class="ml-1" for="two">С1-С2</label>
                                         </div>
                                     </div>
-                                    <div class="multiplayer-button">
-                                        <div v-if="$page.props.user">
-                                            <Link @click.prevent="checkinRegisteredUsers"
-                                                  class="px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex">
-                                                <img src="../../../../public/icons/multiplay_button/icon.png">
-                                                <span class="ml-2">Сыграть с другом</span>
-                                            </Link>
-                                        </div>
-                                        <div v-else>
-                                            <Link
-                                                href="/login"
-                                                type="submit"
-                                                class="px-4 py-3 bg-blue-600 rounded-md text-white outline-none focus:ring-4 shadow-lg transform active:scale-x-75 transition-transform mx-5 flex">
-                                                <img src="../../../../public/icons/multiplay_button/icon.png">
-                                                <span class="ml-2">Сыграть с другом</span>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                    <div class="mt-5">
-                                        <div class="btn start-test-button">
-                                            <button type="submit" class="shop-now">Начать тест</button>
-                                            <div class="snowflake-grid to-left">
-                                                <div class="snowflake-item border-bottom border-right">
-                                                    <div class="sub-items border-right border-bottom pull-down">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-bottom border-left">
-                                                    <div
-                                                        class="sub-items border-right border-bottom r-90 pull-down-right">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-top border-right">
-                                                    <div class="sub-items border-right border-bottom r-270 pull-right">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-top border-left">
-                                                    <div class="sub-items border-right border-bottom r-180 pull-left">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="snowflake-grid to-right">
-                                                <div class="snowflake-item border-bottom border-right">
-                                                    <div class="sub-items border-right border-bottom pull-down">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-bottom border-left">
-                                                    <div
-                                                        class="sub-items border-right border-bottom r-90 pull-down-right"
-                                                    >
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-top border-right">
-                                                    <div class="sub-items border-right border-bottom r-270 pull-right">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="snowflake-item border-top border-left">
-                                                    <div class="sub-items border-right border-bottom r-180 pull-left">
-                                                        <div class="m-w-15 m-h-15 border-right border-bottom m-3"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <start-online-game-button></start-online-game-button>
+                                    <start-test-button></start-test-button>
                                 </div>
                             </div>
                         </div>
@@ -147,8 +78,6 @@
             </div>
         </div>
     </div>
-
-
 </template>
 
 <script>
@@ -156,21 +85,26 @@
 import {Link} from "@inertiajs/inertia-vue3";
 import "../../../../public/cssform/select.scss";
 import Login from "../Auth/Login.vue";
-import Sidebar from "../Sidebar.vue";
 import DropdownLink from "../../Components/DropdownLink.vue";
 import Dropdown from "../../Components/Dropdown.vue";
 import TableTest from "../../Pages/Sidebar/TableTest.vue";
+import Banner from "@/Components/Banner.vue";
+import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
+import StartTestButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
+
 
 export default {
 
     name: "ParamForm",
 
     components: {
+        StartTestButton,
+        StartOnlineGameButton,
+        Banner,
         Dropdown,
         DropdownLink,
         Link,
         Login,
-        Sidebar,
         TableTest,
     },
 
@@ -211,7 +145,7 @@ export default {
                 && this.test_language !== '') {
                 this.checker_home_lang = 'Языки должны быть разные'
             } else {
-                this.$inertia.post('/test', {
+                this.$inertia.post('/single_test', {
                     home_language: this.home_language,
                     test_language: this.test_language,
                     picked: this.picked,
@@ -219,23 +153,7 @@ export default {
             }
 
         },
-
-        checkinRegisteredUsers() {
-            Echo.channel('hello')
-                .listen('Hello', (e) => {
-                    console.log(e)
-                })
-            // console.log('Зарегестрирован');
-        },
-
     },
-
-    mounted() {
-        // Echo.channel('hello')
-        //     .listen('Hello', (e) => {
-        //         console.log(e)
-        //     })
-    }
 
 }
 
@@ -260,7 +178,6 @@ export default {
     left: 320px;
     top: 360px;
 }
-
 
 
 </style>
