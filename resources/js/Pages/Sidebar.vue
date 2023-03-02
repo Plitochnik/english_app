@@ -9,7 +9,7 @@
                     </u>
                 </div>
                 <div v-else>
-                    <Link :href="route('parameters')">{{ userName }}</Link>
+                    <Link :href="route('home')">{{ userName }}</Link>
                 </div>
             </div>
             <div class="overflow-y-auto overflow-x-hidden flex-grow">

@@ -11,16 +11,6 @@ use Swoole\WebSocket\Server;
 
 class IndexController extends Controller
 {
-    public function welcomePage()
-    {
-        return inertia('Welcome');
-    }
-
-    public function privatePage()
-    {
-        return Inertia::render('Private');
-    }
-
     public function getUserStatus()
     {
         if (isset(Auth::user()->name)) {
@@ -32,7 +22,7 @@ class IndexController extends Controller
         return $user_name;
     }
 
-    public function parameters()
+    public function home()
     {
         $user_name = $this->getUserStatus();
 
@@ -47,11 +37,6 @@ class IndexController extends Controller
     public function tableTest()
     {
         return Inertia::render('TableTest');
-    }
-
-    public function onlineTest()
-    {
-        return inertia('Test/Online/OnlineTest');
     }
 
 }

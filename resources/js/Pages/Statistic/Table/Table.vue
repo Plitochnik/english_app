@@ -26,12 +26,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="statistic in userStatistic">
+                            <tr v-for="statistic in statistic_data">
                                 <td class="text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF] py-5 px-2 text-center text-base font-medium">
                                     <div v-if="statistic.percent <= 30" class="text-red-600">
                                         {{ statistic.percent }} %
                                     </div>
-                                    <div v-else-if="statistic.percent >= 90" class="text-green-500">
+                                    <div v-else-if="statistic.percent >= 80" class="text-green-500">
                                         {{ statistic.percent }} %
                                     </div>
                                     <div v-else>
@@ -64,6 +64,7 @@
 
 </template>
 
+
 <script>
 import {Link} from "@inertiajs/inertia-vue3";
 import moment from "moment";
@@ -77,14 +78,14 @@ export default {
 
     data() {
         return {
-            moment: moment
+            moment: moment,
+            statistic_data: this.userStatistic.reverse(),
         }
     },
 
     props: [
         'userStatistic',
     ],
-
 
 
 }
@@ -95,4 +96,5 @@ export default {
     position: relative;
     bottom: 100px;
 }
+
 </style>

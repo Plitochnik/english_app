@@ -45,20 +45,15 @@
                 </div>
             </div>
             <div v-else>
-                <h1>True: {{ user_points.true_answers }}</h1>
-                <h1>False: {{ user_points.false_answers }}</h1>
+                <tests-results :true-answers="user_points.true_answers"
+                               :false-answers="user_points.false_answers"
+                >
+                </tests-results>
             </div>
         </div>
     </div>
     <div v-else>
-        <h3 class="mb-2 font text-xl">
-            Вернитесь в меню и выберете параметры теста
-        </h3>
-        <Link :href="route('parameters')" class="back-to-param u-font-arial">
-            <u>
-                Вернуться в меню
-            </u>
-        </Link>
+        <wrong-route></wrong-route>
     </div>
 
 
@@ -66,11 +61,12 @@
 
 <script>
 import {Link} from "@inertiajs/inertia-vue3";
-import "../../../../public/cssform/select.scss";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
 import "../../../../public/DuringTest/Timer/Timer.css";
 import StartTestAnimation from "@/Pages/Test/Animations/StartTestAnimation.vue";
+import WrongRoute from "./No_result/WrongRoute.vue";
+import TestsResults from "../Test/Is_result/TestsResults.vue";
 
 export default {
 
@@ -79,6 +75,8 @@ export default {
     components: {
         StartTestAnimation,
         Link,
+        WrongRoute,
+        TestsResults,
     },
 
     props: [
@@ -93,10 +91,9 @@ export default {
     data() {
         return {
             is_user_chose_params: false,
-            count: 0,
+            count: 1,
             test_process: false,
             is_start_animation: true,
-            answers: [],
             user_points: {
                 true_answers: 0,
                 false_answers: 0,
@@ -121,6 +118,7 @@ export default {
     },
 
     created: function () {
+
         this.is_user_chose_params = this.user_ready_for_test
 
         if (this.is_user_chose_params === true) {
@@ -144,10 +142,6 @@ export default {
 
         check_one_answer() {
             this.interval_to_check_answer_function = setInterval(() => {
-                if (this.count === 10) {
-                    this.stopInterval()
-                    return
-                }
 
                 if (this.user_answer === this.ready_words_for_test[0][this.test_words[0]][5]) {
                     this.values_for_statistic.true_ids += this.values_for_statistic.true_count
@@ -167,18 +161,28 @@ export default {
                     this.values_for_statistic.user_answer += this.ready_words_for_test[0][this.test_words[0]][this.pressed_button] + this.values_for_statistic.coma
                 }
 
+                if (this.count === 10) {
+                    this.stopInterval()
+                    return
+                }
+
                 this.pressed_button = null
                 this.user_answer = null
 
                 this.count++
-            }, 900)
+
+            }, 3900)
         },
 
         showWords() {
             this.interval_to_show_words_function = setInterval(() => {
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById('button_' + i).blur();
+                }
+
                 this.ready_words_for_test.shift()
                 this.test_words.shift()
-            }, 1000)
+            }, 4000)
         },
 
         stopInterval() {
@@ -223,25 +227,23 @@ export default {
 
 </script>
 
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@700&display=swap');
+
+:root {
+    --background-color: #edeef0;
+    --color: #000000;
+    --light-theme: #ffffff;
+}
+
+
+body {
+    font-family: "Mulish", sans-serif;
+    background: radial-gradient(#eff3f6, #8ec0f9);
+}
+</style>
+
 <style scoped>
-
-.font {
-    display: flex;
-    justify-content: center;
-    font-family: Mulish, sans-serif;
-    position: relative;
-    top: 300px;
-}
-
-.back-to-param {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    top: 290px;
-    color: #aba8a8;
-    font-size: 17px;
-}
-
 .holder {
     background-color: white;
     border-radius: 20px;
@@ -283,13 +285,18 @@ export default {
     right: 0;
 }
 
+@media (min-width: 470px) {
+    .testbuttons {
+        position: absolute;
+        top: 240px;
+        left: 0;
+        right: 0;
+    }
+}
+
 .testbuttons div {
     margin: 10px 10px 10px 10px;
 //position: relative;
-}
-
-.element_3 {
-    margin: 10px 0px 0px 0px;
 }
 
 .timer {

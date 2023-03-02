@@ -8,12 +8,20 @@
     background: linear-gradient(180deg, #7c8ee1 0%, #81b4e5 100%);
 }
 
-.sidebarMenuInner a {
-    padding: 23px 116px 23px 10px;
+/*.sidebarMenuInner a {*/
+/*    padding: 23px 116px 23px 10px;*/
+/*}*/
+
+.dashboard a {
+    padding: 24px 116px 24px 10px;
 }
 
-.dashboard {
+.settings a {
+    padding: 24px 143px 24px 10px;
+}
 
+.log-in a {
+    padding: 24px 146px 44px 10px;
 }
 
 .logout button:hover {
@@ -98,6 +106,7 @@
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
+    /*padding: 10px 10px 10px 10px;*/
 }
 input[type="checkbox"]:checked ~ #sidebarMenu {
     transform: translateX(0);

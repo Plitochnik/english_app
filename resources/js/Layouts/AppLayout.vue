@@ -42,8 +42,8 @@ const logout = () => {
                         <div class="flex">
 
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('parameters')">
-                                    <ApplicationMark class="block h-9 w-auto" />
+                                <Link :href="route('home')">
+                                    <ApplicationMark class="block h-10 w-auto" />
                                 </Link>
                             </div>
 

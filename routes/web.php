@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/parameters', [IndexController::class, 'parameters'])
-    ->name('parameters');
+Route::get('/', [IndexController::class, 'home'])
+    ->name('home');
 
 Route::post('/single_test', [WordsCheckController::class, 'manageWords']);
 
 Route::get('/single_test', [IndexController::class, 'testProcess']);
-
-Route::get('/online_test', [IndexController::class, 'onlineTest']);
 
 // Route::post('/dashboard', [IndexController::class, 'create'])
 //     ->middleware(['auth', 'verified']);
@@ -30,7 +28,3 @@ Route::middleware([
 
     Route::get('/dashboard/{dashboard}', [DashboardController::class, 'details'])->name('dashboard.details');
 });
-
-Route::get('/', [IndexController::class, 'welcomePage'])
-//    ->middleware(['auth', 'verified'])
-    ->name('welcome');

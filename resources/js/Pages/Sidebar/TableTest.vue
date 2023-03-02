@@ -8,22 +8,22 @@
     </label>
     <div id="sidebarMenu">
         <ul class="sidebarMenuInner">
-            <li v-if="userName === 0">
+            <li v-if="userName === 0" class="log-in">
                 <u class="unregister">
                     <Link :href="route('login')">Log In</Link>
                 </u>
                 <span>Web Developer</span>
             </li>
-            <li v-else>
-                <Link :href="route('parameters')">{{ userName }}</Link>
+            <li v-else class="log-in">
+                <Link :href="route('home')">{{ userName }}</Link>
                 <span>Web Developer</span>
             </li>
-            <li>
+            <li class="dashboard">
                 <Link :href="route('dashboard')" target="_blank">
                     Dashboard
                 </Link>
             </li>
-            <li>
+            <li class="settings">
                 <Link :href="route('profile.show')" target="_blank">Settings</Link>
             </li>
             <a class="logout">
@@ -36,14 +36,6 @@
         </ul>
     </div>
 </template>
-
-<script setup>
-
-const logout = () => {
-    Inertia.post(route('logout'));
-};
-
-</script>
 
 
 <script>
@@ -62,6 +54,12 @@ export default {
     props: [
         'userName',
     ],
+
+    methods: {
+        logout() {
+            Inertia.post(route('logout'));
+        }
+    }
 
 }
 </script>
