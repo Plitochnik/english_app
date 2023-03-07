@@ -75,7 +75,7 @@ class WordsCheckController extends Controller
             $test_words = [];
 
             for ($i = 0; $i <= 9; $i++) {
-                $test_words[] = mb_convert_case(Words::find($random_true_values[$i])->$test_language, MB_CASE_TITLE);
+                $test_words[] = Words::find($random_true_values[$i])->$test_language;
             }
 
             return $test_words;
@@ -86,7 +86,7 @@ class WordsCheckController extends Controller
             $true_answers = [];
 
             for ($i = 0; $i <= 9; $i++) {
-                $true_answers[$i] = mb_convert_case(Words::find($random_true_values[$i])->$home_language, MB_CASE_TITLE);
+                $true_answers[$i] = Words::find($random_true_values[$i])->$home_language;
             }
 
             return $true_answers;
@@ -102,10 +102,10 @@ class WordsCheckController extends Controller
             for ($i = 0; $i <= 9; $i++) {
                 $ready_words_for_test[$i] = [
                     $test_words[$i] => [
-                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
-                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
-                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
-                        mb_convert_case(Words::find(rand($picked_level[0], $picked_level[1]))->$home_language, MB_CASE_TITLE),
+                        Words::find(rand($picked_level[0], $picked_level[1]))->$home_language,
+                        Words::find(rand($picked_level[0], $picked_level[1]))->$home_language,
+                        Words::find(rand($picked_level[0], $picked_level[1]))->$home_language,
+                        Words::find(rand($picked_level[0], $picked_level[1]))->$home_language,
                     ]
                 ];
             }

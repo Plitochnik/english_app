@@ -2,7 +2,7 @@
     <body>
     <div class="font">
         <div>
-            <h3 class="text-xl">
+            <h3 class="text-xl mb-2">
                 Вернитесь в меню и выберете параметры теста
             </h3>
             <Link :href="route('home')" class="back-to-param">

@@ -1,7 +1,8 @@
 <template>
 
-    <meta name="viewport" content="width=800">
-    <section class=" py-20 lg:py-[110px]">
+<!--    <meta name="viewport" content="width=800">-->
+    <Head title="Details"/>
+    <section class="py-20 lg:py-[110px]">
         <div class="container mx-auto">
             <div class="mx-8 flex flex-wrap">
                 <div class="w-full px-2">
@@ -56,13 +57,14 @@
 </template>
 
 <script>
-import {Link} from "@inertiajs/inertia-vue3";
+import {Head, Link} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "ViewMore",
 
     components: {
         Link,
+        Head,
     },
 
     props: [

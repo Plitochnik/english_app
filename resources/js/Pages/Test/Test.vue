@@ -1,4 +1,6 @@
 <template>
+    <Head title="Test"/>
+
     <div v-if="is_user_chose_params === true">
         <start-test-animation :is_start_animation="is_start_animation"></start-test-animation>
         <div v-if="test_process === true" class="userform">
@@ -58,23 +60,27 @@
 
 
 </template>
-
 <script>
-import {Link} from "@inertiajs/inertia-vue3";
+
+import {Head, Link} from "@inertiajs/inertia-vue3";
 import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
 import "../../../../public/DuringTest/FormWords/form.scss";
 import "../../../../public/DuringTest/Timer/Timer.css";
 import StartTestAnimation from "@/Pages/Test/Animations/StartTestAnimation.vue";
 import WrongRoute from "./No_result/WrongRoute.vue";
 import TestsResults from "../Test/Is_result/TestsResults.vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default {
 
     name: "Test",
 
     components: {
-        StartTestAnimation,
         Link,
+        Head,
+        StartTestAnimation,
         WrongRoute,
         TestsResults,
     },
@@ -90,6 +96,7 @@ export default {
 
     data() {
         return {
+            isDirty: false,
             is_user_chose_params: false,
             count: 1,
             test_process: false,
@@ -117,7 +124,9 @@ export default {
         }
     },
 
-    created: function () {
+    created() {
+
+        window.addEventListener("beforeunload", this.confirmExit);
 
         this.is_user_chose_params = this.user_ready_for_test
 
@@ -134,7 +143,12 @@ export default {
         }
     },
 
+    beforeUnmount() {
+        window.removeEventListener("beforeunload", this.confirmExit);
+    },
+
     methods: {
+
         check_pressed_button(which_button) {
             this.pressed_button = which_button
             this.user_answer = which_button
@@ -142,13 +156,23 @@ export default {
 
         check_one_answer() {
             this.interval_to_check_answer_function = setInterval(() => {
+                let true_answer = this.ready_words_for_test[0][this.test_words[0]][this.ready_words_for_test[0][this.test_words[0]][5]]
 
                 if (this.user_answer === this.ready_words_for_test[0][this.test_words[0]][5]) {
                     this.values_for_statistic.true_ids += this.values_for_statistic.true_count
 
+                    toast.success('Excellent', {
+                        timeout: 2000,
+                    })
+
                     this.user_points.true_answers++
                 } else {
                     this.values_for_statistic.true_ids += this.values_for_statistic.false_count
+
+                    toast.error('Oops. Right one was: ' + true_answer, {
+                        icon: false,
+                        timeout: 2000,
+                    })
 
                     this.user_points.false_answers++
                 }
@@ -171,7 +195,7 @@ export default {
 
                 this.count++
 
-            }, 3900)
+            }, 9900)
         },
 
         showWords() {
@@ -182,7 +206,7 @@ export default {
 
                 this.ready_words_for_test.shift()
                 this.test_words.shift()
-            }, 4000)
+            }, 10000)
         },
 
         stopInterval() {
@@ -197,6 +221,19 @@ export default {
                 this.stop_animation = false
                 this.sendRequestToDashboard()
             }, 1000)
+        },
+
+        userLeavesPage() {
+            this.test_process = false
+            this.is_test_finished = true
+            clearInterval(this.interval_to_show_words_function);
+            clearInterval(this.interval_to_check_answer_function);
+        },
+
+        confirmExit(event) {
+            event.preventDefault();
+            event.returnValue = "";
+            alert("Are you sure you want to leave the page?");
         },
 
         calculateUserResult() {
@@ -220,8 +257,14 @@ export default {
             }
         },
 
+
     },
 
+    mounted() {
+        onpopstate = (event) => {
+            this.userLeavesPage()
+        };
+    }
 
 }
 
@@ -296,7 +339,6 @@ body {
 
 .testbuttons div {
     margin: 10px 10px 10px 10px;
-//position: relative;
 }
 
 .timer {

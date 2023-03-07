@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Http\Controllers\PushValues\PushToDatabaseController;
 use App\Models\Words;
 use Database\Factories\WordsFactory;
 use Illuminate\Database\Seeder;
@@ -19,28 +20,13 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-        //        код по сиду англ слов ниже
-//        $file_name = 'storage/app/public/english_words.txt';
+//        $get_sources_words = new PushToDatabaseController();
 //
-//        $file = fopen($file_name, 'r');
-//
-//        $content = fread($file, filesize($file_name));
-//
-//        fclose($file);
-////        $content = preg_replace('/[^a-zA-Zа-яА-ЯёЁ]/u', '', $content);
-//        $content = trim($content);
-//
-//        $english_words = explode(',', $content);
-//
-////        dd($english_words);
-//
-//        for ($i = 0; $i <= count($english_words); $i++) {
-//            Words::firstOrCreate([
-//                'english' => $english_words[$i],
-//            ], [
-//                'english' => trim($english_words[$i]),
-//            ]);
-//        }
-//        dump("Everything done");
+//        $get_sources_words->getAndPushValuesToDatabase(
+//            $get_sources_words->english_words,
+//            $get_sources_words->russian_words,
+//            $get_sources_words->spanish_words
+//        );
+
     }
 }

@@ -1,4 +1,5 @@
 <template>
+
     <div class="header"></div>
     <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
     <label for="openSidebarMenu" class="sidebarIconToggle">
@@ -24,7 +25,7 @@
                 </Link>
             </li>
             <li class="settings">
-                <Link :href="route('profile.show')" target="_blank">Settings</Link>
+                <Link :href="route('profile.show')" target="_blank">Account</Link>
             </li>
             <a class="logout">
                 <form @submit.prevent="logout">
@@ -43,6 +44,9 @@
 import {Link} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import "../../../../public/cssform/sidebar.css";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default {
     name: "TableTest",
@@ -57,6 +61,11 @@ export default {
 
     methods: {
         logout() {
+            toast.info('You\'ve been log out', {
+                position: 'bottom-right',
+                timeout: 1000,
+            })
+
             Inertia.post(route('logout'));
         }
     }

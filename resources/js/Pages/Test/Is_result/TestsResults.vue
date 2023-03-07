@@ -4,13 +4,19 @@
         <p> True answers: <b>{{ trueAnswers }}</b><br>
             False answers: <b>{{ falseAnswers }}</b>
         </p>
-
-        <button><Link :href="route('home')"> Continue </Link></button>
+        <Link :href="route('home')" class="button-continue">
+            <button>
+                Continue
+            </button>
+        </Link>
     </div>
 </template>
 
 <script>
 import {Link} from "@inertiajs/inertia-vue3";
+import {useToast} from "vue-toastification";
+
+const toast = useToast();
 
 export default {
     name: "TestsResults",
@@ -23,6 +29,15 @@ export default {
         'trueAnswers',
         'falseAnswers',
     ],
+
+    mounted() {
+        if (this.trueAnswers >= 8) {
+            toast.success('Well Done! \nYour Result more than 80%', {
+                timeout: 2000,
+                position: 'top-center',
+            })
+        }
+    }
 }
 </script>
 
@@ -104,3 +119,4 @@ $primaryColor: #81c784;
 }
 
 </style>
+

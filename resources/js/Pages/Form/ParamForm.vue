@@ -1,13 +1,13 @@
 <template>
 
-    <meta name="viewport" content="width=800">
+<!--    <meta name="viewport" content="width=700">-->
+    <Head title="Start"/>
+
     <table-test :user-name="user_name"></table-test>
 
     <div class="param min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
-            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
                     <div class="font">
@@ -68,7 +68,7 @@
                                             <label class="ml-1" for="two">С1-С2</label>
                                         </div>
                                     </div>
-                                    <start-online-game-button></start-online-game-button>
+<!--                                    <start-online-game-button></start-online-game-button>-->
                                     <start-test-button></start-test-button>
                                 </div>
                             </div>
@@ -81,16 +81,15 @@
 </template>
 
 <script>
-
-import {Link} from "@inertiajs/inertia-vue3";
+import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import "../../../../public/cssform/select.scss";
 import Login from "../Auth/Login.vue";
 import DropdownLink from "../../Components/DropdownLink.vue";
 import Dropdown from "../../Components/Dropdown.vue";
 import TableTest from "../../Pages/Sidebar/TableTest.vue";
 import Banner from "@/Components/Banner.vue";
-import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
-import StartTestButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
+import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
+import StartTestButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
 
 
 export default {
@@ -98,6 +97,7 @@ export default {
     name: "ParamForm",
 
     components: {
+        Head,
         StartTestButton,
         StartOnlineGameButton,
         Banner,
@@ -153,6 +153,12 @@ export default {
             }
 
         },
+
+        myMethod() {
+
+            // Since you returned `toast` from setup(), you can access it now
+            this.toast.info("I'm an info toast!");
+        }
     },
 
 }
