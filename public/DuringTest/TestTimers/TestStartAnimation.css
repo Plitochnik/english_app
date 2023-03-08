@@ -1,13 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@700&display=swap');
 
+.start-animation {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: auto;
+    font-family: 'Mulish', serif;
+}
 
 .countdown {
     position: relative;
-    display: flex;
-    margin: auto;
-    width: 900px;
-    height: 400px;
+    width: 400px;
+    height: 350px;
     transform-style: preserve-3d;
     perspective: 1000px;
 }
@@ -88,13 +94,22 @@
     animation-delay: 9s;
 }
 
-.countdown .number h2 {
-    font-family: Mulish, sans-serif;
-    display: flex;
-    margin: auto;
-    padding: 0;
-    font-size: 20em;
-    color: #313131;
+@media (max-width: 400px) {
+    .countdown .number h2 {
+        margin: auto;
+        padding: 0;
+        font-size: 10em;
+        color: #313131;
+    }
+}
+
+@media (min-width: 401px) {
+    .countdown .number h2 {
+        margin: auto;
+        padding: 0;
+        font-size: 20em;
+        color: #313131;
+    }
 }
 
 @keyframes animate {

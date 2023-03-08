@@ -23,7 +23,7 @@
                             {{ ready_words_for_test[0][test_words[0]][1] }}
                         </button>
                         <button @click.prevent="check_pressed_button(2)" id="button_3" type="button"
-                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                                class="elemline_1 mt-2 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][2] }}
                         </button>
                     </div>
@@ -60,16 +60,16 @@
 
 
 </template>
+
 <script>
 
 import {Head, Link} from "@inertiajs/inertia-vue3";
-import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
-import "../../../../public/DuringTest/FormWords/form.scss";
-import "../../../../public/DuringTest/Timer/Timer.css";
 import StartTestAnimation from "@/Pages/Test/Animations/StartTestAnimation.vue";
 import WrongRoute from "./No_result/WrongRoute.vue";
 import TestsResults from "../Test/Is_result/TestsResults.vue";
-import { useToast } from "vue-toastification";
+import "../../../../public/DuringTest/TestTimers/TestStartAnimation.css";
+import "../../../../public/DuringTest/Timer/Timer.css";
+import {useToast} from "vue-toastification";
 
 const toast = useToast();
 
@@ -323,7 +323,7 @@ body {
 
 .testbuttons {
     position: absolute;
-    top: 210px;
+    top: 200px;
     left: 0;
     right: 0;
 }
