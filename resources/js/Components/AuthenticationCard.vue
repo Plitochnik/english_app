@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+    <div class="form min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
         <div>
             <slot name="logo" />
         </div>
@@ -9,3 +9,9 @@
         </div>
     </div>
 </template>
+
+<style>
+.form {
+    justify-content: center;
+}
+</style>
