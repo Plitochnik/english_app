@@ -20,13 +20,14 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-//        $get_sources_words = new PushToDatabaseController();
-//
-//        $get_sources_words->getAndPushValuesToDatabase(
-//            $get_sources_words->english_words,
-//            $get_sources_words->russian_words,
-//            $get_sources_words->spanish_words
-//        );
+        $get_sources_words = new PushToDatabaseController();
+
+        $get_sources_words->getAndPushValuesToDatabase(
+            $get_sources_words->english_words,
+            $get_sources_words->ukrainian_words,
+            $get_sources_words->russian_words,
+            $get_sources_words->spanish_words,
+        );
 
     }
 }
