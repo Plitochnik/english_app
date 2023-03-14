@@ -41,9 +41,11 @@
             </div>
         </div>
         <div v-if="is_test_finished === true">
-            <div v-if="stop_animation === true" class="countdown">
-                <div class="number">
-                    <h2>Stop</h2>
+            <div class="text-animation">
+                <div v-if="stop_animation === true" class="countdown">
+                    <div class="number">
+                        <h2>Stop</h2>
+                    </div>
                 </div>
             </div>
             <div v-else>

@@ -10,7 +10,7 @@
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
                     <div class="font">
-                        <p class="text-5xl font-semibold">Параметры вашего теста</p>
+                        <p class="text-5xl font-semibold">Select tests parameters</p>
                     </div>
                     <form @submit.prevent="submit">
                         <div class="products">
@@ -20,12 +20,12 @@
                                 </div>
                                 <div class="mt-1 font">
                                     <div>
-                                        Ваш язык: {{ home_language }}
+                                        Your language: {{ home_language }}
                                     </div>
                                 </div>
                                 <div class="mt-1 home_language">
                                     <select v-model="home_language">
-                                        <option disabled value="">Выберете язык</option>
+                                        <option disabled value="">Choose language</option>
                                         <option>Ukrainian</option>
                                         <option>Russian</option>
                                         <option>English</option>
@@ -42,13 +42,13 @@
                                         {{ checker_test_lang }}
                                     </div>
                                     <div class="font">
-                                        Тест на: {{ test_language }}
+                                        Test for:: {{ test_language }}
                                     </div>
                                 </div>
                                 <div class="choose">
                                     <div class="mt-1 test_language">
                                         <select v-model="test_language">
-                                            <option disabled value="">Выберете язык</option>
+                                            <option disabled value="">Choose language</option>
                                             <option>Ukrainian</option>
                                             <option>Russian</option>
                                             <option>English</option>

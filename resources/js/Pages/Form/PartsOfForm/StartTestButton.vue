@@ -1,7 +1,7 @@
 <template>
     <div class="mt-5">
         <div class="btn start-test-button">
-            <button type="submit" class="shop-now">Начать тест</button>
+            <button type="submit" class="shop-now">Start test</button>
             <div class="snowflake-grid to-left">
                 <div class="snowflake-item border-bottom border-right">
                     <div class="sub-items border-right border-bottom pull-down">

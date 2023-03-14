@@ -1,5 +1,5 @@
 <template>
-    <div class="start-animation">
+    <div class="text-animation">
         <div v-if="is_start_animation === true">
             <div class="countdown">
                 <div class="number">
