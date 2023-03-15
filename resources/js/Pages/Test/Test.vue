@@ -15,11 +15,11 @@
                 <form id="myForm" class="testbuttons">
                     <div>
                         <button @click.prevent="check_pressed_button(0)" id="button_1" type="button"
-                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:bg-yellow-400">
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][0] }}
                         </button>
                         <button @click.prevent="check_pressed_button(1)" id="button_2" type="button"
-                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform second_button">
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform  focus:outline-none focus:bg-yellow-400">
                             {{ ready_words_for_test[0][test_words[0]][1] }}
                         </button>
                         <button @click.prevent="check_pressed_button(2)" id="button_3" type="button"
@@ -288,10 +288,6 @@ body {
 </style>
 
 <style scoped>
-
-.second_button:focus {
-    background-color: yellow;
-}
 
 .holder {
     background-color: white;
