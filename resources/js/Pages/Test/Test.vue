@@ -41,8 +41,8 @@
             </div>
         </div>
         <div v-if="is_test_finished === true">
-            <div class="text-animation">
-                <div v-if="stop_animation === true" class="countdown">
+            <div v-if="stop_animation === true" class="text-animation">
+                <div class="countdown">
                     <div class="number">
                         <h2>Stop</h2>
                     </div>
@@ -50,8 +50,7 @@
             </div>
             <div v-else>
                 <tests-results :true-answers="user_points.true_answers"
-                               :false-answers="user_points.false_answers"
-                >
+                               :false-answers="user_points.false_answers">
                 </tests-results>
             </div>
         </div>
