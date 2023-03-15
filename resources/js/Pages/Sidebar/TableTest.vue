@@ -13,11 +13,11 @@
                 <u class="unregister">
                     <Link :href="route('login')">Log In</Link>
                 </u>
-                <span>Web Developer</span>
+                <span>User</span>
             </li>
             <li v-else class="log-in">
                 <Link :href="route('home')">{{ userName }}</Link>
-                <span>Web Developer</span>
+                <span>User</span>
             </li>
             <li class="dashboard">
                 <Link :href="route('dashboard')" target="_blank">

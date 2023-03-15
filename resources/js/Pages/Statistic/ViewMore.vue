@@ -11,13 +11,13 @@
                             <thead>
                             <tr class="bg-gray-800 text-center">
                                 <th class="w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Проверочное слово
+                                    Test word
                                 </th>
                                 <th class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Ваш ответ
+                                    Your answer
                                 </th>
                                 <th class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Правельный ответ
+                                    True answer
                                 </th>
                             </tr>
                             </thead>

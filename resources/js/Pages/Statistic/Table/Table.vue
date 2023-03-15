@@ -9,19 +9,19 @@
                             <thead>
                             <tr class="bg-blue-600 text-center">
                                 <th class="w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Результат
+                                    Result
                                 </th>
                                 <th class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Язык
+                                    Language
                                 </th>
                                 <th class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Верные ответы
+                                    True answers
                                 </th>
                                 <th class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Дата
+                                    Date
                                 </th>
                                 <th class="w-1/6 min-w-[160px] border-r border-transparent py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
-                                    Подробнее
+                                    Details
                                 </th>
                             </tr>
                             </thead>
