@@ -55,16 +55,16 @@
 
 @media (max-width: 700px) {
     .header {
-        display: block;
-        margin: 0 auto;
-        width: 50px;
-        max-width: 100%;
-        box-shadow: none;
+        /*display: block;*/
+        /*margin: 0 auto;*/
+        /*width: 50px;*/
+        /*max-width: 100%;*/
+        /*box-shadow: none;*/
         /*background: linear-gradient(180deg, #3F5EFB 0%, #88bef3 100%);*/
-        position: fixed;
-        height: 100%;
-        overflow: hidden;
-        z-index: 10;
+        /*position: fixed;*/
+        /*height: 100%;*/
+        /*overflow: hidden;*/
+        /*z-index: 10;*/
     }
 
     .spinner {

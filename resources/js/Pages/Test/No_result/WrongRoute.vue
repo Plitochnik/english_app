@@ -3,11 +3,11 @@
     <div class="font">
         <div>
             <h3 class="text-xl mb-2">
-                Вернитесь в меню и выберете параметры теста
+                Return to the menu and select test parameters
             </h3>
             <Link :href="route('home')" class="back-to-param">
                 <u>
-                    Вернуться в меню
+                    Back to menu
                 </u>
             </Link>
         </div>

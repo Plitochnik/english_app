@@ -61,7 +61,7 @@
                                         </div>
                                         <div>
                                             <input type="radio" id="one" value="Upper-Intermediate" v-model="picked"/>
-                                            <label class="ml-1 position-relative mb-2 mr-4" for="one">В1-В2</label>
+                                            <label class="ml-1 mb-2 mr-4" for="one">В1-В2</label>
 
                                             <input type="radio" id="two" value="Advanced" v-model="picked"/>
                                             <label class="ml-1" for="two">С1-С2</label>
@@ -124,25 +124,25 @@ export default {
     methods: {
         submit() {
             if (this.home_language === '' && this.test_language !== '') {
-                this.checker_home_lang = 'Выберете ваш родной язык'
+                this.checker_home_lang = 'Choose your home language'
             } else {
                 this.checker_home_lang = ''
             }
 
             if (this.test_language === '' && this.home_language !== '') {
-                this.checker_test_lang = 'Выберете язык на который вы хотите пройти тест'
+                this.checker_test_lang = 'Choose the language you want to take the test'
             } else {
                 this.checker_test_lang = ''
             }
 
             if (this.test_language === '' && this.home_language === '') {
-                this.checker_home_lang = 'Выберете пожалуйста языки'
+                this.checker_home_lang = 'Please select languages'
             }
 
             if (this.test_language === this.home_language &&
                 this.home_language !== ''
                 && this.test_language !== '') {
-                this.checker_home_lang = 'Языки должны быть разные'
+                this.checker_home_lang = 'Languages must be different'
             } else {
                 this.$inertia.post('/single_test', {
                     home_language: this.home_language,
@@ -152,12 +152,6 @@ export default {
             }
 
         },
-
-        myMethod() {
-
-            // Since you returned `toast` from setup(), you can access it now
-            this.toast.info("I'm an info toast!");
-        }
     },
 
 }
