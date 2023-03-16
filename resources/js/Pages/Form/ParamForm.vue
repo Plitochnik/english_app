@@ -6,11 +6,12 @@
 
     <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
             <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
                     <div class="font">
-                        <p class="text-5xl font-semibold">Select tests parameters</p>
+                        <p class="text-5xl font-semibold">Select test parameters</p>
                     </div>
                     <form @submit.prevent="submit">
                         <div class="products">
@@ -67,7 +68,7 @@
                                             <label class="ml-1" for="two">С1-С2</label>
                                         </div>
                                     </div>
-<!--                                    <start-online-game-button></start-online-game-button>-->
+                                    <!--                                    <start-online-game-button></start-online-game-button>-->
                                     <start-test-button></start-test-button>
                                 </div>
                             </div>
@@ -77,6 +78,7 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -157,6 +159,7 @@ export default {
 }
 
 </script>
+
 
 <style scoped>
 

@@ -10,7 +10,7 @@
                         <div class="numero_shape"></div>
                     </div>
                 </div>
-                <p class="howtranslate">Как переводится слово:</p>
+                <p class="howtranslate">What is this:</p>
                 <p class="testword">{{ test_words[0] }}</p>
                 <form id="myForm" class="testbuttons">
                     <div>
@@ -58,8 +58,6 @@
     <div v-else>
         <wrong-route></wrong-route>
     </div>
-
-
 </template>
 
 <script>
@@ -196,7 +194,7 @@ export default {
 
                 this.count++
 
-            }, 9900)
+            }, 9950)
         },
 
         showWords() {
