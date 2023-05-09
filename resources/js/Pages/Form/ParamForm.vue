@@ -4,79 +4,74 @@
 
     <table-test :user-name="user_name"></table-test>
 
-    <body>
-    <div class="container">
-        <div class="whiteSheet">
-            <div class="max-w-md mx-auto">
-                <div class="font">
-                    <p class="text-5xl font-semibold">Select test parameters</p>
-                </div>
-                <form @submit.prevent="submit">
-                    <div class="products">
-                        <div class="form">
-                            <div class="mt-2 text-red-600">
-                                {{ checker_home_lang }}
-                            </div>
-                            <div class="mt-1 font">
-                                <div>
-                                    Your language: {{ home_language }}
+    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
+        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+                <div class="max-w-md mx-auto">
+                    <div class="font">
+                        <p class="text-5xl font-semibold">Select test parameters</p>
+                    </div>
+                    <form @submit.prevent="submit">
+                        <div class="products">
+                            <div class="form">
+                                <div class="mt-2 text-red-600">
+                                    {{ checker_home_lang }}
                                 </div>
-                            </div>
-                            <div class="mt-1 home_language">
-                                <select v-model="home_language">
-                                    <option disabled value="">Choose language</option>
-                                    <option>Ukrainian</option>
-                                    <option>Russian</option>
-                                    <option>English</option>
-                                    <option>Spanish</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
-                        </div>
-                        <div class="form">
-                            <div class="YourLan">
-                                <div class="mt-3 text-red-600">
-                                    {{ checker_test_lang }}
+                                <div class="mt-1 font">
+                                    <div>
+                                        Your language: {{ home_language }}
+                                    </div>
                                 </div>
-                                <div class="font">
-                                    Test for: {{ test_language }}
-                                </div>
-                            </div>
-                            <div class="choose">
-                                <div class="mt-1 test_language">
-                                    <select v-model="test_language">
+                                <div class="mt-1 home_language">
+                                    <select v-model="home_language">
                                         <option disabled value="">Choose language</option>
-                                        <option>Ukrainian</option>
-                                        <option>Russian</option>
-                                        <option>English</option>
-                                        <option>Spanish</option>
+                                        <option v-for="language in languages">{{ language }}</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <div>
-                                        <div class="mt-3 position-absolute mb-2 font">{{ picked }}</div>
+                            </div>
+                            <div>
+                                <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
+                            </div>
+                            <div class="form">
+                                <div class="YourLan">
+                                    <div class="mt-3 text-red-600">
+                                        {{ checker_test_lang }}
                                     </div>
-                                    <div>
-                                        <input type="radio" id="one" value="Upper-Intermediate" v-model="picked"/>
-                                        <label class="ml-1 mb-2 mr-4" for="one">В1-В2</label>
-
-                                        <input type="radio" id="two" value="Advanced" v-model="picked"/>
-                                        <label class="ml-1" for="two">С1-С2</label>
+                                    <div class="font">
+                                        Test for: {{ test_language }}
                                     </div>
                                 </div>
-                                <!--                                    <start-online-game-button></start-online-game-button>-->
-                                <start-test-button></start-test-button>
+                                <div class="choose">
+                                    <div class="mt-1 test_language">
+                                        <select v-model="test_language">
+                                            <option disabled value="">Choose language</option>
+                                            <option v-for="language in languages">{{ language }}</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="mt-3 position-absolute mb-2 font">{{ picked }}</div>
+                                        </div>
+                                        <div>
+                                            <input type="radio" id="one" value="Upper-Intermediate" v-model="picked"/>
+                                            <label class="ml-1 mb-2 mr-4" for="one">В1-В2</label>
+
+                                            <input type="radio" id="two" value="Advanced" v-model="picked"/>
+                                            <label class="ml-1" for="two">С1-С2</label>
+                                        </div>
+                                    </div>
+                                    <!--                                    <start-online-game-button></start-online-game-button>-->
+                                    <start-test-button></start-test-button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="blueSheet"></div>
     </div>
-    </body>
 
 
 </template>
@@ -115,6 +110,7 @@ export default {
 
     data() {
         return {
+            languages: ['Ukrainian', 'Russian', 'English', 'Spanish',],
             home_language: '',
             test_language: '',
             picked: 'Upper-Intermediate',
@@ -162,43 +158,6 @@ export default {
 
 
 <style scoped>
-
-body {
-    height: 100%;
-    margin: 0;
-}
-
-
-.container {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: red;
-}
-
-.whiteSheet {
-    background-color: white;
-    padding: 50px;
-    width: 550px;
-    height: auto;
-    max-height: 80vh; /* Максимальная высота окна - 80% высоты видимой области */
-    border-radius: 25px;
-    overflow-y: auto;
-    z-index: 999;
-}
-
-.blueSheet {
-    position: absolute;
-    background-color: #2865ea;
-    width: 550px;
-    height: 100%;
-    border-radius: 25px;
-    transform: rotate(6deg); /* Применяем поворот на 40 градусов */
-
-}
 
 .font {
     font-family: Mulish, sans-serif;
