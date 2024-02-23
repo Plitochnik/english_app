@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\TestsAlgorithms\WordsCheckController;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,12 @@ Route::middleware([
     Route::post('/dashboard', [DashboardController::class, 'create']);
 
     Route::get('/dashboard/{dashboard}', [DashboardController::class, 'details'])->name('dashboard.details');
+
+    // friends
+    Route::get('/friends', [FriendsController::class, 'show'])->name('show.friends');
+    Route::get('/api/search-people/{name}', [FriendsController::class, 'searchPeople']);
+});
+
+Route::get('/test-ws', function () {
+    event(new \App\Events\TestEvent());
 });

@@ -5,7 +5,7 @@
             <div class="-mx-4 flex flex-wrap">
                 <div class="w-full px-4">
                     <div class="mytable max-w-full overflow-x-auto">
-                        <table class="w-full table-auto">
+                        <table v-if="userStatistic.length" class="w-full table-auto">
                             <thead>
                             <tr class="bg-blue-600 text-center">
                                 <th class="w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-semibold text-white lg:py-7 lg:px-4">
@@ -56,6 +56,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <h4 class="text-center" v-else>You have no data yet</h4>
                     </div>
                 </div>
             </div>

@@ -6,9 +6,8 @@
 
     <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+            <div class="relative px-8 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
                 <div class="max-w-md mx-auto">
                     <div class="font">
                         <p class="text-5xl font-semibold">Select test parameters</p>
@@ -89,9 +88,7 @@ import StartTestButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
 
 
 export default {
-
     name: "ParamForm",
-
     components: {
         Head,
         StartTestButton,
@@ -103,11 +100,6 @@ export default {
         Login,
         TableTest,
     },
-
-    props: [
-        'user_name',
-    ],
-
     data() {
         return {
             languages: ['Ukrainian', 'Russian', 'English', 'Spanish',],
@@ -118,7 +110,12 @@ export default {
             checker_home_lang: '',
         }
     },
+    mounted() {
 
+    },
+    props: [
+        'user_name',
+    ],
     methods: {
         submit() {
             if (this.home_language === '' && this.test_language !== '') {

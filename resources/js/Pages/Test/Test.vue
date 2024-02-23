@@ -14,18 +14,26 @@
                 <p class="testword">{{ test_words[0] }}</p>
                 <form id="myForm" class="testbuttons">
                     <div>
-                        <button @click.prevent="check_pressed_button(0)" id="button_1" type="button"
-                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
-                            {{ ready_words_for_test[0][test_words[0]][0] }}
+                        <button v-for="(index, number) in 3"
+                                @click.prevent="check_pressed_button(number)" id="button_1" type="button"
+                                class=" elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400"
+                                :class="pressedButtonColorClass"
+                                v-on:click.prevent="changeButtonPressedColorForMobile()"
+                        >
+                            {{ ready_words_for_test[0][test_words[0]][number] }}
                         </button>
-                        <button @click.prevent="check_pressed_button(1)" id="button_2" type="button"
-                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform  focus:outline-none focus:bg-yellow-400">
+<!--                        <button @click.prevent="check_pressed_button(1)" id="button_2" type="button"
+                                class="elemline_1 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400"
+                                v-on:click.prevent="changeButtonPressedColorForMobile"
+                        >
                             {{ ready_words_for_test[0][test_words[0]][1] }}
                         </button>
                         <button @click.prevent="check_pressed_button(2)" id="button_3" type="button"
-                                class="elemline_1 mt-2 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none-4 shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400">
+                                class="elemline_1 mt-2 mr-3 px-9 py-3 bg-blue-600 rounded-md text-white outline-none shadow-lg transform active:scale-75 transition-transform focus:outline-none focus:bg-yellow-400"
+                                v-on:click.prevent="changeButtonPressedColorForMobile"
+                        >
                             {{ ready_words_for_test[0][test_words[0]][2] }}
-                        </button>
+                        </button> -->
                     </div>
                     <div>
                         <button @click.prevent="check_pressed_button(3)" id="button_4" type="button"
@@ -105,6 +113,7 @@ export default {
                 false_answers: 0,
             },
             pressed_button: null,
+            pressedButtonColorClass: null,
             interval_to_check_answer_function: null,
             interval_to_show_words_function: null,
             user_answer: null,
@@ -197,11 +206,15 @@ export default {
             }, 9950)
         },
 
+        resetButtonsColor() {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('button_' + i).blur();
+            }
+        },
+
         showWords() {
             this.interval_to_show_words_function = setInterval(() => {
-                for (let i = 1; i <= 5; i++) {
-                    document.getElementById('button_' + i).blur();
-                }
+                this.resetButtonsColor()
 
                 this.ready_words_for_test.shift()
                 this.test_words.shift()
@@ -220,6 +233,10 @@ export default {
                 this.stop_animation = false
                 this.sendRequestToDashboard()
             }, 1000)
+        },
+
+        changeButtonPressedColorForMobile(buttonId) {
+            this.pressedButtonColorClass = 'pressedButtonColor'
         },
 
         userLeavesPage() {
@@ -283,6 +300,12 @@ body {
     font-family: "Mulish", sans-serif;
     background: radial-gradient(#eff3f6, #8ec0f9);
 }
+
+.pressedButtonColor {
+    color: white;
+    background-color: #f815da;
+}
+
 </style>
 
 <style scoped>

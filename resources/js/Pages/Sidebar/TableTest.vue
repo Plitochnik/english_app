@@ -25,9 +25,12 @@
                 </Link>
             </li>
             <li class="settings">
+                <Link :href="route('show.friends')" target="_blank">Friends</Link>
+            </li>
+            <li class="settings">
                 <Link :href="route('profile.show')" target="_blank">Account</Link>
             </li>
-            <a class="logout">
+            <a v-if="userName" class="logout">
                 <form @submit.prevent="logout">
                     <button type="submit" class="">
                         Log out

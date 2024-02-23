@@ -16,7 +16,7 @@ class WordsCheckController extends Controller
     {
         $user_status = auth()->user();
 
-        if ($user_status !== null) {
+        if (isset($user_status)) {
             $user_status = 1;
         }
 
