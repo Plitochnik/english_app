@@ -2,8 +2,6 @@
 
     <Head title="Start"/>
 
-    <table-test :user-name="user_name"></table-test>
-
     <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12">
         <div class="relative py-3 sm:max-w-xl sm:mx-auto">
             <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
@@ -77,7 +75,7 @@
 
 <script>
 import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
-import "../../../../public/cssform/select.scss";
+// import "../../../../public/cssform/select.scss";
 import Login from "../Auth/Login.vue";
 import DropdownLink from "../../Components/DropdownLink.vue";
 import Dropdown from "../../Components/Dropdown.vue";
@@ -85,7 +83,7 @@ import TableTest from "../../Pages/Sidebar/TableTest.vue";
 import Banner from "@/Components/Banner.vue";
 import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
 import StartTestButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
-
+import LeftPannel from '@/Layouts/LeftPannel.vue';
 
 export default {
     name: "ParamForm",
@@ -100,6 +98,7 @@ export default {
         Login,
         TableTest,
     },
+    layout: LeftPannel,
     data() {
         return {
             languages: ['Ukrainian', 'Russian', 'English', 'Spanish',],
