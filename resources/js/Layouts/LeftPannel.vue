@@ -8,7 +8,7 @@
         <div class="spinner diagonal part-2"></div>
     </label>
     <div id="sidebarMenu">
-        <ul class="sidebarMenuInner">
+        <ul class="sidebarMenuInner" @click.prevent="closePanel()">
             <li v-if="!user" class="log-in">
                 <u class="unregister">
                     <Link :href="route('login')">Log In</Link>
@@ -30,12 +30,12 @@
             <li class="settings">
                 <Link :href="route('profile.show')" target="_blank">Account</Link>
             </li>
-            <a v-if="user" class="logout">
-                <form @submit.prevent="logout">
+            <a v-if="user" @click="logout" class="logout">
+<!--                <form @submit.prevent="logout">-->
                     <button type="submit" class="">
                         Log out
                     </button>
-                </form>
+<!--                </form>-->
             </a>
         </ul>
     </div>
@@ -67,7 +67,7 @@ export default {
             }
         }
     },
-    
+
     methods: {
         logout() {
             toast.info('You\'ve been log out', {
@@ -76,6 +76,9 @@ export default {
             })
 
             Inertia.post(route('logout'));
+        },
+        closePanel() {
+            document.querySelector('.sidebarIconToggle').click();
         }
     }
 

@@ -44,7 +44,8 @@
                         <path class="particle plus"/>
                     </g>
                 </svg>
-                <input v-model="search" type=search placeholder="Search people" aria-label="Search for people around the world"/>
+                <input v-model="search" type=search placeholder="Search people"
+                       aria-label="Search for people around the world"/>
             </div>
             <div id="results"></div>
             <div class="p-6 sm:px-20 bg-white border-gray-200">
@@ -65,8 +66,11 @@
                         <div class="ml-auto">
                             <button
                                 @click="addFriend(user.id)"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4" style="border-radius: 10px">
-                                Add
+                                :disabled="user.added"
+                                :class="user.added ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-700'"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                style="border-radius: 10px">
+                                {{ user.status ? user.status : 'Add' }}
                             </button>
                         </div>
                     </div>
@@ -76,6 +80,22 @@
                 </div>
             </div>
         </div>
+        <Dialog v-model:visible="visible" modal header="Cancel request" :style="{ width: '25rem' }">
+            <span class="p-text-secondary block mb-5">Cancel request</span>
+            <div class="flex align-items-center gap-3 mb-3">
+                <label for="username" class="font-semibold w-6rem">Username</label>
+                <InputText id="username" class="flex-auto" autocomplete="off"/>
+            </div>
+            <div class="flex align-items-center gap-3 mb-5">
+                <label for="email" class="font-semibold w-6rem">Email</label>
+                <InputText id="email" class="flex-auto" autocomplete="off"/>
+            </div>
+            <div class="flex justify-content-end gap-2">
+                <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
+                <Button type="button" label="Save" @click="visible = false"></Button>
+                <Button label="Greet"></Button>
+            </div>
+        </Dialog>
     </div>
 
 </template>
@@ -83,9 +103,8 @@
 <script>
 import {Head, Link} from "@inertiajs/inertia-vue3";
 import spinner from "../Components/spinner.vue";
-import TableTest from "@/Pages/Sidebar/TableTest.vue";
 import LeftPannel from "@/Layouts/LeftPannel.vue";
-import { useToast } from "vue-toastification";
+import {useToast} from "vue-toastification";
 
 const toast = useToast();
 
@@ -97,18 +116,18 @@ export default {
             searchInterval: null,
             loadingUsers: false,
             users: [],
+            visible: false,
         }
     },
     layout: LeftPannel,
     computed: {
-      noResults() {
-          return !this.users.length && !this.loadingUsers && this.search;
-      }
+        noResults() {
+            return !this.users.length && !this.loadingUsers && this.search;
+        }
     },
     components: {
         Link,
         Head,
-        TableTest,
         spinner,
     },
     props: [
@@ -136,10 +155,26 @@ export default {
                 });
         },
         addFriend(id) {
-            toast.success('Invite sent', {
-                position: 'bottom-right',
-                timeout: 1500,
+            this.users.forEach((item) => {
+                if (item.id === id && item.status !== 'Invited') {
+                    item.status = 'Invited';
+                }
             })
+
+            axios.get('/api/add-friend/' + id)
+                .then(response => {
+
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                        timeout: 5000,
+                    })
+                })
+                .finally(() => {
+                    this.loadingUsers = false;
+                });
 
         }
 
@@ -206,10 +241,21 @@ export default {
     stroke-width: 3;
 }
 
-.burst :nth-child(2n) { color: #ff783e }
-.burst :nth-child(3n) { color: #ffab00 }
-.burst :nth-child(4n) { color: #55e214 }
-.burst :nth-child(5n) { color: #82d9f5 }
+.burst :nth-child(2n) {
+    color: #ff783e
+}
+
+.burst :nth-child(3n) {
+    color: #ffab00
+}
+
+.burst :nth-child(4n) {
+    color: #55e214
+}
+
+.burst :nth-child(5n) {
+    color: #82d9f5
+}
 
 .circle {
     r: 6;
@@ -242,26 +288,95 @@ export default {
     transform: translate(100%, 50%) rotate(75deg);
 }
 
-.burst * {}
-
-@keyframes particle-fade {
-    0%, 100% { opacity: 0 }
-    5%, 80% { opacity: 1 }
+.burst * {
 }
 
-.burst :nth-child(1) { animation: particle-fade 600ms 0.55s both, particle-one-move 600ms 0.55s both; }
-.burst :nth-child(2) { animation: particle-fade 600ms 0.55s both, particle-two-move 600ms 0.55s both; }
-.burst :nth-child(3) { animation: particle-fade 600ms 0.55s both, particle-three-move 600ms 0.55s both; }
-.burst :nth-child(4) { animation: particle-fade 600ms 0.55s both, particle-four-move 600ms 0.55s both; }
-.burst :nth-child(5) { animation: particle-fade 600ms 0.55s both, particle-five-move 600ms 0.55s both; }
-.burst :nth-child(6) { animation: particle-fade 600ms 0.55s both, particle-six-move 600ms 0.55s both; }
+@keyframes particle-fade {
+    0%, 100% {
+        opacity: 0
+    }
+    5%, 80% {
+        opacity: 1
+    }
+}
 
-@keyframes particle-one-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(-20deg) translateX(8%) scale(0.5, 0.5) } }
-@keyframes particle-two-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(0deg) translateX(8%) scale(0.5, 0.5) } }
-@keyframes particle-three-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(20deg) translateX(8%) scale(0.5, 0.5) } }
-@keyframes particle-four-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(-35deg) translateX(12%) } }
-@keyframes particle-five-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(0deg) translateX(12%) } }
-@keyframes particle-six-move { 0% { transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001) } 100% { transform: rotate(35deg) translateX(12%) } }
+.burst :nth-child(1) {
+    animation: particle-fade 600ms 0.55s both, particle-one-move 600ms 0.55s both;
+}
+
+.burst :nth-child(2) {
+    animation: particle-fade 600ms 0.55s both, particle-two-move 600ms 0.55s both;
+}
+
+.burst :nth-child(3) {
+    animation: particle-fade 600ms 0.55s both, particle-three-move 600ms 0.55s both;
+}
+
+.burst :nth-child(4) {
+    animation: particle-fade 600ms 0.55s both, particle-four-move 600ms 0.55s both;
+}
+
+.burst :nth-child(5) {
+    animation: particle-fade 600ms 0.55s both, particle-five-move 600ms 0.55s both;
+}
+
+.burst :nth-child(6) {
+    animation: particle-fade 600ms 0.55s both, particle-six-move 600ms 0.55s both;
+}
+
+@keyframes particle-one-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(-20deg) translateX(8%) scale(0.5, 0.5)
+    }
+}
+
+@keyframes particle-two-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(0deg) translateX(8%) scale(0.5, 0.5)
+    }
+}
+
+@keyframes particle-three-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(20deg) translateX(8%) scale(0.5, 0.5)
+    }
+}
+
+@keyframes particle-four-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(-35deg) translateX(12%)
+    }
+}
+
+@keyframes particle-five-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(0deg) translateX(12%)
+    }
+}
+
+@keyframes particle-six-move {
+    0% {
+        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
+    }
+    100% {
+        transform: rotate(35deg) translateX(12%)
+    }
+}
 
 .bar {
     width: 100%;
@@ -272,8 +387,12 @@ export default {
 }
 
 @keyframes bar-in {
-    0% { stroke-dasharray: 0 180 0 226 0 405 0 0 }
-    100% { stroke-dasharray: 0 0 181 0 227 0 405 0 }
+    0% {
+        stroke-dasharray: 0 180 0 226 0 405 0 0
+    }
+    100% {
+        stroke-dasharray: 0 0 181 0 227 0 405 0
+    }
 }
 
 .magnifier {
@@ -282,9 +401,15 @@ export default {
 }
 
 @keyframes magnifier-in {
-    0% { transform: translate(20px, 8px) rotate(-45deg) scale(0.01, 0.01); }
-    50% { transform: translate(-4px, 8px) rotate(-45deg); }
-    100% { transform: translate(0px, 0px) rotate(0deg); }
+    0% {
+        transform: translate(20px, 8px) rotate(-45deg) scale(0.01, 0.01);
+    }
+    50% {
+        transform: translate(-4px, 8px) rotate(-45deg);
+    }
+    100% {
+        transform: translate(0px, 0px) rotate(0deg);
+    }
 }
 
 .magnifier .glass {
@@ -293,6 +418,7 @@ export default {
     r: 8;
     stroke-width: 3;
 }
+
 .magnifier .handle {
     x1: 32;
     y1: 32;

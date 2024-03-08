@@ -32,6 +32,7 @@ Route::middleware([
     // friends
     Route::get('/friends', [FriendsController::class, 'show'])->name('show.friends');
     Route::get('/api/search-people/{name}', [FriendsController::class, 'searchPeople']);
+    Route::get('/api/add-friend/{id}', [FriendsController::class, 'addFriend']);
 });
 
 Route::get('/test-ws', function () {

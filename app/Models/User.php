@@ -59,5 +59,21 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public function isFriend()
+    {
+        return $this->hasOne(Friends::class, 'friend_id', 'id')
+            ->where('user_id', auth()->user()->id);
+    }
 
+    public function isInvited()
+    {
+        return $this->hasOne(FriendsInvitation::class, 'receiver_user_id', 'id')
+            ->where('sender_user_id', auth()->user()->id);
+    }
+
+    public function theySentInvite()
+    {
+        return $this->hasOne(FriendsInvitation::class, 'sender_user_id', 'id')
+            ->where('receiver_user_id', auth()->user()->id);
+    }
 }

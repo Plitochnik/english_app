@@ -8,6 +8,16 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
+// prime vue styles
+import 'primevue/resources/themes/aura-light-green/theme.css'
+import 'primevue/resources/primevue.min.css';
+
+// prime vue components
+import PrimeVue from 'primevue/config';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 createInertiaApp({
@@ -17,6 +27,10 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Toast)
+            .use(PrimeVue)
+            .component('Dialog', Dialog)
+            .component('Button', Button)
+            .component('InputText', InputText)
             .mount(el);
     },
 });

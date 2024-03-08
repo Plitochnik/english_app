@@ -79,7 +79,6 @@ import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import Login from "../Auth/Login.vue";
 import DropdownLink from "../../Components/DropdownLink.vue";
 import Dropdown from "../../Components/Dropdown.vue";
-import TableTest from "../../Pages/Sidebar/TableTest.vue";
 import Banner from "@/Components/Banner.vue";
 import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
 import StartTestButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
@@ -96,12 +95,11 @@ export default {
         DropdownLink,
         Link,
         Login,
-        TableTest,
     },
     layout: LeftPannel,
     data() {
         return {
-            languages: ['Ukrainian', 'Russian', 'English', 'Spanish',],
+            languages: ['Ukrainian', 'Russian', 'English', 'Spanish'],
             home_language: '',
             test_language: '',
             picked: 'Upper-Intermediate',
