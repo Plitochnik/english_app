@@ -68,6 +68,17 @@ export default {
         }
     },
 
+    mounted() {
+        // Invitation
+        Echo.channel('invite-from.' + this.user.id)
+            .listen('.invitation', res => {
+                toast.info(res.message, {
+                    position: 'bottom-right',
+                    timeout: 5000,
+                })
+            })
+    },
+
     methods: {
         logout() {
             toast.info('You\'ve been log out', {

@@ -33,8 +33,7 @@ Route::middleware([
     Route::get('/friends', [FriendsController::class, 'show'])->name('show.friends');
     Route::get('/api/search-people/{name}', [FriendsController::class, 'searchPeople']);
     Route::get('/api/add-friend/{id}', [FriendsController::class, 'addFriend']);
-});
-
-Route::get('/test-ws', function () {
-    event(new \App\Events\TestEvent());
+    Route::get('/api/check-invites', [FriendsController::class, 'getInvitesForMyself']);
+    Route::get('/api/accept-friendship-invitation/{id}', [FriendsController::class, 'acceptFriendshipInvite']);
+    Route::get('/api/accept-all-invitations', [FriendsController::class, 'acceptAllInvitations']);
 });

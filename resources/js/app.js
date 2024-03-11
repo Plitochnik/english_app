@@ -7,10 +7,12 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import Lara from '@/presets/lara';
 
 // prime vue styles
-import 'primevue/resources/themes/aura-light-green/theme.css'
+import 'primevue/resources/themes/aura-light-green/theme.css';
 import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
 
 // prime vue components
 import PrimeVue from 'primevue/config';
@@ -27,7 +29,10 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Toast)
-            .use(PrimeVue)
+            .use(PrimeVue, {
+                // unstyled: true,
+                // pt: Lara
+            })
             .component('Dialog', Dialog)
             .component('Button', Button)
             .component('InputText', InputText)

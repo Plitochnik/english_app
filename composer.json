@@ -19,7 +19,6 @@
         "laravel/ui": "^4.0",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-google-fonts": "^1.2",
-        "swoole/ide-helper": "^5.0",
         "tightenco/ziggy": "^1.5"
     },
 

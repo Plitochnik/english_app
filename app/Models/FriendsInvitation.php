@@ -19,4 +19,9 @@ class FriendsInvitation extends Model
     protected $hidden = [
         'updated_at',
     ];
+
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_user_id')->select('id', 'name', 'profile_photo_path');
+    }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendshipInviteEvent;
 use App\Models\Friends;
 use App\Models\FriendsInvitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class FriendsController extends Controller
@@ -19,6 +21,116 @@ class FriendsController extends Controller
         return Inertia::render('Friends', compact('userID', 'userName'));
     }
 
+    public function addFriend($id)
+    {
+        $userID = auth()->user()->id;
+        $friend = User::find($id);
+
+        $validation = $this->validateFriends($userID, $friend->id);
+
+        if (isset($validation['error'])) {
+            return response(['message' => $validation['error']], 422);
+        }
+
+        // show the message to the invited user
+        broadcast(new FriendshipInviteEvent($friend))->toOthers();
+
+        FriendsInvitation::updateOrCreate([
+            'sender_user_id' => $userID,
+            'receiver_user_id' => $friend->id,
+        ]);
+
+        return response(['message' => 'Friend added'], 200);
+    }
+
+    public function validateFriends($userID, $theirID)
+    {
+        // validation
+        if (!$userID || !$theirID) {
+            return ['error' => 'User not found'];
+        }
+
+        // we can't add ourselves
+        if ($theirID === $userID) {
+            return ['error' => 'You can\'t be friends with yourself, unless you got a dementia'];
+        }
+
+        // check if invite has already been sent
+        if (FriendsInvitation::where(['sender_user_id' => $userID, 'receiver_user_id' => $theirID])->count()) {
+            return ['error' => 'You\'ve already sent an invite to this user'];
+        }
+
+        // check if we're already friends
+        if (Friends::where(['user_id' => $userID, 'friend_id' => $theirID])->count()) {
+            return ['error' => 'You\'re already friends with this user'];
+        }
+    }
+
+    public function getInvitesForMyself()
+    {
+        $userID = auth()->user()->id;
+
+        return FriendsInvitation::where('receiver_user_id', $userID)
+            ->with('sender')
+            ->get()
+            ->map(function ($invite) {
+                $invite['id'] = $invite->sender->id;
+                $invite['sender_name'] = $invite->sender->name;
+                $invite['sender_photo'] = $invite->sender->profile_photo_path;
+                // we need this for the FE loading
+                $invite['accepting_process'] = false;
+
+                unset($invite->sender);
+                return $invite;
+            });
+    }
+
+    public function acceptFriendshipInvite($newFriendID)
+    {
+        try {
+            DB::beginTransaction();
+
+            $userID = auth()->user()->id;
+
+            $validation = $this->validateFriends($userID, $newFriendID);
+
+            if (isset($validation['error'])) {
+                return response(['message' => $validation['error']], 422);
+            }
+
+            // make a friend for both users
+            Friends::insert([
+                ['user_id' => $newFriendID, 'friend_id' => auth()->user()->id],
+                ['user_id' => auth()->user()->id, 'friend_id' => $newFriendID],
+            ]);
+
+            // delete an invite
+            FriendsInvitation::where([
+                'sender_user_id' => $newFriendID,
+                'receiver_user_id' => auth()->user()->id,
+            ])->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        return $this->getInvitesForMyself();
+    }
+
+    public function acceptAllInvitations()
+    {
+        $userID = auth()->user()->id;
+
+        FriendsInvitation::where('receiver_user_id', $userID)->delete();
+
+        return $this->getInvitesForMyself();
+    }
+
     public function searchPeople($name)
     {
         $userID = Auth::id();
@@ -27,7 +139,7 @@ class FriendsController extends Controller
             return response(['error' => 'You\'re not authorized to see that information'], 401);
         }
 
-        $users = User::select('id', 'name')
+        $users = User::select('id', 'name', 'profile_photo_path')
             ->where('name', 'LIKE', '%' . $name . '%')
             ->where('id', '!=', $userID)
             ->with(['isFriend', 'isInvited', 'theySentInvite'])
@@ -40,44 +152,17 @@ class FriendsController extends Controller
                 } else if ($user->isInvited) {
                     $status = 'Invited';
                 } else if ($user->theySentInvite) {
-                    $status = 'Accept invite';
+                    $status = 'Accept invitation';
                 }
                 unset($user->isFriend);
                 unset($user->isInvited);
                 unset($user->theySentInvite);
                 $user['status'] = $status;
+                $user['accepting_process'] = false;
 
                 return $user;
             });
 
         return $users;
-    }
-
-    public function addFriend($id)
-    {
-        $userID = auth()->user()->id;
-        $friendID = User::find($id)->id;
-
-        // validation
-        if (!$friendID) {
-            return response(['message' => 'User not found'], 404);
-        }
-
-        // check if invite has already been sent
-        if (FriendsInvitation::where(['sender_user_id' => $userID, 'receiver_user_id' => $friendID,])->count()) {
-            return response(['message' => 'You\'ve already sent an invite to this user'], 422);
-        }
-
-        // check if we're already friends
-        if (Friends::where(['user_id' => $userID, 'friend_id' => $friendID])->count()) {
-            return response(['message' => 'You\'re already friends with this user'], 422);
-        }
-
-        FriendsInvitation::create([
-            'sender_user_id' => $userID,
-            'receiver_user_id' => $friendID,
-        ]);
-
-        return response(['message' => 'Friend added'], 200);
     }
 }

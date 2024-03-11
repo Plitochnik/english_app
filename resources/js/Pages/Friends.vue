@@ -6,6 +6,15 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="padding-top: 10px;">
         <div class="main-block bg-white overflow-hidden shadow-xl">
+            <!-- button to see my invitations with the count at the top -->
+            <div class="flex justify-end gap-2 p-6">
+                <Button label="Invitations"
+                        @click="invitesDialogue = true"
+                        :badge="invitations.length ? invitations.length.toString() : ''"
+                        badgeSeverity="warning"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"/>
+            </div>
+
             <!-- search box -->
             <div id="search">
                 <svg viewBox="0 0 420 60" xmlns="http://www.w3.org/2000/svg">
@@ -52,8 +61,16 @@
                 <!--     list of users    -->
                 <div v-for="user in users" :key="user.id" v-if="users.length">
                     <div class="flex items-center">
-                        <div class="flex items-center">
-                            <img :src="user.profile_photo_url" alt="" class="w-10 h-10 rounded-full">
+                        <div class="flex items-center pt-5">
+                            <!--    user's image or just first letter of their name     -->
+                            <div v-if="user.profile_photo_path" class="flex-shrink-0">
+                                <img :src="user.profile_photo_path" class="w-10 h-10 rounded-full">
+                            </div>
+                            <div v-else
+                                 class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                {{ user.name.charAt(0) }}
+                            </div>
+
                             <div class="ml-4">
                                 <div class="text-xl font-medium text-gray-900">
                                     {{ user.name }}
@@ -64,14 +81,14 @@
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <button
-                                @click="addFriend(user.id)"
+                            <Button
+                                :loading="user.accepting_process"
                                 :disabled="user.added"
-                                :class="user.added ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-700'"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
-                                style="border-radius: 10px">
-                                {{ user.status ? user.status : 'Add' }}
-                            </button>
+                                :label="user.status ? user.status : 'Add'"
+                                type="button"
+                                class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                @click="addFriend(user)"
+                            />
                         </div>
                     </div>
                 </div>
@@ -80,20 +97,38 @@
                 </div>
             </div>
         </div>
-        <Dialog v-model:visible="visible" modal header="Cancel request" :style="{ width: '25rem' }">
-            <span class="p-text-secondary block mb-5">Cancel request</span>
-            <div class="flex align-items-center gap-3 mb-3">
-                <label for="username" class="font-semibold w-6rem">Username</label>
-                <InputText id="username" class="flex-auto" autocomplete="off"/>
-            </div>
-            <div class="flex align-items-center gap-3 mb-5">
-                <label for="email" class="font-semibold w-6rem">Email</label>
-                <InputText id="email" class="flex-auto" autocomplete="off"/>
-            </div>
-            <div class="flex justify-content-end gap-2">
-                <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-                <Button type="button" label="Save" @click="visible = false"></Button>
-                <Button label="Greet"></Button>
+
+        <Dialog v-model:visible="invitesDialogue" modal header="Invites" :style="{ width: '45rem', height: '40em' }">
+            <span class="flex p-text-secondary block mb-5">
+                Invites that you have received
+                <div v-if="invitations.length"
+                     class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-auto"
+                     style="border-radius: 10px; width: 17%; cursor: pointer">
+                    <Button :loading="acceptingAllProcess" type="button" @click="acceptAllInvitations()" label="Accept All"/>
+                </div>
+            </span>
+            <div v-for="invitation in invitations" :key="invitation.id" class="mt-10 ml-3 flex items-center justify-between">
+                <div class="flex items-center">
+                    <!--    user's image or just first letter of their name     -->
+                    <div v-if="invitation.sender_photo" class="flex-shrink-0">
+                        <img :src="invitation.sender_photo" class="w-10 h-10 rounded-full">
+                    </div>
+                    <div v-else
+                         class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                        {{ invitation.sender_name.charAt(0) }}
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-xl font-medium text-gray-900">
+                            {{ invitation.sender_name }}
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto"
+                    style="border-radius: 10px">
+                    <Button :loading="invitation.accepting_process" type="button"
+                            @click="acceptInvitation(invitation.sender_id)" label="Accept" icon="pi pi-plus"/>
+                </div>
             </div>
         </Dialog>
     </div>
@@ -116,7 +151,10 @@ export default {
             searchInterval: null,
             loadingUsers: false,
             users: [],
-            visible: false,
+            invitesDialogue: false,
+            invitations: [],
+            loadingInvitations: false,
+            acceptingAllProcess: false,
         }
     },
     layout: LeftPannel,
@@ -130,14 +168,8 @@ export default {
         Head,
         spinner,
     },
-    props: [
-        'userName',
-    ],
     mounted() {
-        // Echo.channel('test-ws')
-        //     .listen('.test-message', res => {
-        //         console.log(res)
-        //     })
+        this.checkMyInvitations();
     },
     methods: {
         searchPeople(name) {
@@ -154,17 +186,27 @@ export default {
                     this.loadingUsers = false;
                 });
         },
-        addFriend(id) {
-            this.users.forEach((item) => {
-                if (item.id === id && item.status !== 'Invited') {
-                    item.status = 'Invited';
-                }
-            })
+        addFriend(user) {
+            switch (user.status) {
+                // if this user has already send us an invitation, then approve it
+                case 'Accept invitation':
+                    this.acceptInvitation(user.id)
+                    return;
+                // we've already sent an invitation
+                case 'Invited':
+                    return;
+                case 'Friend':
+                    return;
+                default:
+                    this.users.forEach((item) => {
+                        if (item.id === user.id && item.status !== 'Invited') {
+                            item.status = 'Invited';
+                        }
+                    })
+            }
 
-            axios.get('/api/add-friend/' + id)
-                .then(response => {
-
-                })
+            axios.get('/api/add-friend/' + user.id)
+                .then(response => {})
                 .catch(error => {
                     console.error(error);
                     toast.warning(error.response.data.message, {
@@ -176,8 +218,82 @@ export default {
                     this.loadingUsers = false;
                 });
 
-        }
+        },
+        checkMyInvitations() {
+            axios.get('/api/check-invites')
+                .then(response => {
+                    this.invitations = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                        timeout: 5000,
+                    })
+                })
+                .finally(() => {
+                    this.loadingInvitations = false;
+                });
+        },
+        acceptInvitation(id) {
+            // activate loading spinner for this user
+            this.invitations.forEach((item) => {
+                if (item.id === id) {
+                    item.accepting_process = true;
+                }
+            })
 
+            // list of users under the search box
+            this.users.forEach((user) => {
+                if (user.id === id) {
+                    user.accepting_process = true;
+                }
+            })
+
+            axios.get('/api/accept-friendship-invitation/' + id)
+                .then(response => {
+                    this.invitations = response.data;
+
+                    this.users.forEach((user) => {
+                        if (user.id === id) {
+                            user.accepting_process = false;
+                            user.status = 'Friend';
+                        }
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                        timeout: 5000,
+                    })
+                })
+                .finally(() => {
+                    // deactivate loading spinner
+                    this.invitations.forEach((item) => {
+                        if (item.sender_id === id) {
+                            item.accepting_process = false;
+                        }
+                    })
+                });
+        },
+        acceptAllInvitations() {
+            this.acceptingAllProcess = true;
+            axios.get('/api/accept-all-invitations')
+                .then(response => {
+                    this.invitations = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                        timeout: 5000,
+                    })
+                })
+                .finally(() => {
+                    this.acceptingAllProcess = false;
+                })
+        },
     },
     watch: {
         search(name) {
@@ -195,9 +311,14 @@ export default {
 </script>
 
 <style lang="css">
+.p-badge-warning {
+    background: #fdb500 !important;
+}
+
 .main-block {
     border-radius: 30px;
-    height: 90vh;
+    min-height: 90vh;
+    margin-bottom: 50px;
 }
 
 #search {
