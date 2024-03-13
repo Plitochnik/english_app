@@ -13,12 +13,30 @@ use Inertia\Inertia;
 
 class FriendsController extends Controller
 {
-    public function show()
+    public function index()
     {
         $userID = auth()->user()->id;
-        $userName = auth()->user()->name;
 
-        return Inertia::render('Friends', compact('userID', 'userName'));
+        return Friends::where('user_id', $userID)
+            ->with(['users' => function ($query) {
+                $query->select('id', 'name', 'profile_photo_path');
+            }])
+            ->get()
+            ->map(function ($friend) {
+                $friend['id'] = $friend->users->id;
+                $friend['name'] = $friend->users->name;
+                $friend['profile_photo_path'] = $friend->users->profile_photo_path;
+                // we need this for the FE search
+                $friend['hide'] = false;
+
+                unset($friend->users);
+                return $friend;
+            });
+    }
+
+    public function showPage()
+    {
+        return Inertia::render('Friends');
     }
 
     public function addFriend($id)
@@ -143,20 +161,19 @@ class FriendsController extends Controller
             ->where('name', 'LIKE', '%' . $name . '%')
             ->where('id', '!=', $userID)
             ->with(['isFriend', 'isInvited', 'theySentInvite'])
+            ->whereDoesntHave('isFriend')
             ->take(15)
             ->get()
             ->map(function ($user) {
                 $status = '';
-                if ($user->isFriend) {
-                    $status = 'Friend';
-                } else if ($user->isInvited) {
+                if ($user->isInvited) {
                     $status = 'Invited';
                 } else if ($user->theySentInvite) {
                     $status = 'Accept invitation';
                 }
-                unset($user->isFriend);
                 unset($user->isInvited);
                 unset($user->theySentInvite);
+                unset($user->isFriend);
                 $user['status'] = $status;
                 $user['accepting_process'] = false;
 

@@ -10,7 +10,7 @@ import "vue-toastification/dist/index.css";
 import Lara from '@/presets/lara';
 
 // prime vue styles
-import 'primevue/resources/themes/aura-light-green/theme.css';
+import 'primevue/resources/themes/aura-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
@@ -19,6 +19,7 @@ import PrimeVue from 'primevue/config';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+import FloatLabel from "primevue/floatlabel";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -36,6 +37,7 @@ createInertiaApp({
             .component('Dialog', Dialog)
             .component('Button', Button)
             .component('InputText', InputText)
+            .component('FloatLabel', FloatLabel)
             .mount(el);
     },
 });

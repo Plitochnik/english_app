@@ -20,4 +20,9 @@ class Friends extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'friend_id');
+    }
 }

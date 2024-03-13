@@ -30,7 +30,8 @@ Route::middleware([
     Route::get('/dashboard/{dashboard}', [DashboardController::class, 'details'])->name('dashboard.details');
 
     // friends
-    Route::get('/friends', [FriendsController::class, 'show'])->name('show.friends');
+    Route::get('/friends', [FriendsController::class, 'showPage'])->name('show.friends');
+    Route::get('/api/get-friends', [FriendsController::class, 'index']);
     Route::get('/api/search-people/{name}', [FriendsController::class, 'searchPeople']);
     Route::get('/api/add-friend/{id}', [FriendsController::class, 'addFriend']);
     Route::get('/api/check-invites', [FriendsController::class, 'getInvitesForMyself']);

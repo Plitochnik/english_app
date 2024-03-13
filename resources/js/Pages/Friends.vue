@@ -6,106 +6,96 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="padding-top: 10px;">
         <div class="main-block bg-white overflow-hidden shadow-xl">
-            <!-- button to see my invitations with the count at the top -->
             <div class="flex justify-end gap-2 p-6">
+                <!-- button to see my invitations with the count at the top -->
                 <Button label="Invitations"
                         @click="invitesDialogue = true"
                         :badge="invitations.length ? invitations.length.toString() : ''"
+                        icon="pi pi-book"
                         badgeSeverity="warning"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"/>
+                <!-- add friends -->
+                <Button label="Add new friend"
+                        @click="addFriendDialogue = true"
+                        badgeSeverity="warning"
+                        icon="pi pi-users"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"/>
             </div>
 
-            <!-- search box -->
-            <div id="search">
-                <svg viewBox="0 0 420 60" xmlns="http://www.w3.org/2000/svg">
-                    <rect class="bar"/>
-                    <g class="magnifier">
-                        <circle class="glass"/>
-                        <line class="handle" x1="32" y1="32" x2="44" y2="44"></line>
-                    </g>
-                    <g class="sparks">
-                        <circle class="spark"/>
-                        <circle class="spark"/>
-                        <circle class="spark"/>
-                    </g>
-                    <g class="burst pattern-one">
-                        <circle class="particle circle"/>
-                        <path class="particle triangle"/>
-                        <circle class="particle circle"/>
-                        <path class="particle plus"/>
-                        <rect class="particle rect"/>
-                        <path class="particle triangle"/>
-                    </g>
-                    <g class="burst pattern-two">
-                        <path class="particle plus"/>
-                        <circle class="particle circle"/>
-                        <path class="particle triangle"/>
-                        <rect class="particle rect"/>
-                        <circle class="particle circle"/>
-                        <path class="particle plus"/>
-                    </g>
-                    <g class="burst pattern-three">
-                        <circle class="particle circle"/>
-                        <rect class="particle rect"/>
-                        <path class="particle plus"/>
-                        <path class="particle triangle"/>
-                        <rect class="particle rect"/>
-                        <path class="particle plus"/>
-                    </g>
-                </svg>
-                <input v-model="search" type=search placeholder="Search people"
-                       aria-label="Search for people around the world"/>
-            </div>
-            <div id="results"></div>
             <div class="p-6 sm:px-20 bg-white border-gray-200">
-                <!--     list of users    -->
-                <div v-for="user in users" :key="user.id" v-if="users.length">
-                    <div class="flex items-center">
-                        <div class="flex items-center pt-5">
-                            <!--    user's image or just first letter of their name     -->
-                            <div v-if="user.profile_photo_path" class="flex-shrink-0">
-                                <img :src="user.profile_photo_path" class="w-10 h-10 rounded-full">
-                            </div>
-                            <div v-else
-                                 class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
-                                {{ user.name.charAt(0) }}
-                            </div>
+                <div v-if="friends.length" class="items-center justify-center mt-6">
+                    <FloatLabel class="mb-10">
+                        <InputText
+                            id="username"
+                            class="searchFriendBox"
+                            v-model="friendSearch"
+                            @input="searchFriends"
+                        />
+                        <label for="username">Username</label>
+                    </FloatLabel>
+                    <div
+                        v-for="friend in friends"
+                        :key="friend.id"
+                    >
+                        <div v-if="!friend.hide" class="flex items-center">
+                            <div class="flex items-center pt-5">
+                                <!--    user's image or just first letter of their name     -->
+                                <div v-if="friend.profile_photo_path" class="flex-shrink-0">
+                                    <img :src="friend.profile_photo_path" class="w-10 h-10 rounded-full">
+                                </div>
+                                <div v-else
+                                     class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                    {{ friend.name.charAt(0) }}
+                                </div>
 
-                            <div class="ml-4">
-                                <div class="text-xl font-medium text-gray-900">
-                                    {{ user.name }}
-                                </div>
-                                <div class="text-sm font-medium text-gray-500">
-                                    user
+                                <div class="ml-4">
+                                    <div class="text-xl font-medium text-gray-900">
+                                        {{ friend.name }}
+                                    </div>
+                                    <div class="text-sm font-medium text-gray-500">
+                                        user
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="ml-auto">
-                            <Button
-                                :loading="user.accepting_process"
-                                :disabled="user.added"
-                                :label="user.status ? user.status : 'Add'"
-                                type="button"
-                                class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
-                                @click="addFriend(user)"
-                            />
+                            <div class="ml-auto">
+                                <Button
+                                    :loading="friend.accepting_process"
+                                    :disabled="friend.added"
+                                    label="Send a message"
+                                    icon="pi pi-envelope"
+                                    type="button"
+                                    class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                    @click="addFriend(friend)"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div v-else-if="noResults" class="flex items-center justify-center mt-10">
-                    No results
+                <div v-else>
+                    <div class="flex items-center justify-center mt-10">
+                        You don't have any friends yet
+                    </div>
                 </div>
             </div>
         </div>
 
-        <Dialog v-model:visible="invitesDialogue" modal header="Invites" :style="{ width: '45rem', height: '40em' }">
-            <span class="flex p-text-secondary block mb-5">
+        <!--    see invitations    -->
+        <Dialog v-model:visible="invitesDialogue"
+                modal
+                header="Invites"
+                :style="{ width: '45rem', height: '40em' }"
+        >
+            <span v-if="invitations.length" class="flex p-text-secondary block mb-5">
                 Invites that you have received
-                <div v-if="invitations.length"
+                <div
                      class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-auto"
                      style="border-radius: 10px; width: 17%; cursor: pointer">
                     <Button :loading="acceptingAllProcess" type="button" @click="acceptAllInvitations()" label="Accept All"/>
                 </div>
+            </span>
+            <span v-else class="p-text-secondary block mb-5 flex items-center justify-center mt-10
+            ">
+                No invites
             </span>
             <div v-for="invitation in invitations" :key="invitation.id" class="mt-10 ml-3 flex items-center justify-between">
                 <div class="flex items-center">
@@ -131,6 +121,66 @@
                 </div>
             </div>
         </Dialog>
+
+        <!--    find and add people    -->
+        <Dialog v-model:visible="addFriendDialogue"
+            modal
+            header="Search"
+            class="dialog-box"
+            @hide="closeDialogue"
+        >
+            <span class="flex p-text-secondary block mb-5">
+                Search for people around the world and send them an invitation
+            </span>
+            <div class="mb-10 sm:px-20 bg-white border-gray-200">
+                <SearchBox
+                    :searchValue="search"
+                    @update:searchValue="search = $event"
+                    :aria-label="'Search for people'"
+                />
+            </div>
+            <!--     list of users    -->
+            <div
+                v-for="user in users"
+                v-if="users.length"
+                :key="user.id"
+            >
+                <div class="flex items-center">
+                    <div class="flex items-center pt-5">
+                        <!--    user's image or just first letter of their name     -->
+                        <div v-if="user.profile_photo_path" class="flex-shrink-0">
+                            <img :src="user.profile_photo_path" class="w-10 h-10 rounded-full">
+                        </div>
+                        <div v-else
+                             class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                            {{ user.name.charAt(0) }}
+                        </div>
+
+                        <div class="ml-4">
+                            <div class="text-xl font-medium text-gray-900">
+                                {{ user.name }}
+                            </div>
+                            <div class="text-sm font-medium text-gray-500">
+                                user
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <Button
+                            :loading="user.accepting_process"
+                            :disabled="user.added"
+                            :label="user.status ? user.status : 'Add'"
+                            type="button"
+                            class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                            @click="addFriend(user)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="noResults" class="flex items-center justify-center mt-10">
+                No results
+            </div>
+        </Dialog>
     </div>
 
 </template>
@@ -139,8 +189,8 @@
 import {Head, Link} from "@inertiajs/inertia-vue3";
 import spinner from "../Components/spinner.vue";
 import LeftPannel from "@/Layouts/LeftPannel.vue";
+import SearchBox from "@/Components/SearchBox.vue";
 import {useToast} from "vue-toastification";
-
 const toast = useToast();
 
 export default {
@@ -152,9 +202,13 @@ export default {
             loadingUsers: false,
             users: [],
             invitesDialogue: false,
+            addFriendDialogue: false,
             invitations: [],
             loadingInvitations: false,
             acceptingAllProcess: false,
+            friends: [],
+            loadingFriends: false,
+            friendSearch: '',
         }
     },
     layout: LeftPannel,
@@ -167,11 +221,35 @@ export default {
         Link,
         Head,
         spinner,
+        SearchBox,
     },
     mounted() {
+        this.getFriends();
         this.checkMyInvitations();
     },
     methods: {
+        closeDialogue() {
+            this.users = [];
+            this.search = '';
+        },
+        getFriends() {
+            this.loadingFriends = true;
+
+            axios.get('/api/get-friends')
+                .then(response => {
+                    this.friends = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                        timeout: 5000,
+                    })
+                })
+                .finally(() => {
+                    this.loadingFriends = false;
+                });
+        },
         searchPeople(name) {
             this.loadingUsers = true;
 
@@ -294,6 +372,12 @@ export default {
                     this.acceptingAllProcess = false;
                 })
         },
+        searchFriends() {
+          // frontend filtering
+            this.friends.forEach((friend) => {
+                friend.hide = !friend.name.toLowerCase().includes(this.friendSearch.toLowerCase());
+            })
+        },
     },
     watch: {
         search(name) {
@@ -321,236 +405,25 @@ export default {
     margin-bottom: 50px;
 }
 
-#search {
-    display: grid;
-    grid-area: search;
-    grid-template:
-		"search" 60px
-		/ 420px;
-    justify-content: center;
-    align-content: center;
-    justify-items: stretch;
-    align-items: stretch;
-    background: hsl(0, 0%, 99%);
-    padding-top: 5vh;
+/*dialogue boxes*/
+.dialog-box {
+    width: 45em;
+    height: 40em;
 }
 
-#search input {
-    display: block;
-    grid-area: search;
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 100%;
-    background: none;
-    padding: 0 30px 0 60px;
-    border: none;
+/* For devices with screen width less than 600px */
+@media screen and (max-width: 600px) {
+    .dialog-box {
+        width: 90%; /* or any other value that fits well on mobile devices */
+        height: auto;
+    }
+}
+
+.searchFriendBox {
+    border: 3px solid #1765fa;
     border-radius: 100px;
-    font: 24px/1 system-ui, sans-serif;
-    outline-offset: -8px;
-}
-
-#search svg {
-    grid-area: search;
-    overflow: visible;
-    color: hsl(213, 97%, 63%);
-    fill: none;
-    stroke: currentColor;
-}
-
-.burst {
-    stroke-width: 3;
-}
-
-.burst :nth-child(2n) {
-    color: #ff783e
-}
-
-.burst :nth-child(3n) {
-    color: #ffab00
-}
-
-.burst :nth-child(4n) {
-    color: #55e214
-}
-
-.burst :nth-child(5n) {
-    color: #82d9f5
-}
-
-.circle {
-    r: 6;
-}
-
-.rect {
-    width: 10px;
-    height: 10px;
-}
-
-.triangle {
-    d: path("M0,-6 L7,6 L-7,6 Z");
-    stroke-linejoin: round;
-}
-
-.plus {
-    d: path("M0,-5 L0,5 M-5,0L 5,0");
-    stroke-linecap: round;
-}
-
-.burst:nth-child(4) {
-    transform: translate(30px, 100%) rotate(150deg);
-}
-
-.burst:nth-child(5) {
-    transform: translate(50%, 0%) rotate(-20deg);
-}
-
-.burst:nth-child(6) {
-    transform: translate(100%, 50%) rotate(75deg);
-}
-
-.burst * {
-}
-
-@keyframes particle-fade {
-    0%, 100% {
-        opacity: 0
-    }
-    5%, 80% {
-        opacity: 1
-    }
-}
-
-.burst :nth-child(1) {
-    animation: particle-fade 600ms 0.55s both, particle-one-move 600ms 0.55s both;
-}
-
-.burst :nth-child(2) {
-    animation: particle-fade 600ms 0.55s both, particle-two-move 600ms 0.55s both;
-}
-
-.burst :nth-child(3) {
-    animation: particle-fade 600ms 0.55s both, particle-three-move 600ms 0.55s both;
-}
-
-.burst :nth-child(4) {
-    animation: particle-fade 600ms 0.55s both, particle-four-move 600ms 0.55s both;
-}
-
-.burst :nth-child(5) {
-    animation: particle-fade 600ms 0.55s both, particle-five-move 600ms 0.55s both;
-}
-
-.burst :nth-child(6) {
-    animation: particle-fade 600ms 0.55s both, particle-six-move 600ms 0.55s both;
-}
-
-@keyframes particle-one-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(-20deg) translateX(8%) scale(0.5, 0.5)
-    }
-}
-
-@keyframes particle-two-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(0deg) translateX(8%) scale(0.5, 0.5)
-    }
-}
-
-@keyframes particle-three-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(20deg) translateX(8%) scale(0.5, 0.5)
-    }
-}
-
-@keyframes particle-four-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(-35deg) translateX(12%)
-    }
-}
-
-@keyframes particle-five-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(0deg) translateX(12%)
-    }
-}
-
-@keyframes particle-six-move {
-    0% {
-        transform: rotate(0deg) translate(-5%) scale(0.0001, 0.0001)
-    }
-    100% {
-        transform: rotate(35deg) translateX(12%)
-    }
-}
-
-.bar {
     width: 100%;
-    height: 100%;
-    ry: 50%;
-    stroke-width: 10;
-    animation: bar-in 900ms 0.55s both;
+    height: 40px;
+    padding-left: 10px;
 }
-
-@keyframes bar-in {
-    0% {
-        stroke-dasharray: 0 180 0 226 0 405 0 0
-    }
-    100% {
-        stroke-dasharray: 0 0 181 0 227 0 405 0
-    }
-}
-
-.magnifier {
-    animation: magnifier-in 600ms 0.80s both;
-    transform-box: fill-box;
-}
-
-@keyframes magnifier-in {
-    0% {
-        transform: translate(20px, 8px) rotate(-45deg) scale(0.01, 0.01);
-    }
-    50% {
-        transform: translate(-4px, 8px) rotate(-45deg);
-    }
-    100% {
-        transform: translate(0px, 0px) rotate(0deg);
-    }
-}
-
-.magnifier .glass {
-    cx: 27;
-    cy: 27;
-    r: 8;
-    stroke-width: 3;
-}
-
-.magnifier .handle {
-    x1: 32;
-    y1: 32;
-    x2: 44;
-    y2: 44;
-    stroke-width: 3;
-}
-
-#results {
-    grid-area: results;
-    background: hsl(0, 0%, 95%);
-}
-
 </style>
