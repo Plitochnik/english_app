@@ -33,12 +33,34 @@
                         />
                         <label for="username">Username</label>
                     </FloatLabel>
+                    <!-- deletion confirmation -->
+                    <OverlayPanel ref="op">
+                        <div class="flex items center justify-between">
+                            <span class="font-medium text-900 block mb-2">Do you want to delete {{ friendToDelete.name }} friend?</span>
+                        </div>
+                        <div class="flex flex-column gap-3 w-25rem">
+                            <Button
+                                label="Confirm"
+                                type="button"
+                                class="card flex justify-content-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"
+                            />
+                            <Button
+                                label="Cancel"
+                                type="button"
+                                class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4"
+                            />
+                        </div>
+                    </OverlayPanel>
+
+                    <!--    list of friends    -->
                     <div
                         v-for="friend in friends"
                         :key="friend.id"
+                        class="hover:bg-gray-100 border-gray-200 cursor-pointer rounded-md pl-4 pr-4 pb-4"
+                        @click="deleteFriend($event, friend)"
                     >
                         <div v-if="!friend.hide" class="flex items-center">
-                            <div class="flex items-center pt-5">
+                            <div class="flex items-center pt-5" >
                                 <!--    user's image or just first letter of their name     -->
                                 <div v-if="friend.profile_photo_path" class="flex-shrink-0">
                                     <img :src="friend.profile_photo_path" class="w-10 h-10 rounded-full">
@@ -71,6 +93,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!--    if no friends    -->
                 <div v-else>
                     <div class="flex items-center justify-center mt-10">
                         You don't have any friends yet
@@ -117,7 +141,7 @@
                     class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto"
                     style="border-radius: 10px">
                     <Button :loading="invitation.accepting_process" type="button"
-                            @click="acceptInvitation(invitation.sender_id)" label="Accept" icon="pi pi-plus"/>
+                            @click="acceptInvitation(invitation.sender_user_id)" label="Accept" icon="pi pi-plus"/>
                 </div>
             </div>
         </Dialog>
@@ -190,7 +214,7 @@ import {Head, Link} from "@inertiajs/inertia-vue3";
 import spinner from "../Components/spinner.vue";
 import LeftPannel from "@/Layouts/LeftPannel.vue";
 import SearchBox from "@/Components/SearchBox.vue";
-import {useToast} from "vue-toastification";
+import { useToast } from "vue-toastification";
 const toast = useToast();
 
 export default {
@@ -209,6 +233,8 @@ export default {
             friends: [],
             loadingFriends: false,
             friendSearch: '',
+            isOverlayPanelVisible: false,
+            friendToDelete: null,
         }
     },
     layout: LeftPannel,
@@ -249,6 +275,27 @@ export default {
                 .finally(() => {
                     this.loadingFriends = false;
                 });
+        },
+        deleteFriend(event, friend) {
+            // show confirmation dialogue
+            this.$refs.op.toggle(event);
+            this.friendToDelete = friend;
+
+            // delete friend
+            // axios.get('/api/delete-friend/' + friend.id)
+            //     .then(response => {
+            //         this.friends = response.data;
+            //     })
+            //     .catch(error => {
+            //         console.error(error);
+            //         toast.warning(error.response.data.message, {
+            //             position: 'bottom-right',
+            //             timeout: 5000,
+            //         })
+            //     })
+            //     .finally(() => {
+            //         this.loadingFriends = false;
+            //     });
         },
         searchPeople(name) {
             this.loadingUsers = true;
@@ -338,6 +385,9 @@ export default {
                             user.status = 'Friend';
                         }
                     })
+
+                    // fetch friends
+                    this.getFriends();
                 })
                 .catch(error => {
                     console.error(error);
