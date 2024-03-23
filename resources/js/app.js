@@ -8,6 +8,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Lara from '@/presets/lara';
+import store from '../js/store.js';
 
 // prime vue styles
 import 'primevue/resources/themes/aura-light-blue/theme.css';
@@ -133,6 +134,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(Toast)
+            .use(store)
             .use(PrimeVue, {
                 // unstyled: true,
                 // pt: Lara

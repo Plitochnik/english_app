@@ -65,7 +65,15 @@ export default {
             if (this.$page.props.hasOwnProperty('user')) {
                 return this.$page.props.user;
             }
-        }
+        },
+        testVar: {
+            get() {
+                return this.$store.state.testVar;
+            },
+            set(value) {
+                this.$store.commit('setTestVar', value);
+            }
+        },
     },
 
     mounted() {
