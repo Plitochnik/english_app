@@ -70,7 +70,7 @@
                                 <Button :loading="friend.accepting_process"
                                         :disabled="friend.added"
                                         icon="pi pi-envelope" type="button"
-                                        @click="recipient = friend.id"
+                                        @click="chatDialogue = true; recipientID = friend.id"
                                         class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                                 />
                                 <Button :loading="friend.accepting_process"
@@ -224,12 +224,20 @@ export default {
                 this.$store.commit('setTestVar', value);
             }
         },
-        recipient: {
+        recipientID: {
             get() {
-                return this.$store.state.recipient;
+                return this.$store.state.recipientID;
             },
             set(value) {
-                this.$store.commit('setRecipient', value);
+                this.$store.commit('setRecipientID', value);
+            }
+        },
+        chatDialogue: {
+            get() {
+                return this.$store.state.chatDialogue;
+            },
+            set(value) {
+                this.$store.commit('setChatDialogue', value);
             }
         },
     },
@@ -270,9 +278,6 @@ export default {
             // show confirmation dialogue
             this.$refs.op.toggle(event);
             this.friendToDelete = friend;
-
-            console.log(friend)
-            console.log(event)
 
             // delete friend
             // axios.get('/api/delete-friend/' + friend.id)

@@ -38,7 +38,7 @@
         </ul>
 
         <!--  chat  -->
-        <Dialog v-model:visible="showChat" modal :header="loadingChat ? 'Loading...' : 'Chat'"
+        <Dialog v-model:visible="chatDialogue" modal :header="loadingChat ? 'Loading...' : 'Chat'"
                 :style="{ width: '45rem', height: '40em' }"
                 class="chat-dialogue-box"
         >
@@ -104,8 +104,8 @@ export default {
 
     data() {
         return {
-            showChat: false,
             loadingChat: false,
+            inputMessage: '',
             messages: [
                 {
                     user_id: 3,
@@ -189,12 +189,12 @@ export default {
     },
 
     computed: {
-        recipient: {
+        recipientID: {
             get() {
-                return this.$store.state.recipient;
+                return this.$store.state.recipientID;
             },
             set(value) {
-                this.$store.commit('setRecipient', value);
+                this.$store.commit('setRecipientID', value);
             }
         },
         chat: {
@@ -203,6 +203,14 @@ export default {
             },
             set(value) {
                 this.$store.commit('setChat', value);
+            }
+        },
+        chatDialogue: {
+            get() {
+                return this.$store.state.chatDialogue;
+            },
+            set(value) {
+                this.$store.commit('setChatDialogue', value);
             }
         },
     },
@@ -243,14 +251,22 @@ export default {
         closePanel() {
             document.querySelector('.sidebarIconToggle').click();
         },
+        getChatMessages() {
 
+        },
     },
     watch: {
-        recipient: {
+        chatDialogue: {
             handler(val) {
-
+                if (val) {
+                    this.getChatMessages();
+                } else {
+                    // when chat dialogue is being closed then reset the recipient ID
+                    this.recipientID = null;
+                }
             }
-        }
+        },
+
     }
 }
 </script>
