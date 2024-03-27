@@ -3,11 +3,15 @@ import { createStore } from 'vuex';
 
 const store = createStore({
     state: {
-        testVar: 'hello',
+        chat: [],
+        recipient: null,
     },
     mutations: {
-        setTestVar(state, value) {
-            state.testVar = value;
+        setChat(state, value) {
+            state.chat = value;
+        },
+        setRecipient(state, value) {
+            state.recipient = value;
         },
     }
 })

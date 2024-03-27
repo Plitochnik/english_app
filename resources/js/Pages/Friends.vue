@@ -8,8 +8,6 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="padding-top: 10px;">
         <div class="main-block bg-white overflow-hidden shadow-xl">
             <div class="flex justify-end gap-2 p-6">
-                <div @click="testVar = 1231232">111</div>
-                {{$store.state.testVar}}
                 <Button label="Invitations" @click="invitesDialogue = true"
                         :badge="invitations.length ? invitations.length.toString() : ''" icon="pi pi-book"
                         badgeSeverity="warning" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"/>
@@ -27,19 +25,19 @@
                     </FloatLabel>
                     <!-- deletion confirmation -->
                     <OverlayPanel ref="op">
-                        <div class="flex items center justify-between">
-                            <span class="font-medium text-900 block mb-2">Do you want to delete
-                                {{ friendToDelete.name }} friend?</span>
+                        <div>
+                            <span class="font-medium text-900 block mb-3">
+                                Do you want to delete
+                                {{ friendToDelete.name }} friend?
+                            </span>
                         </div>
-                        <div class="flex flex-column gap-3 w-25rem">
+                        <div class="flex flex-column justify-content-center gap-3 w-25rem">
                             <Button label="Confirm" type="button"
                                     class="card flex justify-content-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"/>
                             <Button label="Cancel" type="button"
                                     class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4"/>
                         </div>
                     </OverlayPanel>
-
-                    <!--                        @click.prevent="deleteFriend($event, friend)"-->
 
                     <!--    list of friends    -->
                     <div v-for="friend in friends" :key="friend.id"
@@ -69,10 +67,17 @@
                                 </div>
                             </div>
                             <div class="ml-auto">
-                                <Button :loading="friend.accepting_process" :disabled="friend.added"
-                                        label="Send message" icon="pi pi-envelope" type="button"
-                                        @click="showChat = true"
-                                        class="mt-4 card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                <Button :loading="friend.accepting_process"
+                                        :disabled="friend.added"
+                                        icon="pi pi-envelope" type="button"
+                                        @click="recipient = friend.id"
+                                        class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                />
+                                <Button :loading="friend.accepting_process"
+                                        :disabled="friend.added"
+                                        icon="pi pi-trash" type="button"
+                                        @click="deleteFriend($event, friend)"
+                                        class="mt-4 ml-3 card justify-content-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"
                                 />
                             </div>
                         </div>
@@ -173,52 +178,6 @@
             </div>
         </Dialog>
 
-        <Dialog v-model:visible="showChat" modal :header="loadingChat ? 'Loading...' : 'Chat'"
-                :style="{ width: '45rem', height: '40em' }"
-                class="chat-dialogue-box"
-        >
-            <div
-                v-if="loadingChat"
-                class="center flex items-center justify-center h-full overflow-hidden"
-            >
-                <ProgressSpinner style="width: 200px; height: 200px" strokeWidth="1" fill="white"
-                                 animationDuration=".9s" aria-label="Custom ProgressSpinner"/>
-            </div>
-            <div v-else
-                 style="height: 90%; overflow: auto"
-                 class="chat bg-white border-gray-600 p-4 overflow-auto flex flex-col justify-between"
-            >
-                <!--      Chat        -->
-                <div v-if="messages.length" class="mb-3">
-                    <div v-for="(message, index) in messages"
-                         :key="index"
-                         class="my-2"
-                    >
-                        <div :class="message.user_id === $page.props.user.id ? 'text-right' : 'text-left'">
-                            <span class="inline-block px-3 py-1 mr-2 rounded-lg"
-                                  :class="message.user_id === $page.props.user.id ? 'bg-blue-500 text-white' : 'bg-green-300 text-black'">
-                              {{ message.message }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div v-else class="text-center">
-                    No messages yet
-                </div>
-                <!--  text field  -->
-            </div>
-                <div>
-                    <input
-                        v-model="inputMessage"
-                        type="text"
-                        class="bg-gray-50 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Your message"
-                        required
-                        autocomplete="off"
-
-                    >
-                </div>
-        </Dialog>
     </div>
 
 </template>
@@ -250,84 +209,6 @@ export default {
             friendSearch: '',
             isOverlayPanelVisible: false,
             friendToDelete: null,
-            showChat: false,
-            chat: [],
-            loadingChat: false,
-            messages: [
-                {
-                    user_id: 3,
-                    message: 'Hello'
-                },
-                {
-                    user_id: 2,
-                    message: 'Hi'
-                },
-                {
-                    user_id: 3,
-                    message: 'How are you?'
-                },
-                {
-                    user_id: 2,
-                    message: 'I am fine'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-            ]
         }
     },
     layout: LeftPannel,
@@ -341,6 +222,14 @@ export default {
             },
             set(value) {
                 this.$store.commit('setTestVar', value);
+            }
+        },
+        recipient: {
+            get() {
+                return this.$store.state.recipient;
+            },
+            set(value) {
+                this.$store.commit('setRecipient', value);
             }
         },
     },
@@ -381,6 +270,9 @@ export default {
             // show confirmation dialogue
             this.$refs.op.toggle(event);
             this.friendToDelete = friend;
+
+            console.log(friend)
+            console.log(event)
 
             // delete friend
             // axios.get('/api/delete-friend/' + friend.id)
