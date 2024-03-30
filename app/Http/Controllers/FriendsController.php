@@ -61,6 +61,16 @@ class FriendsController extends Controller
         return response(['message' => 'Friend added'], 200);
     }
 
+    public function delete($id)
+    {
+        $userID = auth()->user()->id;
+
+        Friends::where('user_id', $userID)->where('friend_id', $id)->delete();
+        Friends::where('friend_id', $userID)->where('user_id', $id)->delete();
+
+        return $this->index();
+    }
+
     public function validateFriends($userID, $theirID)
     {
         // validation
@@ -96,7 +106,7 @@ class FriendsController extends Controller
                 $invite['sender_name'] = $invite->sender->name;
                 $invite['sender_photo'] = $invite->sender->profile_photo_path;
                 // we need this for the FE loading
-                $invite['accepting_process'] = false;
+                $invite['loading'] = false;
 
                 unset($invite->sender);
                 return $invite;
@@ -175,7 +185,7 @@ class FriendsController extends Controller
                 unset($user->theySentInvite);
                 unset($user->isFriend);
                 $user['status'] = $status;
-                $user['accepting_process'] = false;
+                $user['loading'] = false;
 
                 return $user;
             });

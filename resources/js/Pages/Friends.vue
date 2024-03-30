@@ -33,8 +33,10 @@
                         </div>
                         <div class="flex flex-column justify-content-center gap-3 w-25rem">
                             <Button label="Confirm" type="button"
+                                    @click="deleteFriend"
                                     class="card flex justify-content-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"/>
                             <Button label="Cancel" type="button"
+                                    @click="cancelDelete"
                                     class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4"/>
                         </div>
                     </OverlayPanel>
@@ -67,16 +69,14 @@
                                 </div>
                             </div>
                             <div class="ml-auto">
-                                <Button :loading="friend.accepting_process"
-                                        :disabled="friend.added"
+                                <Button :loading="friend.loading"
                                         icon="pi pi-envelope" type="button"
                                         @click="chatDialogue = true; recipientID = friend.id"
                                         class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                                 />
-                                <Button :loading="friend.accepting_process"
-                                        :disabled="friend.added"
+                                <Button :loading="friend.loading"
                                         icon="pi pi-trash" type="button"
-                                        @click="deleteFriend($event, friend)"
+                                        @click="confirmFriendDeletion($event, friend)"
                                         class="mt-4 ml-3 card justify-content-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"
                                 />
                             </div>
@@ -128,7 +128,7 @@
                 <div
                     class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto"
                     style="border-radius: 10px">
-                    <Button :loading="invitation.accepting_process" type="button"
+                    <Button :loading="invitation.loading" type="button"
                             @click="acceptInvitation(invitation.sender_user_id)" label="Accept" icon="pi pi-plus"/>
                 </div>
             </div>
@@ -166,12 +166,18 @@
                         </div>
                     </div>
                     <div class="ml-auto">
-                        <Button :loading="user.accepting_process" :disabled="user.added"
+                        <Button :loading="user.loading" :disabled="user.added"
                                 :label="user.status ? user.status : 'Add'" type="button"
                                 class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                                 @click="addFriend(user)"/>
                     </div>
                 </div>
+            </div>
+            <div v-else-if="searchingUsers"
+                 class="center mt-10 flex items-center justify-center h-full overflow-hidden"
+            >
+                <ProgressSpinner style="width: 150px; height: 150px" strokeWidth="1" fill="white"
+                                 animationDuration=".9s" aria-label="Custom ProgressSpinner"/>
             </div>
             <div v-else-if="noResults" class="flex items-center justify-center mt-10">
                 No results
@@ -197,7 +203,7 @@ export default {
         return {
             search: '',
             searchInterval: null,
-            loadingUsers: false,
+            searchingUsers: false,
             users: [],
             invitesDialogue: false,
             addFriendDialogue: false,
@@ -214,15 +220,7 @@ export default {
     layout: LeftPannel,
     computed: {
         noResults() {
-            return !this.users.length && !this.loadingUsers && this.search;
-        },
-        testVar: {
-            get() {
-                return this.$store.state.testVar;
-            },
-            set(value) {
-                this.$store.commit('setTestVar', value);
-            }
+            return !this.users.length && !this.searchingUsers && this.search && !this.searchInterval;
         },
         recipientID: {
             get() {
@@ -256,6 +254,14 @@ export default {
             this.users = [];
             this.search = '';
         },
+        confirmFriendDeletion(event, friend) {
+            this.$refs.op.toggle(event);
+            this.friendToDelete = friend;
+        },
+        cancelDelete() {
+            this.$refs.op.hide();
+            this.friendToDelete = null;
+        },
         getFriends() {
             this.loadingFriends = true;
 
@@ -267,36 +273,47 @@ export default {
                     console.error(error);
                     toast.warning(error.response.data.message, {
                         position: 'bottom-right',
-                        timeout: 5000,
                     })
                 })
                 .finally(() => {
                     this.loadingFriends = false;
                 });
         },
-        deleteFriend(event, friend) {
-            // show confirmation dialogue
-            this.$refs.op.toggle(event);
-            this.friendToDelete = friend;
+        deleteFriend() {
+            // get friend we're deleting
+            let user = this.friends.find((user) => user.id === this.friendToDelete.id);
 
-            // delete friend
-            // axios.get('/api/delete-friend/' + friend.id)
-            //     .then(response => {
-            //         this.friends = response.data;
-            //     })
-            //     .catch(error => {
-            //         console.error(error);
-            //         toast.warning(error.response.data.message, {
-            //             position: 'bottom-right',
-            //             timeout: 5000,
-            //         })
-            //     })
-            //     .finally(() => {
-            //         this.loadingFriends = false;
-            //     });
+            if (!user.hasOwnProperty('deleting')) {
+                toast.warning('Deleting friend...', {
+                    position: 'bottom-right',
+                })
+
+                this.friends.forEach((item) => {
+                    if (item.id === this.friendToDelete.id) {
+                        item.deleting = true;
+                    }
+                })
+
+                this.$refs.op.hide();
+
+                axios.delete('/api/delete-friend/' + this.friendToDelete.id)
+                    .then(response => {
+                        this.friends = response.data;
+
+                        toast.success('Success', {
+                            position: 'bottom-right',
+                        })
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        toast.warning(error.response.data.message, {
+                            position: 'bottom-right',
+                        })
+                    })
+            }
         },
         searchPeople(name) {
-            this.loadingUsers = true;
+            this.searchingUsers = true;
 
             axios.get('/api/search-people/' + name)
                 .then(response => {
@@ -306,7 +323,7 @@ export default {
                     console.error('Error fetching users:', error);
                 })
                 .finally(() => {
-                    this.loadingUsers = false;
+                    this.searchingUsers = false;
                 });
         },
         addFriend(user) {
@@ -318,30 +335,33 @@ export default {
                 // we've already sent an invitation
                 case 'Invited':
                     return;
+                // we are friends
                 case 'Friend':
                     return;
-                default:
-                    this.users.forEach((item) => {
-                        if (item.id === user.id && item.status !== 'Invited') {
-                            item.status = 'Invited';
-                        }
-                    })
             }
+
+            // activate loading
+            this.users.forEach((item) => {
+                if (item.id === user.id) {
+                    item.loading = true;
+                }
+            })
 
             axios.get('/api/add-friend/' + user.id)
                 .then(response => {
+                    this.users.forEach((item) => {
+                        if (item.id === user.id) {
+                            item.status = 'Invited';
+                            item.loading = false;
+                        }
+                    })
                 })
                 .catch(error => {
                     console.error(error);
                     toast.warning(error.response.data.message, {
                         position: 'bottom-right',
-                        timeout: 5000,
                     })
                 })
-                .finally(() => {
-                    this.loadingUsers = false;
-                });
-
         },
         checkMyInvitations() {
             axios.get('/api/check-invites')
@@ -352,7 +372,6 @@ export default {
                     console.error(error);
                     toast.warning(error.response.data.message, {
                         position: 'bottom-right',
-                        timeout: 5000,
                     })
                 })
                 .finally(() => {
@@ -360,17 +379,17 @@ export default {
                 });
         },
         acceptInvitation(id) {
-            // activate loading spinner for this user
+            // activate loading
             this.invitations.forEach((item) => {
                 if (item.id === id) {
-                    item.accepting_process = true;
+                    item.loading = true;
                 }
             })
 
-            // list of users under the search box
+            // list of searched users
             this.users.forEach((user) => {
                 if (user.id === id) {
-                    user.accepting_process = true;
+                    user.loading = true;
                 }
             })
 
@@ -380,7 +399,7 @@ export default {
 
                     this.users.forEach((user) => {
                         if (user.id === id) {
-                            user.accepting_process = false;
+                            user.loading = false;
                             user.status = 'Friend';
                         }
                     })
@@ -392,14 +411,13 @@ export default {
                     console.error(error);
                     toast.warning(error.response.data.message, {
                         position: 'bottom-right',
-                        timeout: 5000,
                     })
                 })
                 .finally(() => {
                     // deactivate loading spinner
                     this.invitations.forEach((item) => {
                         if (item.sender_id === id) {
-                            item.accepting_process = false;
+                            item.loading = false;
                         }
                     })
                 });
@@ -414,7 +432,6 @@ export default {
                     console.error(error);
                     toast.warning(error.response.data.message, {
                         position: 'bottom-right',
-                        timeout: 5000,
                     })
                 })
                 .finally(() => {
@@ -435,6 +452,7 @@ export default {
 
                 this.searchInterval = setTimeout(() => {
                     this.searchPeople(name);
+                    this.searchInterval = null;
                 }, 500);
             }
         }

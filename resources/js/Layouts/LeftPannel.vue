@@ -252,7 +252,16 @@ export default {
             document.querySelector('.sidebarIconToggle').click();
         },
         getChatMessages() {
-
+            axios.post('/api/get-messages', [this.recipientID])
+                .then(response => {
+                    this.messages = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                    })
+                })
         },
     },
     watch: {

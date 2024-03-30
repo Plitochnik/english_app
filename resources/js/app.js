@@ -133,12 +133,13 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
-            .use(Toast)
-            .use(store)
-            .use(PrimeVue, {
-                // unstyled: true,
-                // pt: Lara
+            .use(Toast, {
+                maxToasts: 1,
+                hideProgressBar: true,
+                timeout: 2000,
             })
+            .use(store)
+            .use(PrimeVue)
             .directive('tooltip', Tooltip)
             .directive('badge', BadgeDirective)
             .directive('ripple', Ripple)

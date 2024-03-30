@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\IndexController;
@@ -37,4 +38,9 @@ Route::middleware([
     Route::get('/api/check-invites', [FriendsController::class, 'getInvitesForMyself']);
     Route::get('/api/accept-friendship-invitation/{id}', [FriendsController::class, 'acceptFriendshipInvite']);
     Route::get('/api/accept-all-invitations', [FriendsController::class, 'acceptAllInvitations']);
+    Route::delete('/api/delete-friend/{id}', [FriendsController::class, 'delete']);
+
+    // messages
+    Route::post('/api/get-messages', [ChatController::class, 'startChat']);
+
 });
