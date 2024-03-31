@@ -38,52 +38,7 @@
         </ul>
 
         <!--  chat  -->
-        <Dialog v-model:visible="chatDialogue" modal :header="loadingChat ? 'Loading...' : 'Chat'"
-                :style="{ width: '45rem', height: '40em' }"
-                class="chat-dialogue-box"
-        >
-            <div
-                v-if="loadingChat"
-                class="center flex items-center justify-center h-full overflow-hidden"
-            >
-                <ProgressSpinner style="width: 200px; height: 200px" strokeWidth="1" fill="white"
-                                 animationDuration=".9s" aria-label="Custom ProgressSpinner"/>
-            </div>
-            <div v-else
-                 style="height: 90%; overflow: auto"
-                 class="chat bg-white border-gray-600 p-4 overflow-auto flex flex-col justify-between"
-            >
-                <!--      Chat        -->
-                <div v-if="messages.length" class="mb-3">
-                    <div v-for="(message, index) in messages"
-                         :key="index"
-                         class="my-2"
-                    >
-                        <div :class="message.user_id === $page.props.user.id ? 'text-right' : 'text-left'">
-                            <span class="inline-block px-3 py-1 mr-2 rounded-lg"
-                                  :class="message.user_id === $page.props.user.id ? 'bg-blue-500 text-white' : 'bg-green-300 text-black'">
-                              {{ message.message }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div v-else class="text-center">
-                    No messages yet
-                </div>
-                <!--  text field  -->
-            </div>
-            <div>
-                <input
-                    v-model="inputMessage"
-                    type="text"
-                    class="bg-gray-50 mt-4 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-300 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Your message"
-                    required
-                    autocomplete="off"
-
-                >
-            </div>
-        </Dialog>
+        <Chat/>
     </div>
     <slot/>
 </template>
@@ -93,6 +48,7 @@
 
 import {Link} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
+import Chat from "@/Components/Chat.vue";
 import "../../../public/cssform/sidebar.css";
 import "../../../public/cssform/select.scss";
 import {useToast} from "vue-toastification";
@@ -104,115 +60,17 @@ export default {
 
     data() {
         return {
-            loadingChat: false,
-            inputMessage: '',
-            messages: [
-                {
-                    user_id: 3,
-                    message: 'Hello'
-                },
-                {
-                    user_id: 2,
-                    message: 'Hi'
-                },
-                {
-                    user_id: 3,
-                    message: 'How are you?'
-                },
-                {
-                    user_id: 2,
-                    message: 'I am fine'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
 
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-                {
-                    user_id: 3,
-                    message: 'Good to hear that'
-                },
-                {
-                    user_id: 2,
-                    message: 'Yes'
-                },
-            ]
         }
     },
 
     components: {
         Link,
+        Chat,
     },
 
     computed: {
-        recipientID: {
-            get() {
-                return this.$store.state.recipientID;
-            },
-            set(value) {
-                this.$store.commit('setRecipientID', value);
-            }
-        },
-        chat: {
-            get() {
-                return this.$store.state.chat;
-            },
-            set(value) {
-                this.$store.commit('setChat', value);
-            }
-        },
-        chatDialogue: {
-            get() {
-                return this.$store.state.chatDialogue;
-            },
-            set(value) {
-                this.$store.commit('setChatDialogue', value);
-            }
-        },
+
     },
 
     mounted() {
@@ -251,35 +109,15 @@ export default {
         closePanel() {
             document.querySelector('.sidebarIconToggle').click();
         },
-        getChatMessages() {
-            axios.post('/api/get-messages', [this.recipientID])
-                .then(response => {
-                    this.messages = response.data;
-                })
-                .catch(error => {
-                    console.error(error);
-                    toast.warning(error.response.data.message, {
-                        position: 'bottom-right',
-                    })
-                })
-        },
     },
-    watch: {
-        chatDialogue: {
-            handler(val) {
-                if (val) {
-                    this.getChatMessages();
-                } else {
-                    // when chat dialogue is being closed then reset the recipient ID
-                    this.recipientID = null;
-                }
-            }
-        },
 
-    }
 }
 </script>
 
 <style scoped>
+
+.p-badge-warning {
+    background: #fdb500 !important;
+}
 
 </style>

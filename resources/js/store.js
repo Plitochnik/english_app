@@ -3,14 +3,14 @@ import { createStore } from 'vuex';
 
 const store = createStore({
     state: {
-        chat: [],
+        // chat: [],
         recipientID: null,
         chatDialogue: false,
     },
     mutations: {
-        setChat(state, value) {
-            state.chat = value;
-        },
+        // setChat(state, value) {
+        //     state.chat = value;
+        // },
         setRecipientID(state, value) {
             state.recipientID = value;
         },

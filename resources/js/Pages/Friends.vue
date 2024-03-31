@@ -463,18 +463,6 @@ export default {
 
 <style lang="css">
 
-/* make the scroll bar having a blue and green gradient color */
-.chat::-webkit-scrollbar {
-    width: 10px;
-}
-.chat::-webkit-scrollbar-track {
-    background: transparent;
-}
-.chat::-webkit-scrollbar-thumb {
-    background: #72a1f4;
-    border-radius: 10px;
-}
-
 /* hide the whole dialogue scrollbar for the chat */
 .chat-dialogue-box:first-child .p-dialog-content {
     overflow: hidden;

@@ -137,6 +137,7 @@ createInertiaApp({
                 maxToasts: 1,
                 hideProgressBar: true,
                 timeout: 2000,
+                position: 'bottom-right',
             })
             .use(store)
             .use(PrimeVue)
