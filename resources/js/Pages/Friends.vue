@@ -1,9 +1,5 @@
 <template>
-
-    <!--    <meta name="viewport" content="width=600">-->
-
     <Head title="Friends"/>
-    <!-- <table-test :user-name="userName"></table-test> -->
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="padding-top: 10px;">
         <div class="main-block bg-white overflow-hidden shadow-xl">
@@ -139,7 +135,7 @@
             <span class="flex p-text-secondary mb-5">
                 Search for people around the world and send them an invitation
             </span>
-            <div class="mb-10 sm:px-20 bg-white border-gray-200">
+            <div class="mb-10 sm:px-20">
                 <SearchBox :searchValue="search" @update:searchValue="search = $event"
                            :aria-label="'Search for people'"/>
             </div>
@@ -284,10 +280,6 @@ export default {
             let user = this.friends.find((user) => user.id === this.friendToDelete.id);
 
             if (!user.hasOwnProperty('deleting')) {
-                toast.warning('Deleting friend...', {
-                    position: 'bottom-right',
-                })
-
                 this.friends.forEach((item) => {
                     if (item.id === this.friendToDelete.id) {
                         item.deleting = true;

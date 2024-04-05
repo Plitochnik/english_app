@@ -4,21 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Chats;
 use App\Models\Messages;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mockery\Exception;
 
 class ChatController extends Controller
 {
     public function startChat(Request $request)
     {
         $userID = auth()->user()->id;
-        $recipients = $request->toArray();
         $chatMembers = [$userID];
+        $recipients = User::select('id', 'name', 'email')
+            ->whereIn('id', $request->toArray())
+            ->where('id', '!=', $userID)
+            ->get();
 
         // check if they chatted yet
         foreach ($recipients as $recipient) {
-            $chatMembers[] = $recipient;
+            $chatMembers[] = $recipient['id'];
         }
 
         sort($chatMembers);
@@ -39,7 +42,10 @@ class ChatController extends Controller
             ], 500);
         }
 
-        return $this->getMessages($chatID);
+        return [
+            'messages' => $this->getMessages($chatID),
+            'recipients' => $recipients,
+        ];
     }
 
     private function getMessages($chatID): array
@@ -49,5 +55,38 @@ class ChatController extends Controller
             ->orderBy('created_at')
             ->get()
             ->toArray();
+    }
+
+    public function sendMessage(Request $request)
+    {
+        $userID = auth()->user()->id;
+        $chatID = $this->getChatID($request['recipients']);
+        $message = $request['message']['title'];
+
+        if (!$message) {
+            return response(['message' => 'You can\'t send an empty text'], 500);
+        }
+
+        // TODO: add the websocket private event and add the JobQueue
+
+        Messages::create([
+            'title' => $request['message']['title'],
+            'chat_id' => $chatID,
+            'user_id' => $userID,
+        ]);
+
+        return true;
+    }
+
+    private function getChatID($recipients)
+    {
+        $userID = auth()->user()->id;
+        $recipientIDs = array_column($recipients, 'id');
+
+        $chatMembers = array_merge($recipientIDs, [$userID]);
+        sort($chatMembers);
+        $chatMembers = implode('-', $chatMembers);
+
+        return Chats::firstOrCreate(['users' => $chatMembers])->id;
     }
 }

@@ -42,5 +42,6 @@ Route::middleware([
 
     // messages
     Route::post('/api/get-messages', [ChatController::class, 'startChat']);
+    Route::post('/api/send-message', [ChatController::class, 'sendMessage']);
 
 });

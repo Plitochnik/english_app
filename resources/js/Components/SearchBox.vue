@@ -77,7 +77,6 @@ export default {
     align-content: center;
     justify-items: stretch;
     align-items: stretch;
-    background: hsl(0, 0%, 99%);
     padding-top: 5vh;
 }
 
@@ -94,6 +93,10 @@ export default {
     border-radius: 100px;
     font: 24px/1 system-ui, sans-serif;
     outline-offset: -8px;
+}
+
+#search input:focus {
+    outline: none;
 }
 
 #search svg {
