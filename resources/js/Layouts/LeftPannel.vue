@@ -38,7 +38,9 @@
         </ul>
 
         <!--  chat  -->
-        <Chat/>
+        <Chat
+            :newPrivateMessage="newPrivateMessage"
+        />
     </div>
     <slot/>
 </template>
@@ -60,7 +62,7 @@ export default {
 
     data() {
         return {
-
+            newPrivateMessage: null,
         }
     },
 
@@ -70,7 +72,30 @@ export default {
     },
 
     computed: {
-
+        newMessageNotification: {
+            get() {
+                return this.$store.state.newMessageNotification;
+            },
+            set(value) {
+                this.$store.commit('setNewMessageNotification', value);
+            }
+        },
+        privateMessages: {
+            get() {
+                return this.$store.state.privateMessages;
+            },
+            set(value) {
+                this.$store.commit('setPrivateMessages', value);
+            }
+        },
+        recipientID: {
+            get() {
+                return this.$store.state.recipientID;
+            },
+            set(value) {
+                this.$store.commit('setRecipientID', value);
+            }
+        },
     },
 
     mounted() {
@@ -100,7 +125,11 @@ export default {
                         })
                     })
 
-                //
+                // private messages
+                Echo.private('messages-for-user.' + this.$page.props.user.id)
+                    .listen('.private.messages', res => {
+                        this.handleNewPrivateMessage(res.message, res.user, res.created_at);
+                    })
             }
         },
         leaveChannels() {
@@ -109,15 +138,41 @@ export default {
         closePanel() {
             document.querySelector('.sidebarIconToggle').click();
         },
+        handleNewPrivateMessage(message, sender, created_at) {
+            // TODO: fix the issue of returning using through the event
+            // TODO: fix the multiple notifications issue
+            // TODO: add the friend check in the backend 'channel'
+
+            this.newPrivateMessage = {title: message, name: sender.name, user_id: sender.id, created_at: created_at};
+
+            // if the current user is looking at the chat then add the new message to the UI, otherwise only show a notification
+            if (this.recipientID) {
+                this.privateMessages.push(this.newPrivateMessage)
+            } else {
+                this.newMessageNotification = true;
+            }
+        },
     },
 
 }
 </script>
 
-<style scoped>
+<style>
 
 .p-badge-warning {
     background: #fdb500 !important;
+}
+
+.p-dialog {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* change the style of the notification dialogue header   */
+.newPrivateMessageNotification .p-dialog-title {
+    font-size: 20px;
+    color: black;
+    /*remove bold text*/
+    font-weight: normal;
 }
 
 </style>

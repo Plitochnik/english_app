@@ -17,8 +17,8 @@
                      class="chat bg-white border-gray-600 p-4 overflow-auto flex flex-col justify-between"
                 >
                     <!--      Chat        -->
-                    <div v-if="messages.length" class="mb-3">
-                        <div v-for="(message, index) in messages"
+                    <div v-if="privateMessages.length" class="mb-3">
+                        <div v-for="(message, index) in privateMessages"
                              :key="index"
                              class="my-2 mt-4"
                         >
@@ -65,6 +65,30 @@
                 >
             </div>
         </Dialog>
+
+        <!--   Notification about messages   -->
+        <Dialog v-model:visible="newMessageNotification"
+                v-if="newPrivateMessage"
+                header="New message"
+                :style="{ width: '25rem' }" position="bottomright" :modal="false" :draggable="false" class="newPrivateMessageNotification"
+                :dismissableMask="true"
+        >
+            <div class="flex ">
+
+            </div>
+            <div class="align-items-center gap-3 mb-5" style="font-size: 20px">
+                <b>{{ newPrivateMessage.name }}</b> <br>
+                {{ newPrivateMessage.title }}
+            </div>
+            <div class="flex justify-between">
+                <Button type="button" label="Open chat"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                        @click="chatDialogue = true; recipientID = newPrivateMessage.user_id" />
+                <span>
+                    {{ normalizeDate(newPrivateMessage.created_at) }}
+                </span>
+            </div>
+        </Dialog>
     </div>
 </template>
 <script>
@@ -75,10 +99,11 @@ export default {
         return {
             loadingChat: false,
             inputMessage: '',
-            messages: [],
             recipients: [],
             countScroll: 0,
             temporaryLoadingKeys: [],
+            notificationTimer: 3,
+            intervalNotification: null,
         }
     },
     computed: {
@@ -98,13 +123,35 @@ export default {
                 this.$store.commit('setChatDialogue', value);
             }
         },
+        newMessageNotification: {
+            get() {
+                return this.$store.state.newMessageNotification;
+            },
+            set(value) {
+                this.$store.commit('setNewMessageNotification', value);
+            }
+        },
+        privateMessages: {
+            get() {
+                return this.$store.state.privateMessages;
+            },
+            set(value) {
+                this.$store.commit('setPrivateMessages', value);
+            }
+        },
+    },
+    props: {
+        newPrivateMessage: {
+            type: Object,
+            default: null,
+        },
     },
     methods: {
         getChatMessages() {
             this.loadingChat = true;
             axios.post('/api/get-messages', [this.recipientID])
                 .then(response => {
-                    this.messages = response.data.messages;
+                    this.privateMessages = response.data.messages;
                     this.recipients = response.data.recipients;
 
                     this.scrollToBottom();
@@ -134,7 +181,7 @@ export default {
                 loadingKey: newKey,
             };
 
-            this.messages.push(message)
+            this.privateMessages.push(message)
             this.scrollToBottom();
 
             axios.post('/api/send-message', {
@@ -143,7 +190,7 @@ export default {
             })
                 .then(response => {
                     // disable loading
-                    this.messages.forEach((item) => {
+                    this.privateMessages.forEach((item) => {
                         if (item.hasOwnProperty('loadingKey') && item.loadingKey === newKey) {
                             delete item.loadingKey;
 
@@ -163,8 +210,6 @@ export default {
                 })
         },
         scrollToBottom() {
-            // TODO: make the scroll smooth
-
             if (this.countScroll >= 150) return; // something went wrong...
 
             setTimeout(() => {
@@ -172,7 +217,7 @@ export default {
                 this.$nextTick(() => {
                     if (chat) {
                         chat.scrollTop = chat.scrollHeight;
-                        this.countScroll = 0;
+                        this.countScroll = 0; // reset the counter
                     } else {
                         this.scrollToBottom();
                         this.countScroll++;
@@ -192,6 +237,15 @@ export default {
 
             return newKey;
         },
+        normalizeDate(date) {
+            return new Date(date).toLocaleString(undefined, { hour: 'numeric', minute: 'numeric' });
+        },
+        closeChat() {
+            // reset
+            this.recipientID = null;
+            this.recipients = [];
+            this.privateMessages = [];
+        },
     },
     watch: {
         chatDialogue: {
@@ -199,9 +253,24 @@ export default {
                 if (val) {
                     this.getChatMessages();
                 } else {
-                    // when chat dialogue is being closed then reset the recipients info
-                    this.recipientID = null;
-                    this.recipients = [];
+                    this.closeChat();
+                }
+            }
+        },
+        newMessageNotification: {
+            handler(val) {
+                if (val) {
+                    this.notificationTimer = 10
+
+                    this.intervalNotification = setInterval(() => {
+                        this.notificationTimer--;
+
+                        if (this.notificationTimer <= 0) {
+                            // close dialogue
+                            this.newMessageNotification = false;
+                            clearInterval(this.intervalNotification);
+                        }
+                    }, 1000)
                 }
             }
         },
@@ -223,5 +292,9 @@ export default {
     border-radius: 10px;
 }
 
+/* change the style of the notification dialogue header   */
+.p-dialog-title {
+    background: red;
+}
 
 </style>

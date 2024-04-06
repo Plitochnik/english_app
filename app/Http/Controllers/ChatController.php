@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PrivateMessages;
 use App\Models\Chats;
 use App\Models\Messages;
 use App\Models\User;
@@ -68,12 +69,17 @@ class ChatController extends Controller
         }
 
         // TODO: add the websocket private event and add the JobQueue
-
-        Messages::create([
+        $newMessage = Messages::create([
             'title' => $request['message']['title'],
             'chat_id' => $chatID,
             'user_id' => $userID,
         ]);
+
+        // dispatch message to all recipients
+        foreach ($request['recipients'] as $recipient) {
+             broadcast(new PrivateMessages(User::find($recipient['id']), $message, $newMessage->created_at))->toOthers();
+        }
+
 
         return true;
     }

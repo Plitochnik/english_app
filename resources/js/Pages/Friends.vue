@@ -500,4 +500,5 @@ export default {
     height: 40px;
     padding-left: 10px;
 }
+
 </style>

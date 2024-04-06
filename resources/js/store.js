@@ -3,20 +3,25 @@ import { createStore } from 'vuex';
 
 const store = createStore({
     state: {
-        // chat: [],
         recipientID: null,
         chatDialogue: false,
+        newMessageNotification: false,
+        privateMessages: [],
     },
     mutations: {
-        // setChat(state, value) {
-        //     state.chat = value;
-        // },
         setRecipientID(state, value) {
             state.recipientID = value;
         },
         setChatDialogue(state, value) {
             state.chatDialogue = value;
         },
+        setNewMessageNotification(state, value) {
+            state.newMessageNotification = value;
+        },
+        setPrivateMessages(state, value) {
+            state.privateMessages = value;
+        },
+
     }
 })
 
