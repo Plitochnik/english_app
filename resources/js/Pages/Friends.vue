@@ -39,7 +39,7 @@
 
                     <!--    list of friends    -->
                     <div v-for="friend in friends" :key="friend.id"
-                         class="hover:bg-gray-100 border-gray-200 cursor-pointer rounded-md pl-4 pr-4 pb-4"
+                         class="hover:bg-gray-100 border-gray-200 rounded-md pl-4 pr-4 pb-4"
                     >
                         <div
                             v-if="!friend.hide"

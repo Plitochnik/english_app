@@ -39,6 +39,7 @@
 
         <!--  chat  -->
         <Chat
+            ref="chatComponent"
             :newPrivateMessage="newPrivateMessage"
         />
     </div>
@@ -54,6 +55,7 @@ import Chat from "@/Components/Chat.vue";
 import "../../../public/cssform/sidebar.css";
 import "../../../public/cssform/select.scss";
 import {useToast} from "vue-toastification";
+import { ref } from 'vue';
 
 const toast = useToast();
 
@@ -72,14 +74,6 @@ export default {
     },
 
     computed: {
-        newMessageNotification: {
-            get() {
-                return this.$store.state.newMessageNotification;
-            },
-            set(value) {
-                this.$store.commit('setNewMessageNotification', value);
-            }
-        },
         privateMessages: {
             get() {
                 return this.$store.state.privateMessages;
@@ -128,7 +122,7 @@ export default {
                 // private messages
                 Echo.private('messages-for-user.' + this.$page.props.user.id)
                     .listen('.private.messages', res => {
-                        this.handleNewPrivateMessage(res.message, res.user, res.created_at);
+                        this.handleNewPrivateMessage(res.message, res.sender, res.created_at);
                     })
             }
         },
@@ -148,8 +142,9 @@ export default {
             // if the current user is looking at the chat then add the new message to the UI, otherwise only show a notification
             if (this.recipientID) {
                 this.privateMessages.push(this.newPrivateMessage)
+                this.$refs.chatComponent.scrollToBottom();
             } else {
-                this.newMessageNotification = true;
+                this.$refs.chatComponent.showNotification();
             }
         },
     },

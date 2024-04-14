@@ -37,10 +37,7 @@ export default {
     ],
 
     mounted() {
-        Echo.channel('test-ws')
-            .listen('.test-message', res => {
-                console.log(res)
-            })
+
     }
 }
 

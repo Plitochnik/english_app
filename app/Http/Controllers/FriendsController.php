@@ -17,6 +17,8 @@ class FriendsController extends Controller
     {
         $userID = auth()->user()->id;
 
+        // TODO: logic of showing a count of the new messages on each friend
+
         return Friends::where('user_id', $userID)
             ->with(['users' => function ($query) {
                 $query->select('id', 'name', 'profile_photo_path');

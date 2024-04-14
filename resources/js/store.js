@@ -5,7 +5,6 @@ const store = createStore({
     state: {
         recipientID: null,
         chatDialogue: false,
-        newMessageNotification: false,
         privateMessages: [],
     },
     mutations: {
@@ -14,9 +13,6 @@ const store = createStore({
         },
         setChatDialogue(state, value) {
             state.chatDialogue = value;
-        },
-        setNewMessageNotification(state, value) {
-            state.newMessageNotification = value;
         },
         setPrivateMessages(state, value) {
             state.privateMessages = value;

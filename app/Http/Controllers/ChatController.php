@@ -60,7 +60,7 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $userID = auth()->user()->id;
+        $sender = auth()->user();
         $chatID = $this->getChatID($request['recipients']);
         $message = $request['message']['title'];
 
@@ -68,18 +68,20 @@ class ChatController extends Controller
             return response(['message' => 'You can\'t send an empty text'], 500);
         }
 
-        // TODO: add the websocket private event and add the JobQueue
+        if (strlen($message) > 1000) {
+            return response(['message' => 'Messages have 1000 characters limit. Your message is too long'], 500);
+        }
+
         $newMessage = Messages::create([
             'title' => $request['message']['title'],
             'chat_id' => $chatID,
-            'user_id' => $userID,
+            'user_id' => $sender->id,
         ]);
 
         // dispatch message to all recipients
         foreach ($request['recipients'] as $recipient) {
-             broadcast(new PrivateMessages(User::find($recipient['id']), $message, $newMessage->created_at))->toOthers();
+             broadcast(new PrivateMessages(User::find($recipient['id']), $sender, $message, $newMessage->created_at))->toOthers();
         }
-
 
         return true;
     }
