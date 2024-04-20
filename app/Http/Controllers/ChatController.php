@@ -34,6 +34,9 @@ class ChatController extends Controller
 
             $chatID = Chats::firstOrCreate(['users' => $chatMembers])->id;
 
+            // set all messages as seen
+            Messages::where('chat_id', $chatID)->update(['is_seen' => 1]);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -47,6 +50,17 @@ class ChatController extends Controller
             'messages' => $this->getMessages($chatID),
             'recipients' => $recipients,
         ];
+    }
+
+    public function getCountNewMessages($friendID)
+    {
+        $userID = auth()->user()->id;
+        $chatMembers = [$userID, $friendID];
+        sort($chatMembers);
+
+        $chatID = Chats::where('users', implode('-', $chatMembers))->value('id');
+
+        return Messages::where('chat_id', $chatID)->where('is_seen', 0)->count();
     }
 
     private function getMessages($chatID): array
@@ -80,10 +94,16 @@ class ChatController extends Controller
 
         // dispatch message to all recipients
         foreach ($request['recipients'] as $recipient) {
-             broadcast(new PrivateMessages(User::find($recipient['id']), $sender, $message, $newMessage->created_at))->toOthers();
+             broadcast(new PrivateMessages(User::find($recipient['id']), $sender, $newMessage))->toOthers();
         }
 
         return true;
+    }
+
+    public function setMessageAsSeen(Request $request)
+    {
+        return Chats::where('id', $request['id'])->update(['is_seen' => 1]);
+//        return true;
     }
 
     private function getChatID($recipients)

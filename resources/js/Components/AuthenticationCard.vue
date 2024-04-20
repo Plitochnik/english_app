@@ -10,8 +10,9 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .form {
     justify-content: center;
+    background: linear-gradient(90deg, #74a5e7 0%, #9d8b4c 100%);
 }
 </style>

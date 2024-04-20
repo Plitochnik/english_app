@@ -9,7 +9,6 @@
         "ext-dom": "20031129",
         "ext-libxml": "*",
         "ext-pdo": "*",
-        "barryvdh/laravel-ide-helper": "*",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.5",
         "inertiajs/inertia-laravel": "^0.6.3",

@@ -19,6 +19,7 @@ import Table from "../Statistic/Table/Table.vue";
 import "../../../../public/cssform/select.scss";
 // import Sidebar from "../Sidebar.vue";
 import TableTest from "@/Pages/Sidebar/TableTest.vue";
+import LeftPannel from "@/Layouts/LeftPannel.vue";
 
 export default {
     name: "Dashboard",
@@ -30,6 +31,8 @@ export default {
         // Sidebar,
         Table,
     },
+
+    layout: LeftPannel,
 
     props: [
         'userName',

@@ -17,8 +17,6 @@ class FriendsController extends Controller
     {
         $userID = auth()->user()->id;
 
-        // TODO: logic of showing a count of the new messages on each friend
-
         return Friends::where('user_id', $userID)
             ->with(['users' => function ($query) {
                 $query->select('id', 'name', 'profile_photo_path');
@@ -30,6 +28,7 @@ class FriendsController extends Controller
                 $friend['profile_photo_path'] = $friend->users->profile_photo_path;
                 // we need this for the FE search
                 $friend['hide'] = false;
+                $friend['new_messages'] = (new ChatController())->getCountNewMessages($friend['id']);
 
                 unset($friend->users);
                 return $friend;
@@ -156,7 +155,11 @@ class FriendsController extends Controller
     {
         $userID = auth()->user()->id;
 
-        FriendsInvitation::where('receiver_user_id', $userID)->delete();
+        $invitations = FriendsInvitation::where('receiver_user_id', $userID)->get()->toArray();
+
+        foreach ($invitations as $invitation) {
+            $this->acceptFriendshipInvite($invitation['sender_user_id']);
+        }
 
         return $this->getInvitesForMyself();
     }

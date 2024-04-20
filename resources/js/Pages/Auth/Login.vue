@@ -94,3 +94,9 @@ const submit = () => {
     </AuthenticationCard>
 
 </template>
+<style scoped>
+/*  make the background the gradient. on loading the page the gradient should smoothly animate */
+body {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+</style>

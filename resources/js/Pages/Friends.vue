@@ -64,12 +64,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="ml-auto">
-                                <Button :loading="friend.loading"
-                                        icon="pi pi-envelope" type="button"
-                                        @click="chatDialogue = true; recipientID = friend.id"
-                                        class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
-                                />
+                            <div class="ml-auto button-container" style="display: flex; align-items: center;">
+                                <div style="position: relative;">
+                                    <Button :loading="friend.loading"
+                                            icon="pi pi-envelope" type="button"
+                                            @click="chatDialogue = true; recipientID = friend.id; friend.new_messages = 0"
+                                            class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                                    />
+                                    <Badge v-if="friend.new_messages" :value="friend.new_messages" style="position: absolute; top: 0; right: -10px;"></Badge>
+                                </div>
                                 <Button :loading="friend.loading"
                                         icon="pi pi-trash" type="button"
                                         @click="confirmFriendDeletion($event, friend)"
@@ -95,7 +98,7 @@
                 Invites that you have received
                 <div
                     class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-auto"
-                    style="border-radius: 10px; width: 17%; cursor: pointer">
+                    style="border-radius: 10px; cursor: pointer">
                     <Button :loading="acceptingAllProcess" type="button" @click="acceptAllInvitations()"
                             label="Accept All"/>
                 </div>
@@ -215,6 +218,9 @@ export default {
     },
     layout: LeftPannel,
     computed: {
+        url() {
+            return window.location.href;
+        },
         noResults() {
             return !this.users.length && !this.searchingUsers && this.search && !this.searchInterval;
         },
@@ -419,6 +425,7 @@ export default {
             axios.get('/api/accept-all-invitations')
                 .then(response => {
                     this.invitations = response.data;
+                    this.getFriends();
                 })
                 .catch(error => {
                     console.error(error);
@@ -468,8 +475,9 @@ export default {
     transform: translate(-50%, -50%);
 }
 
-.p-badge-warning {
+.p-badge {
     background: #fdb500 !important;
+    color: white;
 }
 
 .main-block {

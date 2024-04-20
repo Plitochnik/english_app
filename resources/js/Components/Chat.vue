@@ -115,12 +115,8 @@ export default {
             showMessageNotification: false,
         }
     },
+
     computed: {
-        textareaStyle() {
-            const lines = this.inputMessage.split('\n').length;
-            const height = Math.min(lines * 1.15, 20) + 'em'; // Adjust the multiplier and maximum value as needed
-            return {height};
-        },
         recipientID: {
             get() {
                 return this.$store.state.recipientID;
@@ -146,12 +142,14 @@ export default {
             }
         },
     },
+
     props: {
         newPrivateMessage: {
             type: Object,
             default: null,
         },
     },
+
     methods: {
         getChatMessages() {
             this.loadingChat = true;
@@ -240,6 +238,16 @@ export default {
             }, 100);
 
         },
+        setMessageAsSeen(id) {
+            axios.post('/api/set-message-seen/', {id: id})
+                .then()
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                    })
+                })
+        },
         generateRandomHash() {
             let newKey = Math.random().toString(36).substring(2, 15);
 
@@ -260,6 +268,9 @@ export default {
             this.recipients = [];
             this.privateMessages = [];
         },
+        // incrementBadge(friendID) {
+        //     this.
+        // },
         showNotification() {
             clearInterval(this.intervalNotification);
             this.notificationTimer = 10;

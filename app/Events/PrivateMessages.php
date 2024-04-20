@@ -19,7 +19,7 @@ class PrivateMessages implements ShouldBroadcast
 
     private User $recipient;
 
-    private string $message;
+    private array $message;
 
     private string $created_at;
 
@@ -28,12 +28,11 @@ class PrivateMessages implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(User $recipient, User $sender, $message, $created_at)
+    public function __construct(User $recipient, User $sender, $message)
     {
         $this->recipient = $recipient;
         $this->sender = $sender;
         $this->message = $message;
-        $this->created_at = $created_at;
     }
 
     /**
@@ -56,7 +55,6 @@ class PrivateMessages implements ShouldBroadcast
         return [
             'sender' => ['id' => $this->sender->id, 'name' => $this->sender->name],
             'message' => $this->message,
-            'created_at' => $this->created_at,
         ];
     }
 }

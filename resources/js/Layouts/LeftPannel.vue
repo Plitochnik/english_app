@@ -19,19 +19,27 @@
                 <Link :href="route('home')">{{ $page.props.user.name }}</Link>
                 <span>User</span>
             </li>
-            <li class="dashboard">
-                <Link :href="route('dashboard')" target="_blank">
+            <li class="dashboard" style="padding: 0;">
+                <Link :href="route('dashboard')" target="_blank" class="flex">
+                    <i class="pi pi-chart-bar mr-4" style="font-size: 1rem"/>
                     Dashboard
                 </Link>
             </li>
-            <li class="settings">
-                <Link :href="route('show.friends')" target="_blank">Friends</Link>
+            <li class="settings" style="padding: 0">
+                <Link :href="route('show.friends')" target="_blank" class="flex">
+                    <i class="pi pi-users mr-4" style="font-size: 1rem"/>
+                    Friends
+                </Link>
             </li>
-            <li class="settings">
-                <Link :href="route('profile.show')" target="_blank">Account</Link>
+            <li class="settings" style="padding: 0">
+                <Link :href="route('profile.show')" target="_blank" class="flex">
+                    <i class="pi pi-cog mr-4" style="font-size: 1rem"/>
+                    Account
+                </Link>
             </li>
             <a v-if="$page.props.user" @click="logout" class="logout">
-                <button type="submit" class="">
+                <button type="submit" class="flex">
+                    <i class="pi pi-sign-out mr-2" style="font-size: 1rem"/>
                     Log out
                 </button>
             </a>
@@ -55,7 +63,7 @@ import Chat from "@/Components/Chat.vue";
 import "../../../public/cssform/sidebar.css";
 import "../../../public/cssform/select.scss";
 import {useToast} from "vue-toastification";
-import { ref } from 'vue';
+import {ref} from 'vue';
 
 const toast = useToast();
 
@@ -108,6 +116,10 @@ export default {
 
             Inertia.post(route('logout'));
         },
+        detectCurrentModule(module) {
+            const url = window.location.href;
+            return url.includes(module);
+        },
         listenChannels() {
             if (this.$page.props.user) {
                 // Invitation
@@ -122,7 +134,7 @@ export default {
                 // private messages
                 Echo.private('messages-for-user.' + this.$page.props.user.id)
                     .listen('.private.messages', res => {
-                        this.handleNewPrivateMessage(res.message, res.sender, res.created_at);
+                        this.handleNewPrivateMessage(res.message, res.sender);
                     })
             }
         },
@@ -132,17 +144,21 @@ export default {
         closePanel() {
             document.querySelector('.sidebarIconToggle').click();
         },
-        handleNewPrivateMessage(message, sender, created_at) {
-            // TODO: fix the issue of returning using through the event
-            // TODO: fix the multiple notifications issue
-            // TODO: add the friend check in the backend 'channel'
+        handleNewPrivateMessage(message, sender) {
+            // TODO: add the friend check in the backend 'channel
 
-            this.newPrivateMessage = {title: message, name: sender.name, user_id: sender.id, created_at: created_at};
+            this.newPrivateMessage = {
+                title: message.title,
+                name: sender.name,
+                user_id: sender.id,
+                created_at: message.created_at
+            };
 
             // if the current user is looking at the chat then add the new message to the UI, otherwise only show a notification
             if (this.recipientID) {
                 this.privateMessages.push(this.newPrivateMessage)
                 this.$refs.chatComponent.scrollToBottom();
+                this.$refs.chatComponent.setMessageAsSeen(message.id);
             } else {
                 this.$refs.chatComponent.showNotification();
             }
