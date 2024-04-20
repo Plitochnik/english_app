@@ -72,7 +72,7 @@ const submit = () => {
 
             <div class="block mt-4">
                 <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <Checkbox v-model:checked="form.remember" name="remember" style="display: flex !important" />
                     <span class="ml-3 text-sm text-gray-600">Remember me</span>
                 </label>
             </div>
@@ -95,8 +95,5 @@ const submit = () => {
 
 </template>
 <style scoped>
-/*  make the background the gradient. on loading the page the gradient should smoothly animate */
-body {
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-}
+
 </style>

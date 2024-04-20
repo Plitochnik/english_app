@@ -12,7 +12,19 @@
 
 <style scoped>
 .form {
+    background: radial-gradient(#eff3f6, #8ec0f9);
+}
+.form {
+    background: radial-gradient(#eff3f6, #8ec0f9);
+    display: flex;
     justify-content: center;
-    background: linear-gradient(90deg, #74a5e7 0%, #9d8b4c 100%);
+    align-items: center;
+    height: 100vh;
+}
+
+@media (max-width: 600px) {
+    .form {
+        flex-direction: column;
+    }
 }
 </style>

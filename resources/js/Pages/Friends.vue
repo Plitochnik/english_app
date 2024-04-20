@@ -134,7 +134,7 @@
         </Dialog>
 
         <!--    find and add people    -->
-        <Dialog v-model:visible="addFriendDialogue" modal header="Search" class="dialog-box" @hide="closeDialogue">
+        <Dialog v-model:visible="addFriendDialogue" :style="{ height: '40em' }" modal header="Search" class="dialog-box" @hide="closeDialogue">
             <span class="flex p-text-secondary mb-5">
                 Search for people around the world and send them an invitation
             </span>

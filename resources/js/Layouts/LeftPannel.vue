@@ -7,7 +7,7 @@
         <div class="spinner horizontal"></div>
         <div class="spinner diagonal part-2"></div>
     </label>
-    <div id="sidebarMenu">
+    <div id="sidebarMenu" style="display: flex; flex-direction: column; justify-content: space-between; height: 94%;">
         <ul class="sidebarMenuInner" @click.prevent="closePanel()">
             <li v-if="!$page.props.user" class="log-in">
                 <u class="unregister">
@@ -37,13 +37,13 @@
                     Account
                 </Link>
             </li>
-            <a v-if="$page.props.user" @click="logout" class="logout">
-                <button type="submit" class="flex">
-                    <i class="pi pi-sign-out mr-2" style="font-size: 1rem"/>
-                    Log out
-                </button>
-            </a>
         </ul>
+        <a v-if="$page.props.user" @click="logout" class="logout" style="margin-top: auto;">
+            <button type="submit" class="flex" style="white-space: nowrap; width: 100%">
+                <i class="pi pi-sign-out mr-2" style="font-size: 1rem"/>
+                Log out
+            </button>
+        </a>
 
         <!--  chat  -->
         <Chat
