@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="padding-top: 10px;">
         <div class="main-block bg-white overflow-hidden shadow-xl">
             <div class="flex justify-end gap-2 p-6">
-                <Button label="Invitations" @click="invitesDialogue = true"
+                <Button label="Invitations" @click="getFriendshipInvitations(); invitesDialogue = true"
                         :badge="invitations.length ? invitations.length.toString() : ''" icon="pi pi-book"
                         badgeSeverity="warning" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"/>
                 <!-- add friends -->
@@ -68,10 +68,11 @@
                                 <div style="position: relative;">
                                     <Button :loading="friend.loading"
                                             icon="pi pi-envelope" type="button"
-                                            @click="chatDialogue = true; recipientID = friend.id; friend.new_messages = 0"
+                                            @click="startChat(friend)"
                                             class="mt-4 card justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                                     />
-                                    <Badge v-if="friend.new_messages" :value="friend.new_messages" style="position: absolute; top: 0; right: -10px;"></Badge>
+                                    <Badge v-if="friend.new_messages" :value="friend.new_messages"
+                                           style="position: absolute; top: 0; right: -10px;"></Badge>
                                 </div>
                                 <Button :loading="friend.loading"
                                         icon="pi pi-trash" type="button"
@@ -94,47 +95,56 @@
 
         <!--    see invitations    -->
         <Dialog v-model:visible="invitesDialogue" modal header="Invites" :style="{ width: '45rem', height: '40em' }">
-            <span v-if="invitations.length" class="flex p-text-secondary mb-5">
-                Invites that you have received
-                <div
-                    class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-auto"
-                    style="border-radius: 10px; cursor: pointer">
-                    <Button :loading="acceptingAllProcess" type="button" @click="acceptAllInvitations()"
-                            label="Accept All"/>
+            <div v-if="invitations.length">
+                <span class="flex p-text-secondary mb-5">
+                    Invites that you have received
+                    <div
+                        class="card flex justify-content-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-auto"
+                        style="border-radius: 10px; cursor: pointer">
+                        <Button :loading="acceptingAllProcess" type="button" @click="acceptAllInvitations()"
+                                label="Accept All"/>
+                    </div>
+                </span>
+                <div v-for="invitation in invitations" :key="invitation.id"
+                     class="mt-10 ml-3 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <!--    user's image or just first letter of their name     -->
+                        <div v-if="invitation.sender_photo" class="flex-shrink-0">
+                            <img :src="invitation.sender_photo" class="w-10 h-10 rounded-full">
+                        </div>
+                        <div v-else
+                             class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                            {{ invitation.sender_name.charAt(0) }}
+                        </div>
+                        <div class="ml-4">
+                            <div class="text-xl font-medium text-gray-900">
+                                {{ invitation.sender_name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto"
+                        style="border-radius: 10px">
+                        <Button :loading="invitation.loading" type="button"
+                                @click="acceptInvitation(invitation.sender_user_id)" label="Accept" icon="pi pi-plus"/>
+                    </div>
                 </div>
-            </span>
-            <span v-else class="p-text-secondary mb-5 flex items-center justify-center mt-10
+            </div>
+            <div v-else-if="gettingInvitations"
+                 class="center flex items-center justify-center h-full overflow-hidden"
+            >
+                <ProgressSpinner style="width: 150px; height: 150px" strokeWidth="1" fill="white"
+                                 animationDuration=".9s" aria-label="Custom ProgressSpinner"/>
+            </div>
+            <span v-else-if="noInvitations" class="p-text-secondary mb-5 flex items-center justify-center mt-10
             ">
                 No invites
             </span>
-            <div v-for="invitation in invitations" :key="invitation.id"
-                 class="mt-10 ml-3 flex items-center justify-between">
-                <div class="flex items-center">
-                    <!--    user's image or just first letter of their name     -->
-                    <div v-if="invitation.sender_photo" class="flex-shrink-0">
-                        <img :src="invitation.sender_photo" class="w-10 h-10 rounded-full">
-                    </div>
-                    <div v-else
-                         class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
-                        {{ invitation.sender_name.charAt(0) }}
-                    </div>
-                    <div class="ml-4">
-                        <div class="text-xl font-medium text-gray-900">
-                            {{ invitation.sender_name }}
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="card flex justify-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto"
-                    style="border-radius: 10px">
-                    <Button :loading="invitation.loading" type="button"
-                            @click="acceptInvitation(invitation.sender_user_id)" label="Accept" icon="pi pi-plus"/>
-                </div>
-            </div>
         </Dialog>
 
         <!--    find and add people    -->
-        <Dialog v-model:visible="addFriendDialogue" :style="{ height: '40em' }" modal header="Search" class="dialog-box" @hide="closeDialogue">
+        <Dialog v-model:visible="addFriendDialogue" :style="{ height: '40em' }" modal header="Search" class="dialog-box"
+                @hide="closeDialogue">
             <span class="flex p-text-secondary mb-5">
                 Search for people around the world and send them an invitation
             </span>
@@ -178,7 +188,7 @@
                 <ProgressSpinner style="width: 150px; height: 150px" strokeWidth="1" fill="white"
                                  animationDuration=".9s" aria-label="Custom ProgressSpinner"/>
             </div>
-            <div v-else-if="noResults" class="flex items-center justify-center mt-10">
+            <div v-else-if="noUsersFound" class="flex items-center justify-center mt-10">
                 No results
             </div>
         </Dialog>
@@ -214,6 +224,7 @@ export default {
             friendSearch: '',
             isOverlayPanelVisible: false,
             friendToDelete: null,
+            gettingInvitations: false,
         }
     },
     layout: LeftPannel,
@@ -221,8 +232,11 @@ export default {
         url() {
             return window.location.href;
         },
-        noResults() {
+        noUsersFound() {
             return !this.users.length && !this.searchingUsers && this.search && !this.searchInterval;
+        },
+        noInvitations() {
+            return !this.invitations.length && !this.gettingInvitations;
         },
         recipientID: {
             get() {
@@ -249,7 +263,7 @@ export default {
     },
     mounted() {
         this.getFriends();
-        this.checkMyInvitations();
+        this.getFriendshipInvitations();
     },
     methods: {
         closeDialogue() {
@@ -310,6 +324,27 @@ export default {
                     })
             }
         },
+        startChat(friend) {
+            this.chatDialogue = true;
+            this.recipientID = friend.id;
+            this.readMessages(friend.id)
+        },
+        readMessages(friendID) {
+            axios.get('/api/set-messages-read/' + friendID)
+                .then(response => {
+                    this.friends.forEach((user) => {
+                        if (user.id === friendID) {
+                            user.new_messages = 0;
+                        }
+                    })
+                })
+                .catch(error => {
+                    console.error('Error reading messages:', error);
+                })
+                .finally(() => {
+                    this.searchingUsers = false;
+                });
+        },
         searchPeople(name) {
             this.searchingUsers = true;
 
@@ -361,7 +396,9 @@ export default {
                     })
                 })
         },
-        checkMyInvitations() {
+        getFriendshipInvitations() {
+            this.gettingInvitations = true;
+
             axios.get('/api/check-invites')
                 .then(response => {
                     this.invitations = response.data;
@@ -374,6 +411,7 @@ export default {
                 })
                 .finally(() => {
                     this.loadingInvitations = false;
+                    this.gettingInvitations = false
                 });
         },
         acceptInvitation(id) {

@@ -60,7 +60,7 @@ class ChatController extends Controller
 
         $chatID = Chats::where('users', implode('-', $chatMembers))->value('id');
 
-        return Messages::where('chat_id', $chatID)->where('is_seen', 0)->count();
+        return Messages::where('chat_id', $chatID)->where('is_seen', false)->count();
     }
 
     private function getMessages($chatID): array
@@ -90,6 +90,7 @@ class ChatController extends Controller
             'title' => $request['message']['title'],
             'chat_id' => $chatID,
             'user_id' => $sender->id,
+            'is_seen' => false,
         ]);
 
         // dispatch message to all recipients
@@ -116,5 +117,17 @@ class ChatController extends Controller
         $chatMembers = implode('-', $chatMembers);
 
         return Chats::firstOrCreate(['users' => $chatMembers])->id;
+    }
+
+    public function setMessagesRead($id)
+    {
+        $userID = auth()->user()->id;
+        $chatMembers = [$userID, $id];
+        sort($chatMembers);
+        $chatMembers = implode('-', $chatMembers);
+
+        $chatID = Chats::where('users', $chatMembers)->value('id');
+
+        return Messages::where('chat_id', $chatID)->update(['is_seen' => true]);
     }
 }

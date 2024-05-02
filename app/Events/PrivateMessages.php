@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Messages;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -19,7 +20,7 @@ class PrivateMessages implements ShouldBroadcast
 
     private User $recipient;
 
-    private array $message;
+    private Messages $message;
 
     private string $created_at;
 

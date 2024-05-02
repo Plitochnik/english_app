@@ -15,5 +15,6 @@ class Messages extends Model
         'title',
         'chat_id',
         'user_id',
+        'is_seen',
     ];
 }

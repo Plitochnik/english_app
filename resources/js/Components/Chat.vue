@@ -264,13 +264,27 @@ export default {
         },
         closeChat() {
             // reset
+            this.setMessagesAsRead(this.recipientID);
             this.recipientID = null;
             this.recipients = [];
             this.privateMessages = [];
         },
-        // incrementBadge(friendID) {
-        //     this.
-        // },
+        setMessagesAsRead(friendID) {
+            axios.get('/api/set-messages-read/' + friendID)
+                .then(response => {
+                    this.friends.forEach((user) => {
+                        if (user.id === friendID) {
+                            user.new_messages = 0;
+                        }
+                    })
+                })
+                .catch(error => {
+                    console.error('Error reading messages:', error);
+                })
+                .finally(() => {
+                    this.searchingUsers = false;
+                });
+        },
         showNotification() {
             clearInterval(this.intervalNotification);
             this.notificationTimer = 10;

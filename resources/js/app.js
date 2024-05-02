@@ -7,13 +7,13 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import Lara from '@/presets/lara';
 import store from '../js/store.js';
 
 // prime vue styles
 import 'primevue/resources/themes/aura-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
+import "../css/flags.css";
 
 // prime vue components
 import PrimeVue from 'primevue/config';

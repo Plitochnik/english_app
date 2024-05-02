@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Events\FriendshipInviteEvent;
+use App\Models\Chats;
 use App\Models\Friends;
 use App\Models\FriendsInvitation;
+use App\Models\Messages;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
