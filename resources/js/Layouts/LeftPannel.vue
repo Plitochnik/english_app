@@ -169,14 +169,17 @@ export default {
 </script>
 
 <style>
+* {
+    font-family: 'Mulish', sans-serif;
+}
 
 .p-badge-warning {
     background: #fdb500 !important;
 }
 
-.p-dialog {
+/*.p-dialog {
     font-family: 'Nunito', sans-serif;
-}
+}*/
 
 /* change the style of the notification dialogue header   */
 .newPrivateMessageNotification .p-dialog-title {
@@ -184,6 +187,21 @@ export default {
     color: black;
     /*remove bold text*/
     font-weight: normal;
+}
+
+.p-button {
+    color: #ffffff;
+    background: #2563ea;
+    border: 1px solid #2563ea;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
+    border-radius: 6px;
+    outline-color: transparent;
+}
+
+.p-button:hover {
+    background: #1e4bb1;
 }
 
 </style>
