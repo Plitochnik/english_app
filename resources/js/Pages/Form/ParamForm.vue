@@ -117,8 +117,77 @@
 
             </div>
         </div>
-        <div class="inviteFriendsFields">
-            <div class="text-center text-4xl">Invite your friend</div>
+
+        <div class="onlineGameSetUp text-center">
+            <div class="text-4xl">Online game</div>
+            <div class="mt-6">
+                <div v-if="isGeneratingKey" class="mt-7">
+                    <div style="display: flex; justify-content: center">
+                        <Skeleton width="150px" height="150px"></Skeleton>
+                    </div>
+
+                    <div style="display: flex">
+                        <Skeleton height="2rem" class="mt-2"></Skeleton>
+                        <Skeleton size="2rem" class="mt-2 ml-2"></Skeleton>
+                    </div>
+                </div>
+                <div v-else-if="!gameKey && !isGeneratingKey" class="mt-6">
+                    <Button aria-label="copy"
+                            class="bg-blue-500 hover:bg-blue-600 text-white"
+                            label="Generate code"/>
+                </div>
+                <div v-else class="gameCredentials">
+                    <img
+                        src="https://www.qr-code-generator.com/wp-content/themes/qr/new_structure/markets/basic_market/generator/dist/generator/assets/images/websiteQRCode_noFrame.png"
+                        alt="QR code" class="QRcode">
+                    <div v-if="gameKey" style="display: flex">
+                        <InputText v-model="gameKey" disabled class="py-1 pl-2" style="cursor: text"/>
+                        <Button @click="copyKey" :icon="isKeyCopied ? 'pi pi-check' :'pi pi-copy'" aria-label="copy"
+                                class="copyKeyButton ml-2"/>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="gameKey">
+                <div class="text-left flex mt-3">
+                    <InputSwitch v-model="isPrivateGame"/>
+                    <span class="ml-2">Private game</span>
+                </div>
+                <!--  list of friends  -->
+                <div v-if="friends.length" class="friends mt-5">
+                    <div v-for="user in friends" :key="user.id" class="friendRow rounded-lg">
+                        <div class="flex py-2 ml-1">
+                            <!--    user's image or just first letter of their name     -->
+                            <div v-if="user.profile_photo_path" class="flex-shrink-0">
+                                <img :src="user.profile_photo_path" class="w-10 h-10 rounded-full">
+                            </div>
+                            <div v-else
+                                 class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                                {{ user.name.charAt(0) }}
+                            </div>
+
+                            <div class="ml-4 text-xl font-medium text-gray-900">
+                                {{ user.name }}
+                            </div>
+                            <div class="ml-auto">
+                                <Button :loading="user.loading" :disabled="user.added"
+                                        :label="user.status ? user.status : 'Give access'" type="button"
+                                        class="card flex justify-content-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 mr-1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  skeleton loading users  -->
+                <div v-else-if="!friends.length && gettingFriends" class="mt-5">
+                    <div v-for="n in 5">
+                        <div class="flex items-center py-2">
+                            <Skeleton shape="circle" size="2.6rem" class="mr-2"></Skeleton>
+                            <Skeleton width="7rem" class="ml-2"></Skeleton>
+                            <Skeleton class="ml-auto" width="8.5rem" height="2.3rem"></Skeleton>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -131,13 +200,6 @@ import LeftPannel from '@/Layouts/LeftPannel.vue';
 
 export default {
     name: "ParamForm",
-    components: {
-        Head,
-        StartTestButton,
-        StartOnlineGameButton,
-        Link,
-    },
-    layout: LeftPannel,
     data() {
         return {
             languages: [
@@ -152,8 +214,21 @@ export default {
             checker_test_lang: '',
             checker_home_lang: '',
             selectedMode: 'local',
+            gameKey: null,
+            isGeneratingKey: false,
+            friends: [],
+            isKeyCopied: false,
+            gettingFriends: false,
+            isPrivateGame: false,
         }
     },
+    components: {
+        Head,
+        StartTestButton,
+        StartOnlineGameButton,
+        Link,
+    },
+    layout: LeftPannel,
     methods: {
         setGameMode(mode) {
             if (this.selectedMode === mode) return;
@@ -163,14 +238,14 @@ export default {
             if (mode === 'online') {
                 // increase the width
                 let width = 0;
-                document.querySelector('.inviteFriendsFields').style.display = 'block';
+                document.querySelector('.onlineGameSetUp').style.display = 'block';
 
                 this.extendSizeInterval = setInterval(() => {
                     if (width >= 400) {
                         clearInterval(this.extendSizeInterval);
                     } else {
                         width += 20;
-                        document.querySelector('.inviteFriendsFields').style.width = width + 'px';
+                        document.querySelector('.onlineGameSetUp').style.width = width + 'px';
                     }
                     console.log('hi');
                 }, 4)
@@ -181,14 +256,41 @@ export default {
                 this.extendSizeInterval = setInterval(() => {
                     if (width <= 0) {
                         clearInterval(this.extendSizeInterval);
-                        document.querySelector('.inviteFriendsFields').style.display = 'none';
+                        document.querySelector('.onlineGameSetUp').style.display = 'none';
                     } else {
                         width -= 20;
-                        document.querySelector('.inviteFriendsFields').style.width = width + 'px';
+                        document.querySelector('.onlineGameSetUp').style.width = width + 'px';
                     }
                     console.log('hi');
                 }, 4)
             }
+        },
+        copyKey() {
+            this.isKeyCopied = true;
+
+            if (navigator.clipboard) {
+                // copy "gameKey" to the clipboard
+                navigator.clipboard.writeText(this.gameKey).then(() => {
+                    console.log('game key copied');
+                });
+            } else {
+                // Fallback for browsers that don't support the Clipboard API
+                let textarea = document.createElement('textarea');
+                textarea.value = this.gameKey;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    console.log('game key copied');
+                } catch (err) {
+                    console.log('Fallback: Oops, unable to copy', err);
+                }
+                document.body.removeChild(textarea);
+            }
+
+            setTimeout(() => {
+                this.isKeyCopied = false;
+            }, 2000);
         },
         submit() {
             if (this.home_language === '' && this.test_language !== '') {
@@ -226,8 +328,52 @@ export default {
 
 </script>
 
-
 <style scoped>
+.friendRow:hover {
+    background: #e7e7e7;
+}
+
+.friends {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 300px;
+    width: 100%;
+}
+
+/* make the scroll bar having a blue and green gradient color */
+.friends::-webkit-scrollbar {
+    width: 10px;
+}
+
+.friends::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.friends::-webkit-scrollbar-thumb {
+    background: #ffe800;
+    border-radius: 10px;
+}
+
+.copyKeyButton {
+    background: #e8e8e8;
+}
+
+.copyKeyButton:hover {
+    background: #dcdcdc;
+}
+
+.gameCredentials {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.QRcode {
+    width: 150px;
+    height: 150px;
+}
+
 .whiteBlock {
     background-color: white;
     width: 550px;
@@ -238,12 +384,12 @@ export default {
     border-radius: 20px 0px 0px 20px;
 }
 
-.inviteFriendsFields {
-    display: none;
+.onlineGameSetUp {
+    /*display: none;*/
     background-color: white;
-    width: 0;
+    width: 450px;
     height: 70%;
-    padding: 40px;
+    padding: 30px;
     border-radius: 0 20px 20px 0;
     border-left: solid 1px;
 }
@@ -266,6 +412,14 @@ export default {
     background-color: #e3e3e3;
     border: #e3e3e3;
     transition: background-color 0.5s, color 0.5s;
+}
+
+.p-button {
+    padding: 0.5rem 1rem;
+}
+
+.p-button.selectedMode:hover {
+    background: #1e4bb1;
 }
 
 .gameMode {

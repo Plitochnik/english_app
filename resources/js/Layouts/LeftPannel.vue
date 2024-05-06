@@ -189,7 +189,7 @@ export default {
     font-weight: normal;
 }
 
-.p-button {
+.blue-button {
     color: #ffffff;
     background: #2563ea;
     border: 1px solid #2563ea;
@@ -200,7 +200,7 @@ export default {
     outline-color: transparent;
 }
 
-.p-button:hover {
+.blue-button:hover {
     background: #1e4bb1;
 }
 
