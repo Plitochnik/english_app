@@ -149,7 +149,7 @@
 
             <div v-if="gameKey">
                 <div class="text-left flex mt-3">
-                    <InputSwitch v-model="isPrivateGame"/>
+                    <InputSwitch v-model="isPrivateGame" @click="isPrivateGame = !isPrivateGame"/>
                     <span class="ml-2">Private game</span>
                 </div>
                 <!--  list of friends  -->
