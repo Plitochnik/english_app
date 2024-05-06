@@ -9,9 +9,9 @@
                     <p class="text-4xl">Test parameters</p>
                 </div>
                 <div class="gameMode mt-7">
-                    <Button @click="setGameMode('local')" icon="pi pi-user" class="p-button" label="Local"
+                    <Button @click="expandPanel('local')" icon="pi pi-user" class="p-button" label="Local"
                             :class="{ 'selectedMode': selectedMode === 'local', 'nonSelectedMode': selectedMode !== 'local' }"/>
-                    <Button @click="setGameMode('online')" id="online-mode" icon="pi pi-users" class="p-button"
+                    <Button @click="expandPanel('online')" id="online-mode" icon="pi pi-users" class="p-button"
                             label="Online"
                             :class="{ 'selectedMode': selectedMode === 'online', 'nonSelectedMode': selectedMode !== 'online' }"/>
                 </div>
@@ -133,15 +133,14 @@
                 </div>
                 <div v-else-if="!gameKey && !isGeneratingKey" class="mt-6">
                     <Button aria-label="copy"
+                            @click.prevent="generateQR"
                             class="bg-blue-500 hover:bg-blue-600 text-white"
                             label="Generate code"/>
                 </div>
-                <div v-else class="gameCredentials">
-                    <img
-                        src="https://www.qr-code-generator.com/wp-content/themes/qr/new_structure/markets/basic_market/generator/dist/generator/assets/images/websiteQRCode_noFrame.png"
-                        alt="QR code" class="QRcode">
-                    <div v-if="gameKey" style="display: flex">
-                        <InputText v-model="gameKey" disabled class="py-1 pl-2" style="cursor: text"/>
+                <div class="gameCredentials">
+                    <canvas id="qr"/>
+                    <div v-if="gameKey" style="display: flex" class="mt-2">
+                        <InputText v-model="gameKey" disabled class="pl-2" style="cursor: text"/>
                         <Button @click="copyKey" :icon="isKeyCopied ? 'pi pi-check' :'pi pi-copy'" aria-label="copy"
                                 class="copyKeyButton ml-2"/>
                     </div>
@@ -197,6 +196,7 @@ import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import StartOnlineGameButton from "@/Pages/Form/PartsOfForm/StartOnlineGameButton.vue";
 import StartTestButton from "@/Pages/Form/PartsOfForm/StartTestButton.vue";
 import LeftPannel from '@/Layouts/LeftPannel.vue';
+import QRious from 'qrious';
 
 export default {
     name: "ParamForm",
@@ -230,7 +230,27 @@ export default {
     },
     layout: LeftPannel,
     methods: {
-        setGameMode(mode) {
+        generateQR() {
+            this.isGeneratingKey = true;
+
+            setTimeout(() => {
+                // generate secret key
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                this.gameKey = Array.from({length: 16}, () => characters[Math.floor(Math.random() * characters.length)]).join('');
+
+                this.gameKey = 'http://plitlang.com:8878?key=' + this.gameKey;
+
+                // generate QR code
+                new QRious({
+                    element: document.getElementById('qr'),
+                    value: this.gameKey,
+                    size: 150
+                });
+
+                this.isGeneratingKey = false;
+            }, 500);
+        },
+        expandPanel(mode) {
             if (this.selectedMode === mode) return;
 
             this.selectedMode = mode;
