@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\FriendsController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\TestsAlgorithms\WordsCheckController;
 use Illuminate\Support\Facades\Route;
@@ -46,5 +47,6 @@ Route::middleware([
     Route::post('/api/set-message-seen', [ChatController::class, 'setMessageAsSeen']);
     Route::get('/api/set-messages-read/{id}', [ChatController::class, 'setMessagesRead']);
 
-
+    // game
+    Route::post('/api/set-up-game', [GameController::class, 'store']);
 });

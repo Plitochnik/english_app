@@ -8,25 +8,85 @@
                 <div class="font text-center">
                     <p class="text-4xl">Test parameters</p>
                 </div>
-                <div class="gameMode mt-7">
-                    <Button @click="expandPanel('local')" icon="pi pi-user" class="p-button" label="Local"
-                            :class="{ 'selectedMode': selectedMode === 'local', 'nonSelectedMode': selectedMode !== 'local' }"/>
-                    <Button @click="expandPanel('online')" id="online-mode" icon="pi pi-users" class="p-button"
-                            label="Online"
-                            :class="{ 'selectedMode': selectedMode === 'online', 'nonSelectedMode': selectedMode !== 'online' }"/>
+
+                <!--  game mode  -->
+                <div style="display: grid" class="mt-7">
+                    <span>Game mode</span>
+                    <div class="flex mt-1">
+                        <div class="selectPanel">
+                            <Button @click="expandPanel(false)" icon="pi pi-user" label="Local"
+                                    :class="{ 'selectedMode': !testObject.is_online, 'nonSelectedMode': testObject.is_online }"/>
+                            <Button @click="expandPanel(true)" icon="pi pi-users"
+                                    label="Online"
+                                    :class="{ 'selectedMode': testObject.is_online, 'nonSelectedMode': !testObject.is_online }"/>
+                        </div>
+                    </div>
                 </div>
 
-                <form @submit.prevent="submit">
-                    <div class="products">
-                        <div class="form">
-                            <div class="mt-2 text-red-600">
-                                {{ checker_home_lang }}
-                            </div>
-                            <div class="mt-1 font">
-                                Test from
-                            </div>
-                            <div class="mt-1 home_language">
-                                <Dropdown v-model="home_language" :options="languages" filter
+                <!--  number of players  -->
+                <div v-if="testObject.is_online"
+                     style="display: grid" class="mt-4"
+                >
+                    <span>Number of players</span>
+                    <div class="flex mt-1">
+                        <div class="selectPanel">
+                            <Button v-for="(n, index) in 3" @click="testObject.players_count = (index + 2)"
+                                    :label="index + 2"
+                                    :class="{ 'selectedMode': testObject.players_count === (index + 2), 'nonSelectedMode': testObject.players_count !== (index + 2) }"/>
+                        </div>
+                    </div>
+                </div>
+
+                <form @submit.prevent="validate">
+                    <div class="form mt-4">
+                        <div class="mt-2 text-red-600">
+                            {{ checker_home_lang }}
+                        </div>
+                        <div class="mt-1 font">
+                            Test from
+                        </div>
+                        <div class="mt-1 testObject.test_from">
+                            <Dropdown v-model="testObject.test_from" :options="languages" filter
+                                      optionLabel="name" placeholder="Select a language"
+                                      class="w-full md:w-14rem">
+                                <template #value="slotProps">
+                                                    <span v-if="slotProps.value"
+                                                          style="display: ruby-text; text-align: left;">
+                                                        <img :alt="slotProps.value.label"
+                                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
+                                                             style="width: 18px"/>
+                                                        <div>{{ slotProps.value.name }} </div>
+                                                    </span>
+                                    <span v-else>
+                                                        {{ slotProps.placeholder }}
+                                                    </span>
+                                </template>
+                                <template #option="slotProps">
+                                    <div style="display: contents">
+                                        <img :alt="slotProps.option.label"
+                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                             :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
+                                             style="width: 18px"/>
+                                        <div>{{ slotProps.option.name }}</div>
+                                    </div>
+                                </template>
+                            </Dropdown>
+                        </div>
+                    </div>
+                    <div>
+                        <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
+                    </div>
+                    <div class="form mt-4">
+                        <div class="mt-3 text-red-600">
+                            {{ checker_test_lang }}
+                        </div>
+                        <div class="font">
+                            Test to
+                        </div>
+                        <div>
+                            <div class="mt-1 testObject.test_to">
+                                <Dropdown v-model="testObject.test_to" :options="languages" filter
                                           optionLabel="name" placeholder="Select a language"
                                           class="w-full md:w-14rem">
                                     <template #value="slotProps">
@@ -53,75 +113,35 @@
                                     </template>
                                 </Dropdown>
                             </div>
-                        </div>
-                        <div>
-                            <hr style="border-color: #7d7d7d; position: relative; top: 10px;">
-                        </div>
-                        <div class="form">
-                            <div class="YourLan">
-                                <div class="mt-3 text-red-600">
-                                    {{ checker_test_lang }}
-                                </div>
-                                <div class="font">
-                                    Test to
-                                </div>
-                            </div>
-                            <div class="choose">
-                                <div class="mt-1 test_language">
-                                    <Dropdown v-model="test_language" :options="languages" filter
-                                              optionLabel="name" placeholder="Select a language"
-                                              class="w-full md:w-14rem">
-                                        <template #value="slotProps">
-                                                    <span v-if="slotProps.value"
-                                                          style="display: ruby-text; text-align: left;">
-                                                        <img :alt="slotProps.value.label"
-                                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                                             style="width: 18px"/>
-                                                        <div>{{ slotProps.value.name }} </div>
-                                                    </span>
-                                            <span v-else>
-                                                        {{ slotProps.placeholder }}
-                                                    </span>
-                                        </template>
-                                        <template #option="slotProps">
-                                            <div style="display: contents">
-                                                <img :alt="slotProps.option.label"
-                                                     src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                                     :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
-                                                     style="width: 18px"/>
-                                                <div>{{ slotProps.option.name }}</div>
-                                            </div>
-                                        </template>
-                                    </Dropdown>
+                            <div>
+                                <div>
+                                    <div class="mt-3 position-absolute mb-2 font">{{
+                                            testObject.language_level
+                                        }}
+                                    </div>
                                 </div>
                                 <div>
-                                    <div>
-                                        <div class="mt-3 position-absolute mb-2 font">{{ picked }}</div>
-                                    </div>
-                                    <div>
-                                        <input type="radio" id="one" value="Upper-Intermediate"
-                                               v-model="picked"/>
-                                        <label class="ml-1 mb-2 mr-4" for="one">В1-В2</label>
+                                    <input type="radio" id="one" value="Upper-Intermediate"
+                                           v-model="testObject.language_level"/>
+                                    <label class="ml-1 mb-2 mr-4" for="one">В1-В2</label>
 
-                                        <input type="radio" id="two" value="Advanced" v-model="picked"/>
-                                        <label class="ml-1" for="two">С1-С2</label>
-                                    </div>
+                                    <input type="radio" id="two" value="Advanced"
+                                           v-model="testObject.language_level"/>
+                                    <label class="ml-1" for="two">С1-С2</label>
                                 </div>
-                                <!--                                    <start-online-game-button></start-online-game-button>-->
-                                <start-test-button></start-test-button>
                             </div>
+                            <!--                                    <start-online-game-button></start-online-game-button>-->
+                            <start-test-button></start-test-button>
                         </div>
                     </div>
                 </form>
-
             </div>
         </div>
 
         <div class="onlineGameSetUp text-center">
             <div class="text-4xl">Online game</div>
             <div class="mt-6">
-                <div v-if="isGeneratingKey" class="mt-7">
+                <div v-if="generatingKey" class="mt-7">
                     <div style="display: flex; justify-content: center">
                         <Skeleton width="150px" height="150px"></Skeleton>
                     </div>
@@ -131,29 +151,30 @@
                         <Skeleton size="2rem" class="mt-2 ml-2"></Skeleton>
                     </div>
                 </div>
-                <div v-else-if="!gameKey && !isGeneratingKey" class="mt-6">
+                <div v-else-if="!testObject.key && !generatingKey" class="mt-6">
                     <Button aria-label="copy"
-                            @click.prevent="generateQR"
+                            @click.prevent="generateKey"
                             class="bg-blue-500 hover:bg-blue-600 text-white"
                             label="Generate code"/>
                 </div>
                 <div class="gameCredentials">
                     <canvas id="qr"/>
-                    <div v-if="gameKey" style="display: flex" class="mt-2">
-                        <InputText v-model="gameKey" disabled class="pl-2" style="cursor: text"/>
+                    <div v-if="testObject.key" style="display: flex; width: 100%; justify-content: center" class="mt-2">
+                        <InputText v-model="testObject.key" disabled class="pl-2" style="cursor: text; width: 67%"/>
                         <Button @click="copyKey" :icon="isKeyCopied ? 'pi pi-check' :'pi pi-copy'" aria-label="copy"
                                 class="copyKeyButton ml-2"/>
                     </div>
                 </div>
             </div>
 
-            <div v-if="gameKey">
-                <div class="text-left flex mt-3">
-                    <InputSwitch v-model="isPrivateGame" @click="isPrivateGame = !isPrivateGame"/>
+            <div v-if="testObject.key">
+                <div class="text-left flex mt-7">
+                    <InputSwitch v-model="testObject.is_private"
+                                 @click="testObject.is_private = !testObject.is_private"/>
                     <span class="ml-2">Private game</span>
                 </div>
                 <!--  list of friends  -->
-                <div v-if="friends.length" class="friends mt-5">
+                <div v-if="friends.length && testObject.is_private" class="friends mt-7">
                     <div v-for="user in friends" :key="user.id" class="friendRow rounded-lg">
                         <div class="flex py-2 ml-1">
                             <!--    user's image or just first letter of their name     -->
@@ -208,18 +229,22 @@ export default {
                 {name: 'English', code: 'UK'},
                 {name: 'Spanish', code: 'ES'}
             ],
-            home_language: null,
-            test_language: '',
-            picked: 'Upper-Intermediate',
+            testObject: {
+                is_online: false,
+                is_private: false,
+                total_questions: 10,
+                test_from: '',
+                test_to: '',
+                players_count: 1,
+                language_level: 'Upper-Intermediate',
+                key: null,
+            },
             checker_test_lang: '',
             checker_home_lang: '',
-            selectedMode: 'local',
-            gameKey: null,
-            isGeneratingKey: false,
+            generatingKey: false,
             friends: [],
             isKeyCopied: false,
             gettingFriends: false,
-            isPrivateGame: false,
         }
     },
     components: {
@@ -230,35 +255,56 @@ export default {
     },
     layout: LeftPannel,
     methods: {
-        generateQR() {
-            this.isGeneratingKey = true;
+        generateKey() {
+            // if user is not logged in, redirect to login page
+            if (!this.$page.props.user) {
+                this.$inertia.visit('/login');
+                return;
+            }
 
-            setTimeout(() => {
-                // generate secret key
-                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-                this.gameKey = Array.from({length: 16}, () => characters[Math.floor(Math.random() * characters.length)]).join('');
+            // if (!this.validate()) {
+            //     return;
+            // }
 
-                this.gameKey = 'http://plitlang.com:8878?key=' + this.gameKey;
+            this.generatingKey = true;
 
-                // generate QR code
-                new QRious({
-                    element: document.getElementById('qr'),
-                    value: this.gameKey,
-                    size: 150
-                });
+            // generate secret key
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            this.testObject.key = Array.from({length: 16}, () => characters[Math.floor(Math.random() * characters.length)]).join('');
+            this.testObject.key = 'http://plitlang.com:8878?key=' + this.testObject.key;
 
-                this.isGeneratingKey = false;
-            }, 500);
+            // generate QR code
+            new QRious({
+                element: document.getElementById('qr'),
+                value: this.testObject.key,
+                size: 150
+            });
+
+            this.setUpGame();
         },
-        expandPanel(mode) {
-            if (this.selectedMode === mode) return;
+        setUpGame() {
+            axios.post('/api/set-up-game', this.testObject)
+                .then(response => {
 
-            this.selectedMode = mode;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                    })
+                })
+                .finally(() => { this.generatingKey = false; })
+        },
+        expandPanel(isOnline) {
+            if (this.testObject.is_online === isOnline) return;
 
-            if (mode === 'online') {
+            this.testObject.is_online = isOnline;
+
+            if (isOnline) {
                 // increase the width
                 let width = 0;
                 document.querySelector('.onlineGameSetUp').style.display = 'block';
+                this.testObject.players_count = 2;
 
                 this.extendSizeInterval = setInterval(() => {
                     if (width >= 400) {
@@ -267,7 +313,6 @@ export default {
                         width += 20;
                         document.querySelector('.onlineGameSetUp').style.width = width + 'px';
                     }
-                    console.log('hi');
                 }, 4)
             } else {
                 // decrease the width
@@ -281,7 +326,6 @@ export default {
                         width -= 20;
                         document.querySelector('.onlineGameSetUp').style.width = width + 'px';
                     }
-                    console.log('hi');
                 }, 4)
             }
         },
@@ -289,14 +333,14 @@ export default {
             this.isKeyCopied = true;
 
             if (navigator.clipboard) {
-                // copy "gameKey" to the clipboard
-                navigator.clipboard.writeText(this.gameKey).then(() => {
+                // copy "testObject.key" to the clipboard
+                navigator.clipboard.writeText(this.testObject.key).then(() => {
                     console.log('game key copied');
                 });
             } else {
                 // Fallback for browsers that don't support the Clipboard API
                 let textarea = document.createElement('textarea');
-                textarea.value = this.gameKey;
+                textarea.value = this.testObject.key;
                 document.body.appendChild(textarea);
                 textarea.select();
                 try {
@@ -312,38 +356,68 @@ export default {
                 this.isKeyCopied = false;
             }, 2000);
         },
-        submit() {
-            if (this.home_language === '' && this.test_language !== '') {
+        validate() {
+            if (this.testObject.test_from === '' && this.testObject.test_to !== '') {
                 this.checker_home_lang = 'Choose your home language'
+                return false;
             } else {
                 this.checker_home_lang = ''
             }
 
-            if (this.test_language === '' && this.home_language !== '') {
+            if (this.testObject.test_to === '' && this.testObject.test_from !== '') {
                 this.checker_test_lang = 'Choose the language you want to take the test'
+                return false;
             } else {
                 this.checker_test_lang = ''
             }
 
-            if (this.test_language === '' && this.home_language === '') {
+            if (this.testObject.test_to === '' && this.testObject.test_from === '') {
                 this.checker_home_lang = 'Please select languages'
+                return false;
             }
 
-            if (this.test_language === this.home_language &&
-                this.home_language !== ''
-                && this.test_language !== '') {
+            if (this.testObject.test_to === this.testObject.test_from &&
+                this.testObject.test_from !== ''
+                && this.testObject.test_to !== '') {
                 this.checker_home_lang = 'Languages must be different'
-            } else {
-                this.$inertia.post('/single_test', {
-                    home_language: this.home_language,
-                    test_language: this.test_language,
-                    picked: this.picked,
-                })
+                return false;
             }
 
+            return true;
+
+            /* this.$inertia.post('/single_test', {
+                 testObject.test_from: this.testObject.test_from,
+                 testObject.test_to: this.testObject.test_to,
+                 testObject.language_level: this.testObject.language_level,
+             })*/
+        },
+        fetchFriends() {
+            this.gettingFriends = true;
+
+            axios.get('/api/get-friends')
+                .then(response => {
+                    this.friends = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                    toast.warning(error.response.data.message, {
+                        position: 'bottom-right',
+                    })
+                })
+                .finally(() => {
+                    this.gettingFriends = false;
+                });
         },
     },
-
+    watch: {
+        'testObject.is_private': {
+            handler(val) {
+                if (val && !this.friends.length) {
+                    this.fetchFriends();
+                }
+            }
+        }
+    }
 }
 
 </script>
@@ -425,7 +499,7 @@ export default {
     color: black;
     background: white;
     border: white;
-    transition: background 0.5s, color 0s;
+    transition: background 0.4s, color 0s;
 }
 
 .p-button.nonSelectedMode:hover {
@@ -438,11 +512,7 @@ export default {
     padding: 0.5rem 1rem;
 }
 
-.p-button.selectedMode:hover {
-    background: #1e4bb1;
-}
-
-.gameMode {
+.selectPanel {
     border: solid 1px black;
     display: inline-flex;
     border-radius: 6px;
