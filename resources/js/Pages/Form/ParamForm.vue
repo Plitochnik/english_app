@@ -31,7 +31,7 @@
                     <div class="flex mt-1">
                         <div class="selectPanel">
                             <Button v-for="(n, index) in 3" @click="testObject.players_count = (index + 2)"
-                                    :label="index + 2"
+                                    :label="(index + 2).toString()"
                                     :class="{ 'selectedMode': testObject.players_count === (index + 2), 'nonSelectedMode': testObject.players_count !== (index + 2) }"/>
                         </div>
                     </div>
@@ -50,17 +50,17 @@
                                       optionLabel="name" placeholder="Select a language"
                                       class="w-full md:w-14rem">
                                 <template #value="slotProps">
-                                                    <span v-if="slotProps.value"
-                                                          style="display: ruby-text; text-align: left;">
-                                                        <img :alt="slotProps.value.label"
-                                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                                             style="width: 18px"/>
-                                                        <div>{{ slotProps.value.name }} </div>
-                                                    </span>
+                                    <span v-if="slotProps.value"
+                                          style="display: ruby-text; text-align: left;">
+                                        <img :alt="slotProps.value.label"
+                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
+                                             style="width: 18px"/>
+                                        <div>{{ slotProps.value.name }} </div>
+                                    </span>
                                     <span v-else>
-                                                        {{ slotProps.placeholder }}
-                                                    </span>
+                                        {{ slotProps.placeholder }}
+                                    </span>
                                 </template>
                                 <template #option="slotProps">
                                     <div style="display: contents">
@@ -141,7 +141,15 @@
         <div class="onlineGameSetUp text-center">
             <div class="text-4xl">Online game</div>
             <div class="mt-6">
-                <div v-if="generatingKey" class="mt-7">
+                <!-- generate code button -->
+                <div v-if="!testObject.key && !generatingKey" class="mt-6">
+                    <Button aria-label="copy"
+                            @click.prevent="generateKey"
+                            class="bg-blue-500 hover:bg-blue-600 text-white"
+                            label="Generate code"/>
+                </div>
+                <!-- generating qr code skeleton -->
+                <div v-else-if="generatingKey" class="mt-7">
                     <div style="display: flex; justify-content: center">
                         <Skeleton width="150px" height="150px"></Skeleton>
                     </div>
@@ -150,24 +158,24 @@
                         <Skeleton height="2rem" class="mt-2"></Skeleton>
                         <Skeleton size="2rem" class="mt-2 ml-2"></Skeleton>
                     </div>
+
+                    <div style="display: flex" class="mt-7">
+                        <Skeleton width="5rem" class="mb-2" height="19px"></Skeleton>
+                    </div>
                 </div>
-                <div v-else-if="!testObject.key && !generatingKey" class="mt-6">
-                    <Button aria-label="copy"
-                            @click.prevent="generateKey"
-                            class="bg-blue-500 hover:bg-blue-600 text-white"
-                            label="Generate code"/>
-                </div>
+                <!-- actual code -->
                 <div class="gameCredentials">
                     <canvas id="qr"/>
-                    <div v-if="testObject.key" style="display: flex; width: 100%; justify-content: center" class="mt-2">
-                        <InputText v-model="testObject.key" disabled class="pl-2" style="cursor: text; width: 67%"/>
+                    <div v-if="testObject.key && !generatingKey"
+                         style="display: flex; width: 100%; justify-content: center" class="mt-2">
+                        <InputText v-model="shareGameURL" disabled class="pl-2" style="cursor: text; width: 67%"/>
                         <Button @click="copyKey" :icon="isKeyCopied ? 'pi pi-check' :'pi pi-copy'" aria-label="copy"
                                 class="copyKeyButton ml-2"/>
                     </div>
                 </div>
             </div>
 
-            <div v-if="testObject.key">
+            <div v-if="testObject.key && !generatingKey">
                 <div class="text-left flex mt-7">
                     <InputSwitch v-model="testObject.is_private"
                                  @click="testObject.is_private = !testObject.is_private"/>
@@ -230,15 +238,16 @@ export default {
                 {name: 'Spanish', code: 'ES'}
             ],
             testObject: {
-                is_online: false,
+                is_online: true,
                 is_private: false,
                 total_questions: 10,
                 test_from: '',
                 test_to: '',
-                players_count: 1,
+                players_count: 2,
                 language_level: 'Upper-Intermediate',
                 key: null,
             },
+            shareGameURL: null,
             checker_test_lang: '',
             checker_home_lang: '',
             generatingKey: false,
@@ -271,21 +280,19 @@ export default {
             // generate secret key
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             this.testObject.key = Array.from({length: 16}, () => characters[Math.floor(Math.random() * characters.length)]).join('');
-            this.testObject.key = 'http://plitlang.com:8878?key=' + this.testObject.key;
-
-            // generate QR code
-            new QRious({
-                element: document.getElementById('qr'),
-                value: this.testObject.key,
-                size: 150
-            });
+            this.shareGameURL = window.location.href + '?game-id=' + this.testObject.key;
 
             this.setUpGame();
         },
         setUpGame() {
             axios.post('/api/set-up-game', this.testObject)
                 .then(response => {
-
+                    // generate QR code
+                    new QRious({
+                        element: document.getElementById('qr'),
+                        value: this.shareGameURL,
+                        size: 150
+                    });
                 })
                 .catch(error => {
                     console.error(error);
@@ -293,7 +300,9 @@ export default {
                         position: 'bottom-right',
                     })
                 })
-                .finally(() => { this.generatingKey = false; })
+                .finally(() => {
+                    this.generatingKey = false;
+                })
         },
         expandPanel(isOnline) {
             if (this.testObject.is_online === isOnline) return;
@@ -357,7 +366,7 @@ export default {
             }, 2000);
         },
         validate() {
-            if (this.testObject.test_from === '' && this.testObject.test_to !== '') {
+            /*if (this.testObject.test_from === '' && this.testObject.test_to !== '') {
                 this.checker_home_lang = 'Choose your home language'
                 return false;
             } else {
@@ -381,7 +390,9 @@ export default {
                 && this.testObject.test_to !== '') {
                 this.checker_home_lang = 'Languages must be different'
                 return false;
-            }
+            }*/
+
+            this.$inertia.visit('/vocabulary-game?game-id=' + this.testObject.key);
 
             return true;
 

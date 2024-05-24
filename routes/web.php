@@ -48,5 +48,6 @@ Route::middleware([
     Route::get('/api/set-messages-read/{id}', [ChatController::class, 'setMessagesRead']);
 
     // game
+    Route::get('/vocabulary-game', [GameController::class, 'renderPage'])->name('vocabularyGame');
     Route::post('/api/set-up-game', [GameController::class, 'store']);
 });
