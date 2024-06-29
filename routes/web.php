@@ -50,4 +50,5 @@ Route::middleware([
     // game
     Route::get('/vocabulary-game', [GameController::class, 'renderPage'])->name('vocabularyGame');
     Route::post('/api/set-up-game', [GameController::class, 'store']);
+    Route::post('/api/log-connection-public-vocabulary', [GameController::class, 'logConnectionToPublicVocabularyGame']);
 });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Broadcasting\GameChannel;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -25,15 +26,4 @@ Broadcast::channel('messages-for-user.{userID}', function ($user, $userID) {
 });
 
 // game session
-Broadcast::channel('game.{key}', function ($user, $key) {
-    if ($user) {
-        $isPublicGame = Game::where('key', $key)->value('is_public');
-
-        if ($isPublicGame) {
-            return ['id' => $user->id, 'name' => $user->name];
-        } else {
-            // TODO logic of checking the user's ID in the 'private_game_users' table
-        }
-    }
-});
-
+ Broadcast::channel('game.{key}', GameChannel::class);

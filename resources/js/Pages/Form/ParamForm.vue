@@ -46,32 +46,32 @@
                             Test from
                         </div>
                         <div class="mt-1 testObject.test_from">
-                            <Dropdown v-model="testObject.test_from" :options="languages" filter
-                                      optionLabel="name" placeholder="Select a language"
-                                      class="w-full md:w-14rem">
-                                <template #value="slotProps">
-                                    <span v-if="slotProps.value"
-                                          style="display: ruby-text; text-align: left;">
-                                        <img :alt="slotProps.value.label"
-                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                             style="width: 18px"/>
-                                        <div>{{ slotProps.value.name }} </div>
-                                    </span>
-                                    <span v-else>
-                                        {{ slotProps.placeholder }}
-                                    </span>
-                                </template>
-                                <template #option="slotProps">
-                                    <div style="display: contents">
-                                        <img :alt="slotProps.option.label"
-                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                             :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
-                                             style="width: 18px"/>
-                                        <div>{{ slotProps.option.name }}</div>
-                                    </div>
-                                </template>
-                            </Dropdown>
+                            <!--                            <Dropdown v-model="testObject.test_from" :options="languages" filter
+                                                                  optionLabel="name" placeholder="Select a language"
+                                                                  class="w-full md:w-14rem">
+                                                            <template #value="slotProps">
+                                                                <span v-if="slotProps.value"
+                                                                      style="display: ruby-text; text-align: left;">
+                                                                    <img :alt="slotProps.value.label"
+                                                                         src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                                                         :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
+                                                                         style="width: 18px"/>
+                                                                    <div>{{ slotProps.value.name }} </div>
+                                                                </span>
+                                                                <span v-else>
+                                                                    {{ slotProps.placeholder }}
+                                                                </span>
+                                                            </template>
+                                                            <template #option="slotProps">
+                                                                <div style="display: contents">
+                                                                    <img :alt="slotProps.option.label"
+                                                                         src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                                                         :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
+                                                                         style="width: 18px"/>
+                                                                    <div>{{ slotProps.option.name }}</div>
+                                                                </div>
+                                                            </template>
+                                                        </Dropdown>-->
                         </div>
                     </div>
                     <div>
@@ -86,32 +86,32 @@
                         </div>
                         <div>
                             <div class="mt-1 testObject.test_to">
-                                <Dropdown v-model="testObject.test_to" :options="languages" filter
-                                          optionLabel="name" placeholder="Select a language"
-                                          class="w-full md:w-14rem">
-                                    <template #value="slotProps">
-                                                    <span v-if="slotProps.value"
-                                                          style="display: ruby-text; text-align: left;">
-                                                        <img :alt="slotProps.value.label"
-                                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                                             style="width: 18px"/>
-                                                        <div>{{ slotProps.value.name }} </div>
-                                                    </span>
-                                        <span v-else>
-                                                        {{ slotProps.placeholder }}
-                                                    </span>
-                                    </template>
-                                    <template #option="slotProps">
-                                        <div style="display: contents">
-                                            <img :alt="slotProps.option.label"
-                                                 src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                                 :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
-                                                 style="width: 18px"/>
-                                            <div>{{ slotProps.option.name }}</div>
-                                        </div>
-                                    </template>
-                                </Dropdown>
+                                <!--                                <Dropdown v-model="testObject.test_to" :options="languages" filter
+                                                                          optionLabel="name" placeholder="Select a language"
+                                                                          class="w-full md:w-14rem">
+                                                                    <template #value="slotProps">
+                                                                                    <span v-if="slotProps.value"
+                                                                                          style="display: ruby-text; text-align: left;">
+                                                                                        <img :alt="slotProps.value.label"
+                                                                                             src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                                                                             :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
+                                                                                             style="width: 18px"/>
+                                                                                        <div>{{ slotProps.value.name }} </div>
+                                                                                    </span>
+                                                                        <span v-else>
+                                                                                        {{ slotProps.placeholder }}
+                                                                                    </span>
+                                                                    </template>
+                                                                    <template #option="slotProps">
+                                                                        <div style="display: contents">
+                                                                            <img :alt="slotProps.option.label"
+                                                                                 src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                                                                 :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
+                                                                                 style="width: 18px"/>
+                                                                            <div>{{ slotProps.option.name }}</div>
+                                                                        </div>
+                                                                    </template>
+                                                                </Dropdown>-->
                             </div>
                             <div>
                                 <div>
@@ -241,8 +241,8 @@ export default {
                 is_online: true,
                 is_private: false,
                 total_questions: 10,
-                test_from: '',
-                test_to: '',
+                test_from: 'Russian',
+                test_to: 'Russian',
                 players_count: 2,
                 language_level: 'Upper-Intermediate',
                 key: null,
@@ -280,7 +280,7 @@ export default {
             // generate secret key
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             this.testObject.key = Array.from({length: 16}, () => characters[Math.floor(Math.random() * characters.length)]).join('');
-            this.shareGameURL = window.location.href + '?game-id=' + this.testObject.key;
+            this.shareGameURL = window.location.href + 'vocabulary-game?game-id=' + this.testObject.key;
 
             this.setUpGame();
         },
@@ -343,18 +343,15 @@ export default {
 
             if (navigator.clipboard) {
                 // copy "testObject.key" to the clipboard
-                navigator.clipboard.writeText(this.testObject.key).then(() => {
-                    console.log('game key copied');
-                });
+                navigator.clipboard.writeText(this.shareGameURL);
             } else {
                 // Fallback for browsers that don't support the Clipboard API
                 let textarea = document.createElement('textarea');
-                textarea.value = this.testObject.key;
+                textarea.value = this.shareGameURL;
                 document.body.appendChild(textarea);
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    console.log('game key copied');
                 } catch (err) {
                     console.log('Fallback: Oops, unable to copy', err);
                 }
