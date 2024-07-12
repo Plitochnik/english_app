@@ -43,7 +43,7 @@ class GameController extends Controller
             return ConnectedGameUsers::where('game_id', $gameID)->where('user_id', $userID)->delete();
         }
 
-        return ConnectedGameUsers::create([
+        return ConnectedGameUsers::updateOrCreate([
             'user_id' => $userID,
             'game_id' => $gameID,
         ]);

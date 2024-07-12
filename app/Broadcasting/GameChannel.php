@@ -45,12 +45,17 @@ class GameChannel
             throw new \Exception('The game room is full.');
         }
 
-        if ($game === true) {
+        if ($game->is_private) {
             // TODO logic of checking the user's ID in the 'private_game_users' table. Might create something like: $user->canJoinRoom
         } else {
             (new GameController())->logConnectionToPublicVocabularyGame(new Request(['game_key' => $game->key, 'leave' => false]));
 
-            return ['id' => $user->id, 'name' => $user->name];
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'profile_photo_path' => $user->profile_photo_path,
+                'players_count' => $game->players_count,
+            ];
         }
     }
 }
