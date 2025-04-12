@@ -11,10 +11,10 @@
         "ext-pdo": "*",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.5",
-        "inertiajs/inertia-laravel": "^0.6.3",
-        "laravel/framework": "^9.19",
-        "laravel/jetstream": "^2.12",
-        "laravel/sanctum": "^3.2",
+        "inertiajs/inertia-laravel": "^2.0",
+        "laravel/framework": "^11.44.2",
+        "laravel/jetstream": "^5",
+        "laravel/sanctum": "^4",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "pusher/pusher-php-server": "^7.2",
@@ -27,9 +27,8 @@
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "nunomaduro/collision": "^8",
+        "phpunit/phpunit": "^11.0"
     },
     "autoload": {
         "psr-4": {

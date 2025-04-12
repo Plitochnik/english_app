@@ -175,7 +175,7 @@ class FriendsController extends Controller
         }
 
         $users = User::select('id', 'name', 'profile_photo_path')
-            ->where('name', 'LIKE', '%' . $name . '%')
+            ->where('name', 'ILIKE', '%' . $name . '%')
             ->where('id', '!=', $userID)
             ->with(['isFriend', 'isInvited', 'theySentInvite'])
             ->whereDoesntHave('isFriend')

@@ -77,7 +77,7 @@ export default {
   },
   layout: LeftPannel,
   mounted() {
-    // this.joinGame();
+    this.joinGame();
   },
   unmounted() {
     // window.removeEventListener("beforeunload", this.confirmExit);
